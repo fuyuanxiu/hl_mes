@@ -104,19 +104,18 @@
 						plus.ui.toast("密码不能为空");
 						return;
 					}
+					
+					/* api_localStorageSave("code", username.value);
+					api_localStorageSave("webPath",  API.webPath);
+					
 					mui.openWindow({
 						url: 'index.html',
 						id: 'index'
 					})
-					return ;
-					if (API.version == 'demo') {
-						mui.openWindow({
-							url: 'main_jt.html',
-							id: 'main'
-						})
-					} else {
+					return ; */
+					
 						mui('#login').button('loading');
-						mui('#loginWai').button('loading');
+						//mui('#loginWai').button('loading');
 						mui.ajax(API.webPath + '/login', {
 							data: {
 								username: username.value.toString(),
@@ -142,17 +141,10 @@
 									api_localStorageSave("webPath",  API.webPath);
 									
 									sessionStorage.setItem("bsCode", data.data.FCODE); //存一个session会话
-									if (API.version == 'test') {
-										mui.openWindow({
-											url: 'index.html?username=' + username.value,
-											id: 'index',
-										})
-									} else {
-										mui.openWindow({
-											url: 'main1.html?username=' + username.value,
-											id: 'main1',
-										})
-									}
+									mui.openWindow({
+										url: 'index.html',
+										id: 'index',
+									})
 
 								} else {
 									//登录失败
@@ -167,7 +159,7 @@
 							mui('#login').button('reset');
 							mui('#loginWai').button('reset');
 						}.bind(this), 1000);
-					}
+					
 
 				})
 				
