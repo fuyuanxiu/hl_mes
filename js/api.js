@@ -2,9 +2,8 @@
 var API = window.API = {
     //webPath			: "http://192.168.1.105:9999/",
 	webPathWai			: "http://113.106.220.62:9999/jyapp/",
-
-    //webPath			: "http://192.168.1.105:9999/",
-	webPath			: "http://192.168.1.109:9999/",
+	//webPath			: "http://192.168.1.104:9999/",
+	webPath			: "http://192.168.1.160:9998/hl_rf",
 
 	version         :"test",//demo:静态，prod:正式，test:测试
 	urls: {
@@ -283,6 +282,9 @@ var _mask=mui.createMask();//遮罩层
 			success: success,
 			error: function(xhr, type, errorThrown) {
 				mui.alert('服务器连接超时，请稍后再试');
+				console.log(xhr)
+				console.log(type)
+				console.log(errorThrown)
 			},
 			beforeSend: function () {
 				plus.nativeUI.showWaiting("处理中，请等待...");

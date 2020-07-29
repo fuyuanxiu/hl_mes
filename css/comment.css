@@ -1,10 +1,40 @@
-.mui-bar-nav,.mui-title{
-	background-color:#C9302C;
+.mui-bar-nav,
+.mui-title {
+	background-color: #C9302C;
 	color: white;
 	font-weight: bold;
 	font-size: 20px;
 	letter-spacing: 1px;
 }
-.mui-bar-nav a{
+
+.mui-bar-nav a {
 	color: white;
+}
+
+.mui-content {
+	margin-top: 2px;
+}
+
+.colorBg {
+	background: -moz-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #1fd5e6), color-stop(100%, #21b6f8));
+	background: -webkit-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+	background: -o-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+	background: -ms-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+	background: linear-gradient(to bottom, #34dbfc 0%, #61a7fd 100%);
+}
+
+.font-seal {
+	font-size: 10px;
+	z-index: 2;
+	position: absolute;
+	right: 14px;
+	top: 25px;
+	border: 1px solid #F73A3C;
+	transform: rotate(25deg);
+	width: 43px;
+	line-height: 20px;
+	text-align: center;
+	color: #F73A3C;
+	font-weight: bold;
 }

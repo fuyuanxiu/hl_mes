@@ -171,31 +171,6 @@
 			<span class="title-right mui-icon mui-icon-list" style="color:#0062CC" id="moreId"></span>
 		</header>
 		<div class="mui-content" id="contentId">
-			<!-- <div class="mui-card">
-				<div class="font-seal">生产中</div>
-				<div class="mui-card-header">
-					产品名称: 21753边框毛坯
-				</div>
-				<div class="mui-card-content">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell mui-media">
-							<a href="javascript:;" class="mui-navigate-right">
-								<span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
-								<div class="mui-media-body">
-									切割机4号-TEST005
-									<p class='mui-ellipsis'>
-										工序:制程
-									</p>
-								</div>
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="mui-card-footer">
-					<span>工单号:MD-T-200618-01-3</span>
-					<span>开始时间：2020-07-24 10:26</span>
-				</div>
-			</div> -->
 		</div>
 		<script id='record-template' type="text/template">
 			<% for(var i in record){ var item=record[i];%>
@@ -227,6 +202,9 @@
 			<%}%>
 		</script>
 		<script type="text/javascript">
+			window.addEventListener('refresh', function(e) { //监听页面返回事件
+				window.location.reload(); //执行刷新
+			});
 			mui.init({});
 			mui.plusReady(function() {
 				//获取工单列表数据

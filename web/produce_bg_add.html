@@ -70,7 +70,8 @@
 				background: -ms-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
 				background: linear-gradient(to bottom, #34dbfc 0%, #61a7fd 100%);
 			}
-			.detailData{
+
+			.detailData {
 				background-color: #F5F5F5;
 			}
 		</style>
@@ -84,100 +85,153 @@
 			<h1 class="mui-title">生产报工</h1>
 		</header>
 		<div class="mui-content" id="contentId">
-			<div class="mui-input-group" >
+			<div class="mui-input-group">
 				<div class="mui-input-row">
 					<label>本次报工数量</label>
-					<input type="text" class="mui-input-clear" placeholder="请输入本次报工数量">
+					<input id="bgqty" type="number" class="mui-input-clear" placeholder="请输入本次报工数量" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
 				</div>
 				<div class="mui-input-row">
 					<label>不良品数</label>
-					<input type="text" class="mui-input-clear" placeholder="请输入不良品数">
+					<input id="unqualifiedqty" type="number" class="mui-input-clear" placeholder="请输入不良品数" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>良品数</label>
-					<input type="text" class="mui-input-clear" placeholder="请输入良品数">
+					<input id="qualifiedqty" type="number" class="mui-input-clear" placeholder="请输入良品数" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-content-padded" align="center">
-					<button type="button" class="mui-btn mui-btn-success" style="width: 80%;margin: 10px;" id="start">生产报工</button>
-					<button type="button" class="mui-btn mui-btn-primary" style="width: 80%;margin: 10px;" onclick="document.getElementById('detail').style.display='block'" id="read_detail">查看基础信息</button>
+					<button type="button" class="mui-btn mui-btn-success" style="width: 80%;margin: 10px;" id="report">生产报工</button>
+					<button type="button" class="mui-btn mui-btn-primary" style="width: 80%;margin: 10px;" onclick="document.getElementById('detail').style.display='block'"
+					 id="read_detail">查看基础信息</button>
 				</div>
 				<div class="mui-scroll mui-content" style="display: none;" id="detail">
 					<div class="mui-input-row">
-						<label >工单号</label>
-						<input id="WORL_SINGNUM" type="text" class="mui-input-clear detailData" >
+						<label>工单号</label>
+						<input id="worl_singnum" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
 						<label>品号</label>
-						<input id="PRO_CODE" type="text" class="mui-input-clear detailData" >
+						<input id="pro_code" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
 						<label>产品名称</label>
-						<input id="PRO_NAME" type="text" class="mui-input-clear detailData">
+						<input id="pro_name" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >工序</label>
-						<input id="WORPROC_NAME" type="text" class="mui-input-clear detailData">
+						<label>工序</label>
+						<input id="worproc_name" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >设备</label>
-						<input id="EQU_NAME" type="text" class="mui-input-clear detailData">
+						<label>设备</label>
+						<input id="equ_name" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >设备编号</label>
-						<input id="EQU_CODE" type="text" class="mui-input-clear detailData">
+						<label>设备编号</label>
+						<input id="equ_code" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >工作中心</label>
-						<input id="WORKSHOP_CENTER_CODE" type="text" class="mui-input-clear detailData" >
+						<label>工作中心</label>
+						<input id="workshop_center_code" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >工单数量</label>
-						<input id="WORL_QTY" type="text" class="mui-input-clear detailData">
+						<label>工单数量</label>
+						<input id="worl_qty" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >工排产量</label>
-						<input id="OUTPUT_QTY" type="text" class="mui-input-clear detailData">
+						<label>工排产量</label>
+						<input id="output_qty" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >完工数量</label>
-						<input id="COMPLETE_QTY" type="text" class="mui-input-clear detailData">
+						<label>完工数量</label>
+						<input id="complete_qty" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >已报工数量</label>
-						<input id="BG_QTY" type="text" class="mui-input-clear detailData">
+						<label>已报工数量</label>
+						<input id="bg_qty" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >员工</label>
-						<input id="PERSON_NAME" type="text" class="mui-input-clear detailData">
+						<label>员工</label>
+						<input id="person_name" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 					<div class="mui-input-row">
-						<label >状态</label>
-						<input id="STATUS" type="text" class="mui-input-clear detailData">
+						<label>状态</label>
+						<input id="status" type="text" class="mui-input-clear detailData" disabled="true">
 					</div>
 				</div>
 			</div>
 			<script type="text/javascript">
+				mui.init({
+					beforeback: function() { //页面返回时触发
+						var list = plus.webview.currentWebview().opener();
+						mui.fire(list, 'refresh'); //refresh是A页面自定义事件
+						return true; //返回true,继续页面关闭逻辑
+					}
+				})
+				var id = ""; //MES_PLAN_PRO_ID 排产ID
+				var worproc_code = ""; //工序编码
 				mui.plusReady(function() {
 					var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
 					var detail = param.detail;
 					showDetailData(detail);
 				})
-				function showDetailData(detail){
-					var data=JSON.parse(detail)
-					$("#PERSON_NAME").val(data.PERSON_NAME);
-					$("#WORL_SINGNUM").val(data.WORL_SINGNUM);//工单号
-					$("#PRO_CODE").val(data.PRO_CODE);//品名
-					$("#PRO_NAME").val(data.PRO_NAME);//工单号
-					$("#WORPROC_NAME").val(data.WORPROC_NAME);//工序
-					$("#EQU_NAME").val(data.EQU_NAME);//设备
-					$("#EQU_CODE").val(data.EQU_CODE);//设备编号
-					$("#WORKSHOP_CENTER_CODE").val(data.WORKSHOP_CENTER_CODE);//工作中心
-					$("#WORL_QTY").val(data.WORL_QTY);//工单数量
-					$("#OUTPUT_QTY").val(data.OUTPUT_QTY);//工排产量
-					$("#COMPLETE_QTY").val(data.COMPLETE_QTY);//完成数量
-					$("#BG_QTY").val(data.BG_QTY);//已报工数量
-					$("#PERSON_NAME").val(data.PERSON_NAME);//员工
-					$("#STATUS").val(data.STATUS);//状态
+				//监听点击事件
+				document.getElementById("report").addEventListener("tap", function() {
+					var bgqty = $("#bgqty").val();
+					var unqualifiedqty = $("#unqualifiedqty").val();
+					var qualifiedqty = $("#qualifiedqty").val();
+					if (bgqty == "" || unqualifiedqty == "" || qualifiedqty == "") {
+						mui.alert("请完善数据"); //再加上bgqty要大于良品和不良品
+					} else {
+						var btnArray = ['取消', '提交'];
+						mui.confirm("本次报工数量："+bgqty+" 不良品数："+unqualifiedqty+" 良品数："+qualifiedqty, '请确认', btnArray, function(e) {
+							if (e.index == 1) {
+								reportBgQTY(bgqty, unqualifiedqty, qualifiedqty);
+							}
+						})
+						
+					}
+				});
+				function showDetailData(detail) { //显示详细数据
+					var data = JSON.parse(detail)
+					$("#worl_singnum").val(data.WORL_SINGNUM); //工单号
+					$("#pro_code").val(data.PRO_CODE); //品名
+					$("#pro_name").val(data.PRO_NAME); //产品名称
+					$("#worproc_name").val(data.WORPROC_NAME); //工序名称
+					$("#equ_name").val(data.EQU_NAME); //设备
+					$("#equ_code").val(data.EQU_CODE); //设备编号
+					$("#workshop_center_code").val(data.WORKSHOP_CENTER_CODE); //工作中心
+					$("#worl_qty").val(data.WORL_QTY); //工单数量
+					$("#output_qty").val(data.OUTPUT_QTY); //工排产量
+					$("#complete_qty").val(data.COMPLETE_QTY); //完成数量
+					$("#bg_qty").val(data.BG_QTY); //已报工数量
+					$("#person_name").val(data.PERSON_NAME); //员工
+					$("#status").val(data.STATUS); //状态
+					id = data.ID; //MES_PLAN_PRO_ID 排产ID
+					worproc_code = data.WORPROC_CODE; //工序编码
+				}
+				//提交报工数量
+				function reportBgQTY(bgqty, unqualifiedqty, qualifiedqty) { //报工数量，不良品数，良品数
+					aj.post('/produce/produceReport', {
+						usercode: api_localStorageGet("code"),
+						factory: api_localStorageGet("factory"),
+						company: api_localStorageGet("company"),
+						plan_id: id,
+						proc: worproc_code,
+						bg_Qty: bgqty,
+						unqu_Qty: unqualifiedqty,
+						qu_Qty: qualifiedqty,
+						eqCODE: $("#equ_code").val()
+					}, function(data) {
+						if (data.result) {
+							//console.log(JSON.stringify(data));
+							mui.alert(data.msg);
+							$("#bg_qty").val(data.data);//详细信息--报工数据
+							var bgqty = $("#bgqty").val("");//填写栏，报工数
+							var unqualifiedqty = $("#unqualifiedqty").val("");
+							var qualifiedqty = $("#qualifiedqty").val("");
+						} else {
+							mui.alert(data.msg);
+						}
+					});
 				}
 			</script>
 	</body>
