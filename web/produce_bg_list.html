@@ -171,13 +171,11 @@
 			<span class="title-right mui-icon mui-icon-list" style="color:#0062CC" id="moreId"></span>
 		</header>
 		<div class="mui-content" id="contentId">
-			<div class="mui-card">
-				<!--页眉，放置标题-->
+			<!-- <div class="mui-card">
 				<div class="font-seal">生产中</div>
 				<div class="mui-card-header">
 					产品名称: 21753边框毛坯
 				</div>
-				<!--内容区-->
 				<div class="mui-card-content">
 					<ul class="mui-table-view">
 						<li class="mui-table-view-cell mui-media">
@@ -193,76 +191,69 @@
 						</li>
 					</ul>
 				</div>
-				<!--页脚，放置补充信息或支持的操作-->
 				<div class="mui-card-footer">
 					<span>工单号:MD-T-200618-01-3</span>
 					<span>开始时间：2020-07-24 10:26</span>
 				</div>
-			</div>
-			<div class="mui-card">
-				<!--页眉，放置标题-->
-				<div class="font-seal">生产中</div>
-				<div class="mui-card-header">
-					产品名称: 21753边框毛坯
-				</div>
-				<!--内容区-->
-				<div class="mui-card-content">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell mui-media">
-							<a href="javascript:;" class="mui-navigate-right">
-								<span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
-								<div class="mui-media-body">
-									切割机4号-TEST005
-									<p class='mui-ellipsis'>
-										工序:制程
-									</p>
-								</div>
-							</a>
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<a href="javascript:;" class="mui-navigate-right">
-								<span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
-								<div class="mui-media-body">
-									切割机4号-TEST005
-									<p class='mui-ellipsis'>
-										工序:制程
-									</p>
-								</div>
-							</a>
-						</li>
-					</ul>
-				</div>
-				<!--页脚，放置补充信息或支持的操作-->
-				<div class="mui-card-footer">
-					<span>工单号:MD-T-200618-01-3</span>
-					<span>开始时间：2020-07-24 10:26</span>
-				</div>
-			</div>
+			</div> -->
 		</div>
+		<script id='record-template' type="text/template">
+			<% for(var i in record){ var item=record[i];%>
+			<div class="mui-card">
+			<div class="font-seal"><%=(item.STATUS)%></div>
+			<div class="mui-card-header">
+				产品名称: <%=(item.PRO_NAME)%>
+			</div>
+			<div class="mui-card-content">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>'>
+						<a href="javascript:;" class="mui-navigate-right">
+							<span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
+							<div class="mui-media-body">
+								<%=(item.EQU_NAME)%>—<%=(item.EQU_CODE)%>
+								<p class='mui-ellipsis'>
+									工序:<%=(item.WORPROC_NAME)%>
+								</p>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<div class="mui-card-footer">
+					<span>工单号:<%=(item.WORL_SINGNUM)%></span>
+					<span>生产时间：<%=(item.PROD_DATE)%></span>
+				</div>
+			</div>
+			</div>
+			<%}%>
+		</script>
 		<script type="text/javascript">
 			mui.init({});
 			mui.plusReady(function() {
+				//获取工单列表数据
+				getProduceList();
 				mui("#contentId").on("tap", "li", function() {
-					mui.openWindow({
-						id: 'produce_bg_add',
-						url: 'produce_bg_add.html',
-						extras: {
-							//urlId:urlId
-							//自定义扩展参数，可以用来处理页面间传值 
-						},
-						show: { //控制打开页面的类型
-							autoShow: true,
-							//页面loaded事件发生后自动显示，默认为true 
-							aniShow: 'slide-in-right', //页面显示动画，默认为”slide-in-right“；  页面出现的方式 左右上下
-							duration: '100' //页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒； 
-						},
-						waiting: { // 控制 弹出转圈框的信息
-							autoShow: true, //自动显示等待框，默认为true 
-							title: '加载中' //等待对话框上显示的提示内容 
-						}
+					var detail_data = this.getAttribute('detail-data'); //详细信息
+					//console.log(detail_data);
+					OpenWindow('produce_bg_add','produce_bg_add.html',{
+						"detail":detail_data
 					});
-				})
-			})
+				});
+			});
+
+			function getProduceList() {
+				aj.post('/produce/getProduceList', {
+					usercode: api_localStorageGet("code")
+				}, function(data) {
+					if (data.result) {
+						//console.log(JSON.stringify(data.data))
+						document.getElementById('contentId').innerHTML = template('record-template', {
+							"record": data.data
+						});
+					} else {
+						plus.ui.toast(data.msg);
+					}
+				});
+			}
 		</script>
 	</body>
 
