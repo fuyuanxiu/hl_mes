@@ -166,11 +166,11 @@
 					<input style="background-color: #F5F5F5;" type="text" class="mui-input-clear" placeholder="请输入条码/批次号" value="切割机1号">
 				</div>
 				<div class="mui-input-row">
-					<label onclick="clicked('commom/saomiao.html','saomiao',true);"><span class="mui-icon iconfont icon-saomiao" id="num1"></span>工号</label>
+					<label onclick="clicked('commom/saomiao.html','barcode','web/start_check_add.html');"><span class="mui-icon iconfont icon-saomiao" id="num1"></span>工号</label>
 					<input type="text" class="mui-input-clear" placeholder="请输入扫描/输入工号" id='barcode'>
 				</div>
 				<div class="mui-input-row">
-					<label onclick="clicked('commom/saomiao.html','saomiao',true);"><span class="mui-icon iconfont icon-saomiao" id="num1"></span>设备</label>
+					<label onclick="clicked('commom/saomiao.html','machine','web/start_check_add.html');"><span class="mui-icon iconfont icon-saomiao" id="num1"></span>设备</label>
 					<input type="text" class="mui-input-clear" placeholder="请输入扫描/输入设备" id='machine'>
 				</div>
 			</div>
@@ -195,19 +195,22 @@
 			window.addEventListener("changeBar", function(e) {
 				console.log(e.detail.barcode)
 				//console.log(document.getElementById("#barcode").value)
-				if (document.getElementById("barcode").value.length == 0) {
-					document.getElementById("barcode").value = (e.detail.barcode)+",";
+				var inputId = e.detail.inputId
+				if (document.getElementById(inputId).value.length == 0) {
+					document.getElementById(inputId).value = (e.detail.barcode)+",";
 				}else{
-					document.getElementById("barcode").value = (document.getElementById("barcode").value+e.detail.barcode+",");
+					document.getElementById(inputId).value = (document.getElementById("barcode").value+e.detail.barcode+",");
 				}
 				
 			});
-			function clicked(url, f1, f2) {
+			function clicked(url, f1, urlId) {
 				mui.openWindow({
 					id: f1,
 					url: url,
 					extras: {
-						urlId:'web/start_check_add.html'
+						urlId:urlId,
+						inputId:f1
+						//'web/start_check_add.html'
 						//自定义扩展参数，可以用来处理页面间传值 
 					},
 					show: { //控制打开页面的类型
