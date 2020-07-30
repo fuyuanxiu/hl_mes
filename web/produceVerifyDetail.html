@@ -39,10 +39,6 @@
 				margin: 10px 20px;
 			}
 
-			.detailData {
-				background-color: #F5F5F5;
-			}
-
 			.headlabel {
 				margin: 0.5125rem;
 				padding: 0.5125rem;
@@ -52,7 +48,8 @@
 			}
 
 			.mui-table-view-cell {
-				height: 40px;
+				height: 45px;
+				font-size: 19px;
 			}
 
 			.mui-input-row label {
@@ -61,21 +58,13 @@
 
 			.mui-input-row label~input {
 				float: right;
-				width: 55%;
-			}
-
-			.cards-box {
-				width: 100%;
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: space-between;
+				width: 45%;
+				font-size: 19px;
 			}
 
 			.card {
-				flex: 1;
-				width: 46%;
-				min-width: 46%;
-				max-width: 46%;
+				width: 80%;
+				margin: auto;
 			}
 		</style>
 	</head>
@@ -87,18 +76,19 @@
 			<h1 class="mui-title">报工审核</h1>
 		</header>
 		<div class="mui-content" style="display: flex;">
-			<p class="headlabel" id="task_no"><span>工单号：123455</span></p>
+			<p class="headlabel" id="task_no"><span>工单号：/span></p>
+			<p class="headlabel" id="proc_equ"><span>工序名称-设备名称</span></p>
+		</div>
+		<div>
 			<p class="headlabel" id="board_name"><span>产品名称：</span></p>
 		</div>
 		<div style="display: flex;">
-			<p class="headlabel" id="proc_equ"><span>工序名称-设备名称</span></p>
 			<p class="headlabel" id="plan_qty"><span>工单数量</span></p>
 			<p class="headlabel" id="complete_qty"><span>完成数量</span></p>
 		</div>
-		<div id="contentId" class="cards-box">
+		<div id="contentId">
 			<script id='record-template' type="text/template">
 				<% for(var i in record){ var item=record[i]; %>	
-				
 			<div class="mui-card card">
 				<div class="mui-card-header">
 					<%=(item.PERSON_NAME)%> (<%=(item.ASSESSOR)%>)
@@ -167,9 +157,9 @@
 				<div class="mui-card-footer">
 					<span></span>
 					{{if item.VERIFY=="0"}}
-					<span style="color: red;">未审核</span>
+					<span style="color: red;font-size: 18px;">未审核</span>
 					{{else}}
-					<span style="color: green;">已审核</span>
+					<span style="color: green;font-size: 18px;">已审核</span>
 					{{/if}}	
 				</div>
 			</div>
@@ -177,7 +167,7 @@
 			</script>
 		</div>
 			<div class="mui-content-padded" align="center">
-				<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="login">提交审核</button>
+				<button type="button" class="mui-btn mui-btn-success" style="width: 100%;font-size: 20px;" id="sumbit">提 交 审 核</button>
 			</div>
 			<script type="text/javascript">
 				mui.plusReady(function() {
@@ -190,17 +180,16 @@
 
 				function showDetailData(detail) {
 					var data = JSON.parse(detail)
-					console.log(data.TASK_NO)
-					$("#task_no").text("工单号: " + data.TASK_NO); //工单号
-					$("#board_name").text("产品名称: " + data.BOARD_NAME); //产品名称
+					$("#task_no").text("工单号:  " + data.TASK_NO); //工单号
+					$("#board_name").text("产品名称:  " + data.BOARD_NAME); //产品名称
 					$("#proc_equ").text(data.PROC_NAM + " - " + data.EQU_NAME); //工序名称-设备名称
-					$("#plan_qty").text("工作数量: " + data.PLAN_QTY); //工单数量
-					$("#complete_qty").text("完成数量: " + data.COMPLETE_QTY); //完成数量
+					$("#plan_qty").text("工作数量:  " + data.PLAN_QTY); //工单数量
+					$("#complete_qty").text("完成数量:  " + data.COMPLETE_QTY); //完成数量
 				}
 
 				function getProduceVerifyDetail(detail) {
 					var de_data = JSON.parse(detail)
-					console.log(detail)
+					//console.log(detail)
 					aj.post('/produceVerify/getProduceVerifyDetail', {
 						usercode: api_localStorageGet("code"),
 						proc: de_data.PROC_NO,
@@ -209,7 +198,7 @@
 						eq_code: de_data.EQU_CODE
 					}, function(data) {
 						if (data.result) {
-							console.log(JSON.stringify(data.data))
+							//console.log(JSON.stringify(data.data))
 							document.getElementById('contentId').innerHTML = template('record-template', {
 								"record": data.data
 							});
