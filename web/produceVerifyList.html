@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/api.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/template-web.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+		<script src="js/NG_check.js"></script>
+		<style type="text/css">
+			.mui-content {
+				margin-top: 2px;
+			}
+
+			/*标题中图标居右侧的css样式*/
+			.title-right {
+				float: right;
+				line-height: 44px !important;
+				position: absolute;
+				display: block;
+				width: 100%;
+				margin: 0 0px !important;
+				padding: 0 !important;
+				text-align: center;
+				white-space: nowrap;
+				color: #000;
+				display: inline-block;
+				overflow: hidden;
+				width: auto;
+				margin: 0;
+				text-overflow: ellipsis;
+				--color: #de1312;
+			}
+
+			.product {
+				margin-top: 4.375rem;
+			}
+
+			.productBox {
+				background-color: #fff;
+				width: 100%;
+				/* position:fixed; */
+			}
+
+			.productConten {
+				margin-bottom: 1rem;
+			}
+
+			.productConten .mui-input-group {
+				padding: 0.125rem;
+			}
+
+			.product-delcom {
+				padding: 0.24rem 3%;
+				color: #323232;
+				/* font-size:0.625rem; */
+				/* border-bottom: 1px solid #EEEEEE;  */
+			}
+
+			.type {
+				width: 100%;
+				/* height: 4.0625rem; */
+				border-bottom: 1px solid #EEEEEE;
+				align-items: center;
+				display: flex;
+			}
+
+			.noodles {
+				display: inline-block;
+				padding: 0.125rem;
+				border: 1px rgb(255, 145, 0) dashed;
+				margin: 0.3125rem;
+			}
+
+			.ncheck {
+				background: #FFA54F;
+			}
+
+			.ndis {
+				display: none;
+			}
+
+			.colorBg {
+				background: -moz-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #1fd5e6), color-stop(100%, #21b6f8));
+				background: -webkit-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+				background: -o-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+				background: -ms-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+				background: linear-gradient(to bottom, #34dbfc 0%, #61a7fd 100%);
+			}
+
+			.clearfix:after {
+				display: block;
+				overflow: hidden;
+				clear: both;
+				height: 0;
+				visibility: hidden;
+				content: "";
+			}
+
+			.product-img {
+				float: left;
+				width: 30%;
+			}
+
+			.product-text {
+				float: left;
+				width: 70%;
+			}
+
+			.type-left {
+				float: left;
+			}
+
+			.type-right {
+				float: right;
+				width: 120px;
+			}
+
+			.product-footer {
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex: 1;
+				-webkit-box-flex: 1;
+				flex: 1;
+				line-height: 1rem;
+				text-align: center;
+			}
+
+			.product-footer a {
+				border-radius: 5px;
+				-webkit-flex: 1;
+				-webkit-box-flex: 1;
+				flex: 1;
+				color: #fff;
+				text-decoration: none;
+				background-color: rgb(255, 145, 0);
+				padding: 5px;
+				margin: 10px 20px;
+			}
+
+			.font-seal {
+				font-size: 10px;
+				z-index: 2;
+				position: absolute;
+				right: 14px;
+				top: 25px;
+				border: 1px solid #F73A3C;
+				transform: rotate(25deg);
+				width: 43px;
+				line-height: 20px;
+				text-align: center;
+				color: #F73A3C;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body class="mui-fullscreen">
+		<header class="mui-bar mui-bar-nav colorBg">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>
+			</button>
+			<h1 class="mui-title">报工审核</h1>
+
+		</header>
+		<div class="mui-content" id="contentId">
+		</div>
+
+		<script id='record-template' type="text/template">
+			<% for(var i in record){ var item=record[i]; %>	
+			<div class="mui-card">
+				<div class="font-seal"><%=(item.PRODUCE_STATE)%></div>
+				<div class="mui-card-header">
+					产品名称: <%=(item.BOARD_NAME)%>
+				</div>
+				<div class="mui-card-content">
+					<ul class="mui-table-view">
+					    <li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>'>
+					        <a href="javascript:;" class="mui-navigate-right">
+					            <span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
+					            <div class="mui-media-body">
+					                <%=(item.EQU_NAME)%>-<%=(item.EQU_CODE)%>
+					                <p class='mui-ellipsis'>
+										工序:<%=(item.PROC_NAM)%>-<%=(item.WORKSHOP_CENTER_CODE)%>
+									</p>
+					            </div>
+					        </a>
+					    </li>
+					</ul>
+				</div>
+				<div class="mui-card-footer">
+					<span>工单号:<%=(item.TASK_NO)%></span>
+					<span>品号：<%=(item.BOARD_ITEM)%></span>
+				</div>
+			</div>
+			<%}%>
+		</script>
+
+		<script type="text/javascript" charset="utf-8">
+			window.addEventListener('refresh', function(e) { //监听页面返回事件
+				window.location.reload(); //执行刷新
+			});
+			mui.init({});
+			mui.plusReady(function() {
+				//OpenWindow('start_check_add','start_check_add.html',"");
+
+				getProduceVerifyList(); //获取待开工审核列表
+
+				mui("#contentId").on("tap", "li", function() {
+					var detail_data = this.getAttribute('detail-data'); //详细信息
+					OpenWindow('produceVerifyDetail', 'produceVerifyDetail.html', {
+						"detail": detail_data
+					})
+				})
+			})
+
+			function getProduceVerifyList() {
+				aj.post('/produceVerify/getProduceVerifyList', {
+					usercode:api_localStorageGet("code")
+				}, function(data) {
+					if (data.result) {
+						//console.log(JSON.stringify(data.data))
+						document.getElementById('contentId').innerHTML = template('record-template', {
+							"record": data.data
+						});
+					} else {
+						plus.ui.toast(data.msg);
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

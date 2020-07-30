@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.js"></script>
+		<script src="../js/jquery-1.11.1.js"></script>
+		<script src="../js/api.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/template-web.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+		<style type="text/css">
+			.productConten .mui-input-group {
+				padding: 0.125rem;
+			}
+
+			.colorBg {
+				background: -moz-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #1fd5e6), color-stop(100%, #21b6f8));
+				background: -webkit-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+				background: -o-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+				background: -ms-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
+				background: linear-gradient(to bottom, #34dbfc 0%, #61a7fd 100%);
+			}
+
+			.product-footer a {
+				border-radius: 5px;
+				-webkit-flex: 1;
+				-webkit-box-flex: 1;
+				flex: 1;
+				color: #fff;
+				text-decoration: none;
+				background-color: rgb(255, 145, 0);
+				padding: 10px;
+				margin: 10px 20px;
+			}
+
+			.detailData {
+				background-color: #F5F5F5;
+			}
+
+			.headlabel {
+				margin: 0.5125rem;
+				padding: 0.5125rem;
+				font-size: large;
+				font-weight: 800;
+				color: #000000;
+			}
+
+			.mui-table-view-cell {
+				height: 40px;
+			}
+
+			.mui-input-row label {
+				width: 40%;
+			}
+
+			.mui-input-row label~input {
+				float: right;
+				width: 55%;
+			}
+
+			.cards-box {
+				width: 100%;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+			}
+
+			.card {
+				flex: 1;
+				width: 46%;
+				min-width: 46%;
+				max-width: 46%;
+			}
+		</style>
+	</head>
+	<body class="mui-fullscreen">
+		<header class="mui-bar mui-bar-nav colorBg">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>
+			</button>
+			<h1 class="mui-title">报工审核</h1>
+		</header>
+		<div class="mui-content" style="display: flex;">
+			<p class="headlabel" id="task_no"><span>工单号：123455</span></p>
+			<p class="headlabel" id="board_name"><span>产品名称：</span></p>
+		</div>
+		<div style="display: flex;">
+			<p class="headlabel" id="proc_equ"><span>工序名称-设备名称</span></p>
+			<p class="headlabel" id="plan_qty"><span>工单数量</span></p>
+			<p class="headlabel" id="complete_qty"><span>完成数量</span></p>
+		</div>
+		<div id="contentId" class="cards-box">
+			<script id='record-template' type="text/template">
+				<% for(var i in record){ var item=record[i]; %>	
+				
+			<div class="mui-card card">
+				<div class="mui-card-header">
+					<%=(item.PERSON_NAME)%> (<%=(item.ASSESSOR)%>)
+				</div>
+				<div class="mui-card-content">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell mui-small">
+							<div class="mui-input-row">
+								<label>报工数量</label>
+								<input type="text" class="mui-input-clear" disabled="true" value="<%=(item.BG_QTY)%>">
+							</div>
+						</li>
+						{{if item.VERIFY=="0"}}
+						<li class="mui-table-view-cell mui-media">
+							<div class="mui-input-row">
+								<label>审核数量</label>
+								<input type="text" class="mui-input-clear" value="<%=(item.AUDIT_QTY)%>">
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media">
+							<div class="mui-input-row">
+								<label>良品数量</label>
+								<input type="text" class="mui-input-clear" value="<%=(item.QUALIFIED_QTY)%>">
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media">
+							<div class="mui-input-row">
+								<label>不良品数</label>
+								<input type="text" class="mui-input-clear" value="<%=(item.UNQUALIFIED_QTY)%>">
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media">
+							<div class="mui-input-row">
+								<label>报废数量</label>
+								<input type="text" class="mui-input-clear" value="<%=(item.BF_QTY)%>">
+							</div>
+						</li>
+						{{else}}
+						<li class="mui-table-view-cell mui-media">
+							<div class="mui-input-row">
+								<label>审核数量</label>
+								<input type="text" class="mui-input-clear" disabled="true" value="<%=(item.AUDIT_QTY)%>">
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media">
+							<div class="mui-input-row">
+								<label>良品数量</label>
+								<input type="text" class="mui-input-clear" disabled="true" value="<%=(item.QUALIFIED_QTY)%>">
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media">
+							<div class="mui-input-row">
+								<label>不良品数</label>
+								<input type="text" class="mui-input-clear" disabled="true" value="<%=(item.UNQUALIFIED_QTY)%>">
+							</div>
+						</li>
+						<li class="mui-table-view-cell mui-media">
+							<div class="mui-input-row">
+								<label>报废数量</label>
+								<input type="text" class="mui-input-clear" disabled="true" value="<%=(item.BF_QTY)%>">
+							</div>
+						</li>
+						{{/if}}	
+					</ul>
+				</div>
+				<div class="mui-card-footer">
+					<span></span>
+					{{if item.VERIFY=="0"}}
+					<span style="color: red;">未审核</span>
+					{{else}}
+					<span style="color: green;">已审核</span>
+					{{/if}}	
+				</div>
+			</div>
+			<%}%>
+			</script>
+		</div>
+			<div class="mui-content-padded" align="center">
+				<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="login">提交审核</button>
+			</div>
+			<script type="text/javascript">
+				mui.plusReady(function() {
+					var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
+					var detail = param.detail;
+					//console.log(detail)
+					showDetailData(detail);
+					getProduceVerifyDetail(detail)
+				})
+
+				function showDetailData(detail) {
+					var data = JSON.parse(detail)
+					console.log(data.TASK_NO)
+					$("#task_no").text("工单号: " + data.TASK_NO); //工单号
+					$("#board_name").text("产品名称: " + data.BOARD_NAME); //产品名称
+					$("#proc_equ").text(data.PROC_NAM + " - " + data.EQU_NAME); //工序名称-设备名称
+					$("#plan_qty").text("工作数量: " + data.PLAN_QTY); //工单数量
+					$("#complete_qty").text("完成数量: " + data.COMPLETE_QTY); //完成数量
+				}
+
+				function getProduceVerifyDetail(detail) {
+					var de_data = JSON.parse(detail)
+					console.log(detail)
+					aj.post('/produceVerify/getProduceVerifyDetail', {
+						usercode: api_localStorageGet("code"),
+						proc: de_data.PROC_NO,
+						workCenter: de_data.WORKSHOP_CENTER_CODE,
+						taskNo: de_data.TASK_NO,
+						eq_code: de_data.EQU_CODE
+					}, function(data) {
+						if (data.result) {
+							console.log(JSON.stringify(data.data))
+							document.getElementById('contentId').innerHTML = template('record-template', {
+								"record": data.data
+							});
+						} else {
+							plus.ui.toast(data.msg);
+						}
+					});
+				}
+			</script>
+	</body>
+
+</html>
