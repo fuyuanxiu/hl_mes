@@ -174,23 +174,26 @@
 		<script id='record-template' type="text/template">
 			<% for(var i in record){ var item=record[i]; %>	
 			<div class="mui-card">
-				<div class="font-seal"><%=(item.PRODUCE_STATE)%></div>
+				
 				<div class="mui-card-header">
 					产品名称: <%=(item.BOARD_NAME)%>
 				</div>
 				<div class="mui-card-content">
 					<ul class="mui-table-view">
+						<% for(var j in item.Child){ var item1=item.Child[j]; %>	
 					    <li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>'>
 					        <a href="javascript:;" class="mui-navigate-right">
+								<div class="font-seal"><%=(item1.PRODUCE_STATE)%></div>
 					            <span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
 					            <div class="mui-media-body">
-					                <%=(item.EQU_NAME)%>-<%=(item.EQU_CODE)%>
+					                <%=(item1.EQU_NAME)%>-<%=(item1.EQU_CODE)%>
 					                <p class='mui-ellipsis'>
-										工序:<%=(item.PROC_NAM)%>-<%=(item.WORKSHOP_CENTER_CODE)%>
+										工序:<%=(item1.PROC_NAM)%>-<%=(item1.WORKSHOP_CENTER_CODE)%>
 									</p>
 					            </div>
 					        </a>
 					    </li>
+						<%}%>
 					</ul>
 				</div>
 				<div class="mui-card-footer">
@@ -220,14 +223,15 @@
 			})
 
 			function getProduceVerifyList() {
+				
 				aj.post('/produceVerify/getProduceVerifyList', {
-					usercode:api_localStorageGet("code")
+					usercode: api_localStorageGet("code")
 				}, function(data) {
 					if (data.result) {
-						//console.log(JSON.stringify(data.data))
-						document.getElementById('contentId').innerHTML = template('record-template', {
+						console.log(JSON.stringify(data.data))
+						 document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data
-						});
+						}); 
 					} else {
 						plus.ui.toast(data.msg);
 					}
