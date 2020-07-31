@@ -44,7 +44,7 @@
 		<script id='record-template' type="text/template">
 			<% for(var i in record){ var item=record[i]; var check = $imports.checkInput(item.VERIFY) %>	
 		<div class="mui-card">
-		<div class="mui-card-header"><%=(item.PERSON_NAME)%> (<%=(item.ASSESSOR)%>)</div>
+		<div class="mui-card-header"><%=(item.PERSON_NAME)%>(<%=(item.STAFF_NO)%>)</div>
 		<div class="mui-card-content" id="list">
 			<ul class="mui-table-view">
 			<li class="mui-table-view-cell" data-id="">
@@ -130,7 +130,7 @@
 							"record": data.data
 						});
 					} else {
-						plus.ui.toast(data.msg);
+						mui.alert(data.msg);
 					}
 				});
 			}
@@ -151,16 +151,27 @@
 				var qualified_qty = document.getElementsByName("qualified_qty"); //良品数量
 				var unqualified_qty = document.getElementsByName("unqualified_qty"); //不良品数
 				var bf_qty = document.getElementsByName("bf_qty"); //报废数量
-				var paramInfo = "";
+				var paramInfo = "";//参数字符串
 				for (var i = 0; i < id.length; i++) { //循环获取每组input的数据
-					if (i + 1 == id.length) { //判断是否是最后一组数据
+					if (audit_qty[i].value == "" || qualified_qty[i].value == "" || //判断数据表的完整性
+						unqualified_qty[i].value == "" || bf_qty[i].value == "") {
+						mui.alert("请完善审核数据！")
+						return false;
+					}
+					if (i == 0) { //判断是否是第一组数据
 						paramInfo = id[i].value + "," +
+							audit_qty[i].value + "," +
+							qualified_qty[i].value + "," +
+							unqualified_qty[i].value + "," +
+							bf_qty[i].value + "|";
+					} else if (i + 1 == id.length) { //判断是否是最后一组数据
+						paramInfo = paramInfo + id[i].value + "," +
 							audit_qty[i].value + "," +
 							qualified_qty[i].value + "," +
 							unqualified_qty[i].value + "," +
 							bf_qty[i].value;
 					} else {
-						paramInfo = id[i].value + "," +
+						paramInfo = paramInfo + id[i].value + "," +
 							audit_qty[i].value + "," +
 							qualified_qty[i].value + "," +
 							unqualified_qty[i].value + "," +
@@ -173,10 +184,13 @@
 					reportInfo: paramInfo
 				}, function(data) {
 					if (data.result) {
-						console.log(JSON.stringify(data))
+						//console.log(JSON.stringify(data))
 						mui.alert(data.msg);
+						window.location.reload(); //执行刷新
 					} else {
+						//console.log(JSON.stringify(data))
 						mui.alert(data.msg);
+						window.location.reload(); //执行刷新
 					}
 				});
 			}
