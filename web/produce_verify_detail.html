@@ -117,7 +117,7 @@
 			function getProduceVerifyDetail(detail, PROC_NO, WORKSHOP_CENTER_CODE) {
 				var de_data = JSON.parse(detail)
 				//console.log(detail)
-				aj.post('/produceVerify/getProduceVerifyDetail', {
+				aj.post('/produce_verify/getProduceVerifyDetail', {
 					usercode: api_localStorageGet("code"),
 					proc: PROC_NO,
 					workCenter: WORKSHOP_CENTER_CODE,
@@ -168,7 +168,7 @@
 					}
 				}
 				//console.log(paramInfo);
-				aj.post('/produceVerify/sumbitProduceVerify', {
+				aj.post('/produce_verify/sumbitProduceVerify', {
 					usercode: api_localStorageGet("code"),
 					reportInfo: paramInfo
 				}, function(data) {
