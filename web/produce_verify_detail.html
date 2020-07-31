@@ -68,9 +68,7 @@
 				color: #00ff7f;
 				font-weight: bold;
 			}
-			.mui-input-row label {
-				font-size: large;
-			}
+
 		</style>
 	</head>
 	<body class="mui-fullscreen">
@@ -81,81 +79,78 @@
 			<h1 class="mui-title">报工审核</h1>
 		</header>
 		<div class="mui-content">
-			<div class="mui-card">
-				<div class="mui-card-header">
-					<div class="mui-media-body">
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell ui-media">工单号:&nbsp; <span id="task_no"></span>&nbsp;&nbsp;&nbsp; 工序-设备: &nbsp;<span
-								 id="proc_equ"></span></li>
-							<li class="mui-table-view-cell ui-media">产品名称:&nbsp;<span id="board_name"></span></li>
-							<li class="mui-table-view-cell ui-media">工单数量:&nbsp;<span id="plan_qty"></span>&nbsp;&nbsp;&nbsp;完成数量:&nbsp;<span
-								 id="complete_qty"></span></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div id="contentId">
-				<script id='record-template' type="text/template">
-					<% for(var i in record){ var item=record[i]; var check = $imports.checkInput(item.VERIFY) %>	
-				<div class="mui-card">
-				<div class="mui-card-content" id="list">
-					<ul class="mui-table-view">
-					<li class="mui-table-view-cell ui-media" data-id="<%=(item.ID)%>">
-					{{if item.VERIFY=="0"}}
-					<div class="font-seal">未审核</div>
-					{{else}}
-					<div class="font-seal-ok">已审核</div>
-					{{/if}}	
-						<div class="mui-input-row">
-						<label>员工信息：</label>
-						<input name="aplay_num" type="text"  disabled value="<%=(item.PERSON_NAME)%> (<%=(item.ASSESSOR)%>)">
-					    </div>
-						<div class="mui-input-row">
-							<label>报工数量：</label>
-							<input name="aplay_num" type="text"  disabled value="<%=(item.BG_QTY)%>">
-						</div>
-						<div class="mui-input-row">
-							<label>审核数量：</label>
-							<input name="audit_qty" type="text"  {{check}} value="<%=(item.AUDIT_QTY)%>">
-						</div>
-						<div class="mui-input-row">
-							<label>良品数量：</label>
-							<input name="qualified_qty" type="text"  {{check}} value="<%=(item.QUALIFIED_QTY)%>">
-						</div>
-						<div class="mui-input-row">
-							<label>不良品数：</label>
-							<input name="unqualified_qty" type="text" {{check}} value="<%=(item.UNQUALIFIED_QTY)%>">
-						</div>
-						<div class="mui-input-row">
-							<label>报废数量：</label>
-							<input name="bf_qty" type="text"  {{check}} value="<%=(item.BF_QTY)%>">
-						</div>
-					</li>
-					</ul>
-				</div>
-				</div>
-				<%}%>
-				</script>
+			<ul class="mui-table-view">
+			       <li class="mui-table-view-cell mui-collapse">
+			           <a class="mui-navigate-right" href="#">工单信息</a>
+			           <div class="mui-collapse-content">
+			               <p>工单号:&nbsp; <span id="task_no"></span></p>
+						   <p> 工序-设备:&nbsp;<spanid="proc_equ"></span></p>
+			               <p>产品名称:&nbsp;<span id="board_name"></span></p>
+			               <p>工单数量:&nbsp;<span id="plan_qty"></span></p>
+			               <p>完成数量:&nbsp;<spanid="complete_qty"></span></p>
+					   </div>
+			       </li>
+			   </ul>
+			<div   id="contentId">
 			</div>
 		</div>
 
 		<div class="mui-content-padded" align="center">
 			<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="sumbit">提 交 审 核</button>
 		</div>
+		<script id='record-template' type="text/template">
+			<% for(var i in record){ var item=record[i]; var check = $imports.checkInput(item.VERIFY) %>	
+		<div class="mui-card">
+		<div class="mui-card-header"><%=(item.PERSON_NAME)%> (<%=(item.ASSESSOR)%>)</div>
+		<div class="mui-card-content" id="list">
+			<ul class="mui-table-view">
+			<li class="mui-table-view-cell  " data-id="<%=(item.ID)%>">
+			{{if item.VERIFY=="0"}}
+			<div class="font-seal">未审核</div>
+			{{else}}
+			<div class="font-seal-ok">已审核</div>
+			{{/if}}	
+
+				<div class="mui-input-row">
+					<label>报工数量：</label>
+					<input name="aplay_num" type="text"  disabled value="<%=(item.BG_QTY)%>">
+				</div>
+				<div class="mui-input-row">
+					<label>审核数量：</label>
+					<input name="audit_qty" type="text"  {{check}} value="<%=(item.AUDIT_QTY)%>">
+				</div>
+				<div class="mui-input-row">
+					<label>良品数量：</label>
+					<input name="qualified_qty" type="text"  {{check}} value="<%=(item.QUALIFIED_QTY)%>">
+				</div>
+				<div class="mui-input-row">
+					<label>不良品数：</label>
+					<input name="unqualified_qty" type="text" {{check}} value="<%=(item.UNQUALIFIED_QTY)%>">
+				</div>
+				<div class="mui-input-row">
+					<label>报废数量：</label>
+					<input name="bf_qty" type="text"  {{check}} value="<%=(item.BF_QTY)%>">
+				</div>
+			</li>
+			</ul>
+		</div>
+		</div>
+		<%}%>
+		</script>
 		<script type="text/javascript">
 			mui.plusReady(function() {
 				var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
 				var detail = param.detail;
 				//console.log(detail)
 				showDetailData(detail);
-				getProduceVerifyDetail(detail)
+				getProduceVerifyDetail(detail,param.PROC_NO,param.WORKSHOP_CENTER_CODE)
 			})
 
 			template.defaults.imports.checkInput = function(item_verify) {
 				if (item_verify == "0") {
-					return "disabled";
+					return "";
 				}
-				return "";
+				return "disabled";
 			};
 
 
@@ -168,18 +163,18 @@
 				$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
 			}
 
-			function getProduceVerifyDetail(detail) {
+			function getProduceVerifyDetail(detail,PROC_NO,WORKSHOP_CENTER_CODE) {
 				var de_data = JSON.parse(detail)
 				//console.log(detail)
 				aj.post('/produceVerify/getProduceVerifyDetail', {
 					usercode: api_localStorageGet("code"),
-					proc: de_data.PROC_NO,
-					workCenter: de_data.WORKSHOP_CENTER_CODE,
+					proc:PROC_NO,
+					workCenter: WORKSHOP_CENTER_CODE,
 					taskNo: de_data.TASK_NO,
 					eq_code: de_data.EQU_CODE
 				}, function(data) {
+					console.log(JSON.stringify(data))
 					if (data.result) {
-						console.log(JSON.stringify(data.data))
 						document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data
 						});
