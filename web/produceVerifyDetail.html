@@ -39,32 +39,37 @@
 				margin: 10px 20px;
 			}
 
-			.headlabel {
-				margin: 0.5125rem;
-				padding: 0.5125rem;
-				font-size: large;
-				font-weight: 800;
-				color: #000000;
+			.font-seal {
+				font-size: 12px;
+				z-index: 2;
+				position: absolute;
+				right: 14px;
+				top: 25px;
+				border: 1px solid #F73A3C;
+				transform: rotate(25deg);
+				width: 43px;
+				line-height: 20px;
+				text-align: center;
+				color: #F73A3C;
+				font-weight: bold;
 			}
 
-			.mui-table-view-cell {
-				height: 45px;
-				font-size: 19px;
+			.font-seal-ok {
+				font-size: 12px;
+				z-index: 2;
+				position: absolute;
+				right: 14px;
+				top: 25px;
+				border: 1px solid #00ff7f;
+				transform: rotate(25deg);
+				width: 43px;
+				line-height: 20px;
+				text-align: center;
+				color: #00ff7f;
+				font-weight: bold;
 			}
-
 			.mui-input-row label {
-				width: 40%;
-			}
-
-			.mui-input-row label~input {
-				float: right;
-				width: 45%;
-				font-size: 19px;
-			}
-
-			.card {
-				width: 80%;
-				margin: auto;
+				font-size: large;
 			}
 		</style>
 	</head>
@@ -75,139 +80,115 @@
 			</button>
 			<h1 class="mui-title">报工审核</h1>
 		</header>
-		<div class="mui-content" style="display: flex;">
-			<p class="headlabel" id="task_no"><span>工单号：/span></p>
-			<p class="headlabel" id="proc_equ"><span>工序名称-设备名称</span></p>
-		</div>
-		<div>
-			<p class="headlabel" id="board_name"><span>产品名称：</span></p>
-		</div>
-		<div style="display: flex;">
-			<p class="headlabel" id="plan_qty"><span>工单数量</span></p>
-			<p class="headlabel" id="complete_qty"><span>完成数量</span></p>
-		</div>
-		<div id="contentId">
-			<script id='record-template' type="text/template">
-				<% for(var i in record){ var item=record[i]; %>	
-			<div class="mui-card card">
+		<div class="mui-content">
+			<div class="mui-card">
 				<div class="mui-card-header">
-					<%=(item.PERSON_NAME)%> (<%=(item.ASSESSOR)%>)
+					<div class="mui-media-body">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell ui-media">工单号:&nbsp; <span id="task_no"></span>&nbsp;&nbsp;&nbsp; 工序-设备: &nbsp;<span
+								 id="proc_equ"></span></li>
+							<li class="mui-table-view-cell ui-media">产品名称:&nbsp;<span id="board_name"></span></li>
+							<li class="mui-table-view-cell ui-media">工单数量:&nbsp;<span id="plan_qty"></span>&nbsp;&nbsp;&nbsp;完成数量:&nbsp;<span
+								 id="complete_qty"></span></li>
+						</ul>
+					</div>
 				</div>
+			</div>
+			<div id="contentId">
+				<script id='record-template' type="text/template">
+					<% for(var i in record){ var item=record[i]; var check = $imports.checkInput(item.VERIFY) %>	
+				<div class="mui-card">
 				<div class="mui-card-content" id="list">
-					<ul class="mui-table-view" data-id="<%=(item.ID)%>">
-						<li class="mui-table-view-cell mui-small">
-							<div class="mui-input-row">
-								<label>报工数量</label>
-								<input name="aplay_num" type="text" class="mui-input-clear" disabled="true" value="<%=(item.BG_QTY)%>">
-							</div>
-						</li>
-						{{if item.VERIFY=="0"}}
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-input-row">
-								<label>审核数量</label>
-								<input type="text" class="mui-input-clear" value="<%=(item.AUDIT_QTY)%>">
-							</div>
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-input-row">
-								<label>良品数量</label>
-								<input type="text" class="mui-input-clear" value="<%=(item.QUALIFIED_QTY)%>">
-							</div>
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-input-row">
-								<label>不良品数</label>
-								<input type="text" class="mui-input-clear" value="<%=(item.UNQUALIFIED_QTY)%>">
-							</div>
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-input-row">
-								<label>报废数量</label>
-								<input type="text" class="mui-input-clear" value="<%=(item.BF_QTY)%>">
-							</div>
-						</li>
-						{{else}}
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-input-row">
-								<label>审核数量</label>
-								<input type="text" class="mui-input-clear" disabled="true" value="<%=(item.AUDIT_QTY)%>">
-							</div>
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-input-row">
-								<label>良品数量</label>
-								<input type="text" class="mui-input-clear" disabled="true" value="<%=(item.QUALIFIED_QTY)%>">
-							</div>
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-input-row">
-								<label>不良品数</label>
-								<input type="text" class="mui-input-clear" disabled="true" value="<%=(item.UNQUALIFIED_QTY)%>">
-							</div>
-						</li>
-						<li class="mui-table-view-cell mui-media">
-							<div class="mui-input-row">
-								<label>报废数量</label>
-								<input type="text" class="mui-input-clear" disabled="true" value="<%=(item.BF_QTY)%>">
-							</div>
-						</li>
-						{{/if}}	
+					<ul class="mui-table-view">
+					<li class="mui-table-view-cell ui-media" data-id="<%=(item.ID)%>">
+					{{if item.VERIFY=="0"}}
+					<div class="font-seal">未审核</div>
+					{{else}}
+					<div class="font-seal-ok">已审核</div>
+					{{/if}}	
+						<div class="mui-input-row">
+						<label>员工信息：</label>
+						<input name="aplay_num" type="text"  disabled value="<%=(item.PERSON_NAME)%> (<%=(item.ASSESSOR)%>)">
+					    </div>
+						<div class="mui-input-row">
+							<label>报工数量：</label>
+							<input name="aplay_num" type="text"  disabled value="<%=(item.BG_QTY)%>">
+						</div>
+						<div class="mui-input-row">
+							<label>审核数量：</label>
+							<input name="audit_qty" type="text"  {{check}} value="<%=(item.AUDIT_QTY)%>">
+						</div>
+						<div class="mui-input-row">
+							<label>良品数量：</label>
+							<input name="qualified_qty" type="text"  {{check}} value="<%=(item.QUALIFIED_QTY)%>">
+						</div>
+						<div class="mui-input-row">
+							<label>不良品数：</label>
+							<input name="unqualified_qty" type="text" {{check}} value="<%=(item.UNQUALIFIED_QTY)%>">
+						</div>
+						<div class="mui-input-row">
+							<label>报废数量：</label>
+							<input name="bf_qty" type="text"  {{check}} value="<%=(item.BF_QTY)%>">
+						</div>
+					</li>
 					</ul>
 				</div>
-				<div class="mui-card-footer">
-					<span></span>
-					{{if item.VERIFY=="0"}}
-					<span style="color: red;font-size: 18px;">未审核</span>
-					{{else}}
-					<span style="color: green;font-size: 18px;">已审核</span>
-					{{/if}}	
 				</div>
+				<%}%>
+				</script>
 			</div>
-			<%}%>
-			</script>
 		</div>
-			<div class="mui-content-padded" align="center">
-				<button type="button" class="mui-btn mui-btn-success" style="width: 100%;font-size: 20px;" id="sumbit">提 交 审 核</button>
-			</div>
-			<script type="text/javascript">
-				mui.plusReady(function() {
-					var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
-					var detail = param.detail;
-					//console.log(detail)
-					showDetailData(detail);
-					getProduceVerifyDetail(detail)
-				})
 
-				function showDetailData(detail) {
-					var data = JSON.parse(detail)
-					$("#task_no").text("工单号:  " + data.TASK_NO); //工单号
-					$("#board_name").text("产品名称:  " + data.BOARD_NAME); //产品名称
-					$("#proc_equ").text(data.PROC_NAM + " - " + data.EQU_NAME); //工序名称-设备名称
-					$("#plan_qty").text("工作数量:  " + data.PLAN_QTY); //工单数量
-					$("#complete_qty").text("完成数量:  " + data.COMPLETE_QTY); //完成数量
-				}
+		<div class="mui-content-padded" align="center">
+			<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="sumbit">提 交 审 核</button>
+		</div>
+		<script type="text/javascript">
+			mui.plusReady(function() {
+				var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
+				var detail = param.detail;
+				//console.log(detail)
+				showDetailData(detail);
+				getProduceVerifyDetail(detail)
+			})
 
-				function getProduceVerifyDetail(detail) {
-					var de_data = JSON.parse(detail)
-					//console.log(detail)
-					aj.post('/produceVerify/getProduceVerifyDetail', {
-						usercode: api_localStorageGet("code"),
-						proc: de_data.PROC_NO,
-						workCenter: de_data.WORKSHOP_CENTER_CODE,
-						taskNo: de_data.TASK_NO,
-						eq_code: de_data.EQU_CODE
-					}, function(data) {
-						if (data.result) {
-							//console.log(JSON.stringify(data.data))
-							document.getElementById('contentId').innerHTML = template('record-template', {
-								"record": data.data
-							});
-						} else {
-							plus.ui.toast(data.msg);
-						}
-					});
+			template.defaults.imports.checkInput = function(item_verify) {
+				if (item_verify == "0") {
+					return "disabled";
 				}
-			</script>
+				return "";
+			};
+
+
+			function showDetailData(detail) {
+				var data = JSON.parse(detail)
+				$("#task_no").text(data.TASK_NO); //工单号
+				$("#board_name").text(data.BOARD_NAME); //产品名称
+				$("#proc_equ").text(data.PROC_NAM + " - " + data.EQU_NAME); //工序名称-设备名称
+				$("#plan_qty").text(data.PLAN_QTY); //工单数量
+				$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
+			}
+
+			function getProduceVerifyDetail(detail) {
+				var de_data = JSON.parse(detail)
+				//console.log(detail)
+				aj.post('/produceVerify/getProduceVerifyDetail', {
+					usercode: api_localStorageGet("code"),
+					proc: de_data.PROC_NO,
+					workCenter: de_data.WORKSHOP_CENTER_CODE,
+					taskNo: de_data.TASK_NO,
+					eq_code: de_data.EQU_CODE
+				}, function(data) {
+					if (data.result) {
+						console.log(JSON.stringify(data.data))
+						document.getElementById('contentId').innerHTML = template('record-template', {
+							"record": data.data
+						});
+					} else {
+						plus.ui.toast(data.msg);
+					}
+				});
+			}
+		</script>
 	</body>
 
 </html>
