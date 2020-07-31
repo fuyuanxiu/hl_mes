@@ -1,12 +1,3 @@
-.mui-bar-nav,
-.mui-title {
-	background-color: #C9302C;
-	color: white;
-	font-weight: bold;
-	font-size: 20px;
-	letter-spacing: 1px;
-}
-
 .mui-bar-nav a {
 	color: white;
 }
@@ -36,5 +27,20 @@
 	line-height: 20px;
 	text-align: center;
 	color: #F73A3C;
+	font-weight: bold;
+}
+
+.font-seal-ok {
+	font-size: 10px;
+	z-index: 2;
+	position: absolute;
+	right: 14px;
+	top: 25px;
+	border: 1px solid #00ff7f;
+	transform: rotate(25deg);
+	width: 43px;
+	line-height: 20px;
+	text-align: center;
+	color: #00ff7f;
 	font-weight: bold;
 }

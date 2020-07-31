@@ -168,7 +168,7 @@
 			<h1 class="mui-title">报工审核</h1>
 
 		</header>
-		<div class="mui-content" id="contentId">
+		<div class="mui-content" id="contentId"> 
 		</div>
 
 		<script id='record-template' type="text/template">
@@ -181,12 +181,12 @@
 				<div class="mui-card-content">
 					<ul class="mui-table-view">
 						<% for(var j in item.Child){ var item1=item.Child[j]; %>	
-					    <li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>' data-PROC_NO='<%=(item1.PROC_NO)%>' data-WORKSHOP_CENTER_CODE='<%=(item1.WORKSHOP_CENTER_CODE)%>'>
+					    <li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>' child-data='<%=(item1)%>' data-PROC_NO='<%=(item1.PROC_NO)%>' data-WORKSHOP_CENTER_CODE='<%=(item1.WORKSHOP_CENTER_CODE)%>'>
 					        <a href="javascript:;" class="mui-navigate-right">
 								<div class="font-seal"><%=(item1.PRODUCE_STATE)%></div>
 					            <span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
 					            <div class="mui-media-body">
-					                <%=(item1.EQU_NAME)%>-<%=(item1.EQU_CODE)%>
+					                <%=(item.EQU_NAME)%>-<%=(item.EQU_CODE)%>
 					                <p class='mui-ellipsis'>
 										工序:<%=(item1.PROC_NAM)%>-<%=(item1.WORKSHOP_CENTER_CODE)%>
 									</p>
@@ -208,7 +208,6 @@
 			window.addEventListener('refresh', function(e) { //监听页面返回事件
 				window.location.reload(); //执行刷新
 			});
-			mui.init({});
 			mui.plusReady(function() {
 				getProduceVerifyList(); //获取待开工审核列表
 
@@ -216,10 +215,12 @@
 					var detail_data = this.getAttribute('detail-data'); //详细信息
 					var WORKSHOP_CENTER_CODE = this.getAttribute('data-WORKSHOP_CENTER_CODE');
 					var PROC_NO = this.getAttribute('data-PROC_NO');
+					var child_data=this.getAttribute('child-data')
 					OpenWindow('produce_verify_detail', 'produce_verify_detail.html', {
 						"detail": detail_data,
 						"WORKSHOP_CENTER_CODE":WORKSHOP_CENTER_CODE,
-						"PROC_NO":PROC_NO
+						"PROC_NO":PROC_NO,
+						"child_data":child_data
 					})
 				})
 			})
@@ -230,12 +231,12 @@
 					usercode: api_localStorageGet("code")
 				}, function(data) {
 					if (data.result) {
-						console.log(JSON.stringify(data.data))
+						//console.log(JSON.stringify(data.data))
 						 document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data
 						}); 
 					} else {
-						plus.ui.toast(data.msg);
+						mui.alert(data.msg);
 					}
 				});
 			}

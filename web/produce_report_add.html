@@ -12,69 +12,8 @@
 		<script src="../js/common.js"></script>
 		<script src="../js/template-web.js"></script>
 		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
 		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
-		<style type="text/css">
-			.mui-content {
-				margin-top: 2px;
-			}
-
-			.productConten .mui-input-group {
-				padding: 0.125rem;
-			}
-
-			.product-delcom {
-				padding: 0.24rem 3%;
-				color: #323232;
-				/* font-size:0.625rem; */
-				/* border-bottom: 1px solid #EEEEEE;  */
-			}
-
-			.type {
-				width: 100%;
-				/* height: 4.0625rem; */
-				border-bottom: 1px solid #EEEEEE;
-				align-items: center;
-				display: flex;
-			}
-
-			.clearfix:after {
-				display: block;
-				overflow: hidden;
-				clear: both;
-				height: 0;
-				visibility: hidden;
-				content: "";
-			}
-
-
-			.font-seal {
-				font-size: 10px;
-				z-index: 2;
-				position: absolute;
-				right: 14px;
-				top: 15px;
-				border: 1px solid #F73A3C;
-				transform: rotate(25deg);
-				width: 43px;
-				line-height: 20px;
-				text-align: center;
-				color: #F73A3C;
-				font-weight: bold;
-			}
-
-			.colorBg {
-				background: -moz-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
-				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #1fd5e6), color-stop(100%, #21b6f8));
-				background: -webkit-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
-				background: -o-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
-				background: -ms-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
-				background: linear-gradient(to bottom, #34dbfc 0%, #61a7fd 100%);
-			}
-
-			.detailData {
-				background-color: #F5F5F5;
-			}
-		</style>
 	</head>
 
 	<body class="mui-fullscreen">
@@ -100,63 +39,27 @@
 				</div>
 				<div class="mui-content-padded" align="center">
 					<button type="button" class="mui-btn mui-btn-success" style="width: 80%;margin: 10px;" id="report">生产报工</button>
-					<button type="button" class="mui-btn mui-btn-primary" style="width: 80%;margin: 10px;" onclick="document.getElementById('detail').style.display='block'"
-					 id="read_detail">查看基础信息</button>
 				</div>
-				<div class="mui-scroll mui-content" style="display: none;" id="detail">
-					<div class="mui-input-row">
-						<label>工单号</label>
-						<input id="worl_singnum" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>品号</label>
-						<input id="pro_code" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>产品名称</label>
-						<input id="pro_name" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>工序</label>
-						<input id="worproc_name" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>设备</label>
-						<input id="equ_name" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>设备编号</label>
-						<input id="equ_code" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>工作中心</label>
-						<input id="workshop_center_code" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>工单数量</label>
-						<input id="worl_qty" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>工排产量</label>
-						<input id="output_qty" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row"> 
-						<label>完工数量</label>
-						<input id="complete_qty" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>已报工数量</label>
-						<input id="bg_qty" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>员工</label>
-						<input id="person_name" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-					<div class="mui-input-row">
-						<label>状态</label>
-						<input id="status" type="text" class="mui-input-clear detailData" disabled>
-					</div>
-				</div>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#">查看基础信息</a>
+						<div class="mui-collapse-content">
+							<p>工单号:&nbsp;&nbsp;<span id="worl_singnum"></span></p>
+							<p>品号:&nbsp;&nbsp;<span id="pro_code"></span></p>
+							<p>产品名称:&nbsp;<span id="pro_name"></span></p>
+							<p>工序:&nbsp;<span id="worproc_name"></span></p>
+							<p>设备:&nbsp;<span id="equ_name"></span></p>
+							<p>设备编号:&nbsp;<span id="equ_code"></span></p>
+							<p>工作中心:&nbsp;<span id="workshop_center_code"></span></p>
+							<p>工单数量:&nbsp;<span id="worl_qty"></span></p>
+							<p>工排产量:&nbsp;<span id="output_qty"></span></p>
+							<p>完工数量:&nbsp;<span id="complete_qty"></span></p>
+							<p>已报工数量:&nbsp;<span id="bg_qty"></span></p>
+							<p>员工:&nbsp;<span id="person_name"></span></p>
+							<p>状态:&nbsp;<span id="status"></span></p>
+						</div>
+					</li>
+				</ul>
 			</div>
 			<script type="text/javascript">
 				mui.init({
@@ -182,29 +85,30 @@
 						mui.alert("请完善数据"); //再加上bgqty要大于良品和不良品
 					} else {
 						var btnArray = ['取消', '提交'];
-						mui.confirm("本次报工数量："+bgqty+" 不良品数："+unqualifiedqty+" 良品数："+qualifiedqty, '请确认', btnArray, function(e) {
+						mui.confirm("本次报工数量：" + bgqty + " 不良品数：" + unqualifiedqty + " 良品数：" + qualifiedqty, '请确认', btnArray, function(e) {
 							if (e.index == 1) {
 								reportBgQTY(bgqty, unqualifiedqty, qualifiedqty);
 							}
 						})
-						
+
 					}
 				});
+
 				function showDetailData(detail) { //显示详细数据
 					var data = JSON.parse(detail)
-					$("#worl_singnum").val(data.WORL_SINGNUM); //工单号
-					$("#pro_code").val(data.PRO_CODE); //品名
-					$("#pro_name").val(data.PRO_NAME); //产品名称
-					$("#worproc_name").val(data.WORPROC_NAME); //工序名称
-					$("#equ_name").val(data.EQU_NAME); //设备
-					$("#equ_code").val(data.EQU_CODE); //设备编号
-					$("#workshop_center_code").val(data.WORKSHOP_CENTER_CODE); //工作中心
-					$("#worl_qty").val(data.WORL_QTY); //工单数量
-					$("#output_qty").val(data.OUTPUT_QTY); //工排产量
-					$("#complete_qty").val(data.COMPLETE_QTY); //完成数量
-					$("#bg_qty").val(data.BG_QTY); //已报工数量
-					$("#person_name").val(data.PERSON_NAME); //员工
-					$("#status").val(data.STATUS); //状态
+					$("#worl_singnum").text(data.WORL_SINGNUM); //工单号
+					$("#pro_code").text(data.PRO_CODE); //品名
+					$("#pro_name").text(data.PRO_NAME); //产品名称
+					$("#worproc_name").text(data.WORPROC_NAME); //工序名称
+					$("#equ_name").text(data.EQU_NAME); //设备
+					$("#equ_code").text(data.EQU_CODE); //设备编号
+					$("#workshop_center_code").text(data.WORKSHOP_CENTER_CODE); //工作中心
+					$("#worl_qty").text(data.WORL_QTY); //工单数量
+					$("#output_qty").text(data.OUTPUT_QTY); //工排产量
+					$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
+					$("#bg_qty").text(data.BG_QTY); //已报工数量
+					$("#person_name").text(data.PERSON_NAME); //员工
+					$("#status").text(data.STATUS); //状态
 					id = data.ID; //MES_PLAN_PRO_ID 排产ID
 					worproc_code = data.WORPROC_CODE; //工序编码
 				}
@@ -224,8 +128,8 @@
 						if (data.result) {
 							//console.log(JSON.stringify(data));
 							mui.alert(data.msg);
-							$("#bg_qty").val(data.data);//详细信息--报工数据
-							var bgqty = $("#bgqty").val("");//填写栏，报工数
+							$("#bg_qty").val(data.data); //详细信息--报工数据
+							var bgqty = $("#bgqty").val(""); //填写栏，报工数
 							var unqualifiedqty = $("#unqualifiedqty").val("");
 							var qualifiedqty = $("#qualifiedqty").val("");
 						} else {

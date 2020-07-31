@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<title></title>
@@ -12,64 +11,8 @@
 		<script src="../js/common.js"></script>
 		<script src="../js/template-web.js"></script>
 		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
 		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
-		<style type="text/css">
-			.productConten .mui-input-group {
-				padding: 0.125rem;
-			}
-
-			.colorBg {
-				background: -moz-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
-				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #1fd5e6), color-stop(100%, #21b6f8));
-				background: -webkit-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
-				background: -o-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
-				background: -ms-linear-gradient(top, #34dbfc 0%, #61a7fd 100%);
-				background: linear-gradient(to bottom, #34dbfc 0%, #61a7fd 100%);
-			}
-
-			.product-footer a {
-				border-radius: 5px;
-				-webkit-flex: 1;
-				-webkit-box-flex: 1;
-				flex: 1;
-				color: #fff;
-				text-decoration: none;
-				background-color: rgb(255, 145, 0);
-				padding: 10px;
-				margin: 10px 20px;
-			}
-
-			.font-seal {
-				font-size: 12px;
-				z-index: 2;
-				position: absolute;
-				right: 14px;
-				top: 25px;
-				border: 1px solid #F73A3C;
-				transform: rotate(25deg);
-				width: 43px;
-				line-height: 20px;
-				text-align: center;
-				color: #F73A3C;
-				font-weight: bold;
-			}
-
-			.font-seal-ok {
-				font-size: 12px;
-				z-index: 2;
-				position: absolute;
-				right: 14px;
-				top: 25px;
-				border: 1px solid #00ff7f;
-				transform: rotate(25deg);
-				width: 43px;
-				line-height: 20px;
-				text-align: center;
-				color: #00ff7f;
-				font-weight: bold;
-			}
-
-		</style>
 	</head>
 	<body class="mui-fullscreen">
 		<header class="mui-bar mui-bar-nav colorBg">
@@ -80,23 +23,23 @@
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view">
-			       <li class="mui-table-view-cell mui-collapse">
-			           <a class="mui-navigate-right" href="#">工单信息</a>
-			           <div class="mui-collapse-content">
-			               <p>工单号:&nbsp; <span id="task_no"></span></p>
-						   <p> 工序-设备:&nbsp;<spanid="proc_equ"></span></p>
-			               <p>产品名称:&nbsp;<span id="board_name"></span></p>
-			               <p>工单数量:&nbsp;<span id="plan_qty"></span></p>
-			               <p>完成数量:&nbsp;<spanid="complete_qty"></span></p>
-					   </div>
-			       </li>
-			   </ul>
-			<div   id="contentId">
+				<li class="mui-table-view-cell mui-collapse">
+					<a class="mui-navigate-right" href="#">工单信息</a>
+					<div class="mui-collapse-content">
+						<p>工单号:&nbsp; <span id="task_no"></span></p>
+						<p>工序-设备:&nbsp;<span id="proc_equ"></span></p>
+						<p>产品名称:&nbsp;<span id="board_name"></span></p>
+						<p>工单数量:&nbsp;<span id="plan_qty"></span></p>
+						<p>完成数量:&nbsp;<span id="complete_qty"></span></p>
+					</div>
+				</li>
+			</ul>
+			<div id="contentId">
 			</div>
 		</div>
 
 		<div class="mui-content-padded" align="center">
-			<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="sumbit">提 交 审 核</button>
+			<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="submit">提 交 审 核</button>
 		</div>
 		<script id='record-template' type="text/template">
 			<% for(var i in record){ var item=record[i]; var check = $imports.checkInput(item.VERIFY) %>	
@@ -104,33 +47,33 @@
 		<div class="mui-card-header"><%=(item.PERSON_NAME)%> (<%=(item.ASSESSOR)%>)</div>
 		<div class="mui-card-content" id="list">
 			<ul class="mui-table-view">
-			<li class="mui-table-view-cell  " data-id="<%=(item.ID)%>">
+			<li class="mui-table-view-cell" data-id="">
 			{{if item.VERIFY=="0"}}
 			<div class="font-seal">未审核</div>
 			{{else}}
 			<div class="font-seal-ok">已审核</div>
 			{{/if}}	
-
 				<div class="mui-input-row">
 					<label>报工数量：</label>
-					<input name="aplay_num" type="text"  disabled value="<%=(item.BG_QTY)%>">
+					<input name="aplay_num"  disabled value="<%=(item.BG_QTY)%>">
 				</div>
 				<div class="mui-input-row">
 					<label>审核数量：</label>
-					<input name="audit_qty" type="text"  {{check}} value="<%=(item.AUDIT_QTY)%>">
+					<input name="audit_qty" type="number"  {{check}} value="<%=(item.AUDIT_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>良品数量：</label>
-					<input name="qualified_qty" type="text"  {{check}} value="<%=(item.QUALIFIED_QTY)%>">
+					<input name="qualified_qty" type="number"  {{check}} value="<%=(item.QUALIFIED_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>不良品数：</label>
-					<input name="unqualified_qty" type="text" {{check}} value="<%=(item.UNQUALIFIED_QTY)%>">
+					<input name="unqualified_qty" type="number" {{check}} value="<%=(item.UNQUALIFIED_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>报废数量：</label>
-					<input name="bf_qty" type="text"  {{check}} value="<%=(item.BF_QTY)%>">
+					<input name="bf_qty" type="number"  {{check}} value="<%=(item.BF_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
+				<input name="id" type="text" style="display: none;" disabled value="<%=(item.ID)%>">
 			</li>
 			</ul>
 		</div>
@@ -138,42 +81,50 @@
 		<%}%>
 		</script>
 		<script type="text/javascript">
+			mui.init({
+				beforeback: function() { //页面返回时触发
+					var list = plus.webview.currentWebview().opener();
+					mui.fire(list, 'refresh'); //refresh是A页面自定义事件
+					return true; //返回true,继续页面关闭逻辑
+				}
+			})
 			mui.plusReady(function() {
 				var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
 				var detail = param.detail;
-				//console.log(detail)
-				showDetailData(detail);
-				getProduceVerifyDetail(detail,param.PROC_NO,param.WORKSHOP_CENTER_CODE)
+				var child = param.child_data;
+				showDetailData(detail, child);
+				getProduceVerifyDetail(detail, param.PROC_NO, param.WORKSHOP_CENTER_CODE)
 			})
 
 			template.defaults.imports.checkInput = function(item_verify) {
-				if (item_verify == "0") {
+				if (item_verify == "0") { //0:未审核 1：已审核
 					return "";
 				}
 				return "disabled";
 			};
 
-
-			function showDetailData(detail) {
+			function showDetailData(detail, child) {
 				var data = JSON.parse(detail)
+				var child_data = JSON.parse(child)
+				//var child_data=JSON.parse(child)
 				$("#task_no").text(data.TASK_NO); //工单号
 				$("#board_name").text(data.BOARD_NAME); //产品名称
-				$("#proc_equ").text(data.PROC_NAM + " - " + data.EQU_NAME); //工序名称-设备名称
+				$("#proc_equ").text(child_data.PROC_NAM + " - " + data.EQU_NAME); //工序名称-设备名称
 				$("#plan_qty").text(data.PLAN_QTY); //工单数量
 				$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
 			}
 
-			function getProduceVerifyDetail(detail,PROC_NO,WORKSHOP_CENTER_CODE) {
+			function getProduceVerifyDetail(detail, PROC_NO, WORKSHOP_CENTER_CODE) {
 				var de_data = JSON.parse(detail)
 				//console.log(detail)
 				aj.post('/produceVerify/getProduceVerifyDetail', {
 					usercode: api_localStorageGet("code"),
-					proc:PROC_NO,
+					proc: PROC_NO,
 					workCenter: WORKSHOP_CENTER_CODE,
 					taskNo: de_data.TASK_NO,
 					eq_code: de_data.EQU_CODE
 				}, function(data) {
-					console.log(JSON.stringify(data))
+					//console.log(JSON.stringify(data))
 					if (data.result) {
 						document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data
@@ -183,7 +134,52 @@
 					}
 				});
 			}
+
+			//监听点击事件 —— 提交审核
+			document.getElementById("submit").addEventListener("tap", function() {
+				var btnArray = ['取消', '提交'];
+				mui.confirm("确认提交本次审核？", '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						submitResult();
+					}
+				})
+			});
+
+			function submitResult() {
+				var id = document.getElementsByName("id");
+				var audit_qty = document.getElementsByName("audit_qty"); //审核数量
+				var qualified_qty = document.getElementsByName("qualified_qty"); //良品数量
+				var unqualified_qty = document.getElementsByName("unqualified_qty"); //不良品数
+				var bf_qty = document.getElementsByName("bf_qty"); //报废数量
+				var paramInfo = "";
+				for (var i = 0; i < id.length; i++) { //循环获取每组input的数据
+					if (i + 1 == id.length) { //判断是否是最后一组数据
+						paramInfo = id[i].value + "," +
+							audit_qty[i].value + "," +
+							qualified_qty[i].value + "," +
+							unqualified_qty[i].value + "," +
+							bf_qty[i].value;
+					} else {
+						paramInfo = id[i].value + "," +
+							audit_qty[i].value + "," +
+							qualified_qty[i].value + "," +
+							unqualified_qty[i].value + "," +
+							bf_qty[i].value + "|";
+					}
+				}
+				//console.log(paramInfo);
+				aj.post('/produceVerify/sumbitProduceVerify', {
+					usercode: api_localStorageGet("code"),
+					reportInfo: paramInfo
+				}, function(data) {
+					if (data.result) {
+						console.log(JSON.stringify(data))
+						mui.alert(data.msg);
+					} else {
+						mui.alert(data.msg);
+					}
+				});
+			}
 		</script>
 	</body>
-
 </html>
