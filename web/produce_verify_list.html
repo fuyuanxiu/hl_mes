@@ -21,18 +21,16 @@
 		</header>
 		<div class="mui-content" id="contentId"> 
 		</div>
-
 		<script id='record-template' type="text/template">
 			<% for(var i in record){ var item=record[i]; %>	
 			<div class="mui-card">
-				
 				<div class="mui-card-header">
 					产品名称: <%=(item.BOARD_NAME)%>
 				</div>
 				<div class="mui-card-content">
 					<ul class="mui-table-view">
 						<% for(var j in item.Child){ var item1=item.Child[j]; %>	
-					    <li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>' child-data='<%=(item1)%>' data-PROC_NO='<%=(item1.PROC_NO)%>' data-WORKSHOP_CENTER_CODE='<%=(item1.WORKSHOP_CENTER_CODE)%>'>
+					    <li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>' child-data='<%=(item1)%>'>
 					        <a href="javascript:;" class="mui-navigate-right">
 								<div class="font-seal"><%=(item1.PRODUCE_STATE)%></div>
 					            <span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
@@ -61,23 +59,17 @@
 			});
 			mui.plusReady(function() {
 				getProduceVerifyList(); //获取待开工审核列表
-
 				mui("#contentId").on("tap", "li", function() {
 					var detail_data = this.getAttribute('detail-data'); //详细信息
-					var WORKSHOP_CENTER_CODE = this.getAttribute('data-WORKSHOP_CENTER_CODE');
-					var PROC_NO = this.getAttribute('data-PROC_NO');
 					var child_data=this.getAttribute('child-data')
 					OpenWindow('produce_verify_detail', 'produce_verify_detail.html', {
 						"detail": detail_data,
-						"WORKSHOP_CENTER_CODE":WORKSHOP_CENTER_CODE,
-						"PROC_NO":PROC_NO,
 						"child_data":child_data
 					})
 				})
 			})
 
 			function getProduceVerifyList() {
-				
 				aj.post('/produce_verify/getProduceVerifyList', {
 					usercode: api_localStorageGet("code")
 				}, function(data) {

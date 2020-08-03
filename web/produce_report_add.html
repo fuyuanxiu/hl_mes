@@ -1,9 +1,8 @@
 <!doctype html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>提交报工</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/jquery.js"></script>
@@ -15,7 +14,6 @@
 		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
 		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
 	</head>
-
 	<body class="mui-fullscreen">
 		<header class="mui-bar mui-bar-nav colorBg">
 			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
@@ -24,6 +22,26 @@
 			<h1 class="mui-title">生产报工</h1>
 		</header>
 		<div class="mui-content" id="contentId">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-collapse">
+					<a class="mui-navigate-right" href="#">查看基础信息</a>
+					<div class="mui-collapse-content">
+						<p>工单号:&nbsp;&nbsp;<span id="worl_singnum"></span></p>
+						<p>品号:&nbsp;&nbsp;<span id="pro_code"></span></p>
+						<p>产品名称:&nbsp;<span id="pro_name"></span></p>
+						<p>工序:&nbsp;<span id="worproc_name"></span></p>
+						<p>设备:&nbsp;<span id="equ_name"></span></p>
+						<p>设备编号:&nbsp;<span id="equ_code"></span></p>
+						<p>工作中心:&nbsp;<span id="workshop_center_code"></span></p>
+						<p>工单数量:&nbsp;<span id="worl_qty"></span></p>
+						<p>工排产量:&nbsp;<span id="output_qty"></span></p>
+						<p>完工数量:&nbsp;<span id="complete_qty"></span></p>
+						<p>已报工数量:&nbsp;<span id="bg_qty"></span></p>
+						<p>员工:&nbsp;<span id="person_name"></span></p>
+						<p>状态:&nbsp;<span id="status"></span></p>
+					</div>
+				</li>
+			</ul>
 			<div class="mui-input-group">
 				<div class="mui-input-row">
 					<label>本次报工数量</label>
@@ -40,26 +58,7 @@
 				<div class="mui-content-padded" align="center">
 					<button type="button" class="mui-btn mui-btn-success" style="width: 80%;margin: 10px;" id="report">生产报工</button>
 				</div>
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell mui-collapse">
-						<a class="mui-navigate-right" href="#">查看基础信息</a>
-						<div class="mui-collapse-content">
-							<p>工单号:&nbsp;&nbsp;<span id="worl_singnum"></span></p>
-							<p>品号:&nbsp;&nbsp;<span id="pro_code"></span></p>
-							<p>产品名称:&nbsp;<span id="pro_name"></span></p>
-							<p>工序:&nbsp;<span id="worproc_name"></span></p>
-							<p>设备:&nbsp;<span id="equ_name"></span></p>
-							<p>设备编号:&nbsp;<span id="equ_code"></span></p>
-							<p>工作中心:&nbsp;<span id="workshop_center_code"></span></p>
-							<p>工单数量:&nbsp;<span id="worl_qty"></span></p>
-							<p>工排产量:&nbsp;<span id="output_qty"></span></p>
-							<p>完工数量:&nbsp;<span id="complete_qty"></span></p>
-							<p>已报工数量:&nbsp;<span id="bg_qty"></span></p>
-							<p>员工:&nbsp;<span id="person_name"></span></p>
-							<p>状态:&nbsp;<span id="status"></span></p>
-						</div>
-					</li>
-				</ul>
+				
 			</div>
 			<script type="text/javascript">
 				mui.init({
@@ -90,7 +89,6 @@
 								reportBgQTY(bgqty, unqualifiedqty, qualifiedqty);
 							}
 						})
-
 					}
 				});
 

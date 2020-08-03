@@ -59,9 +59,7 @@
 			mui.init({});
 			mui.plusReady(function() {
 				//OpenWindow('start_check_add','start_check_add.html',"");
-
 				getStartList(); //获取待开工列表
-
 				mui("#contentId").on("tap", "li", function() {
 					var detail_data = this.getAttribute('detail-data'); //详细信息
 					OpenWindow('start_check_add', 'start_check_add.html', {

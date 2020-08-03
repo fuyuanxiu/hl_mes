@@ -63,8 +63,6 @@
 				</ul>
 			</div>
 		</div>
-
-
 		<script type="text/javascript" charset="utf-8">
 			mui.init({
 				beforeback: function() { //页面返回时触发
@@ -80,7 +78,7 @@
 				showDetailData(detail);
 			})
 			window.addEventListener("changeBar", function(e) {
-				console.log(e.detail.barcode)
+				//console.log(e.detail.barcode)
 				//console.log(document.getElementById("#barcode").value)
 				var inputId = e.detail.inputId
 				if (document.getElementById(inputId).value.length == 0) {
@@ -127,7 +125,7 @@
 			}
 
 			function startCheckAdd(machine, barcode) {
-				aj.post('/start//addStartCheck', {
+				aj.post('/start/addStartCheck', {
 					usercode: api_localStorageGet("code"),
 					proc: worproc_code, //工序
 					workCenter: workCenter, // 工作中心

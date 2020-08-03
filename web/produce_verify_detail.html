@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>报工审核</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/jquery.js"></script>
@@ -47,7 +47,7 @@
 		<div class="mui-card-header"><%=(item.PERSON_NAME)%>(<%=(item.STAFF_NO)%>)</div>
 		<div class="mui-card-content" id="list">
 			<ul class="mui-table-view">
-			<li class="mui-table-view-cell" data-id="">
+			<li class="mui-table-view-cell">
 			{{if item.VERIFY=="0"}}
 			<div class="font-seal">未审核</div>
 			{{else}}
@@ -92,8 +92,9 @@
 				var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
 				var detail = param.detail;
 				var child = param.child_data;
+				var data=JSON.parse(child)
 				showDetailData(detail, child);
-				getProduceVerifyDetail(detail, param.PROC_NO, param.WORKSHOP_CENTER_CODE)
+				getProduceVerifyDetail(detail, data.PROC_NO, data.WORKSHOP_CENTER_CODE)
 			})
 
 			template.defaults.imports.checkInput = function(item_verify) {
@@ -106,7 +107,6 @@
 			function showDetailData(detail, child) {
 				var data = JSON.parse(detail)
 				var child_data = JSON.parse(child)
-				//var child_data=JSON.parse(child)
 				$("#task_no").text(data.TASK_NO); //工单号
 				$("#board_name").text(data.BOARD_NAME); //产品名称
 				$("#proc_equ").text(child_data.PROC_NAM + " - " + data.EQU_NAME); //工序名称-设备名称
@@ -116,7 +116,6 @@
 
 			function getProduceVerifyDetail(detail, PROC_NO, WORKSHOP_CENTER_CODE) {
 				var de_data = JSON.parse(detail)
-				//console.log(detail)
 				aj.post('/produce_verify/getProduceVerifyDetail', {
 					usercode: api_localStorageGet("code"),
 					proc: PROC_NO,
@@ -124,7 +123,6 @@
 					taskNo: de_data.TASK_NO,
 					eq_code: de_data.EQU_CODE
 				}, function(data) {
-					//console.log(JSON.stringify(data))
 					if (data.result) {
 						document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data
@@ -178,17 +176,14 @@
 							bf_qty[i].value + "|";
 					}
 				}
-				//console.log(paramInfo);
 				aj.post('/produce_verify/sumbitProduceVerify', {
 					usercode: api_localStorageGet("code"),
 					reportInfo: paramInfo
 				}, function(data) {
 					if (data.result) {
-						//console.log(JSON.stringify(data))
 						mui.alert(data.msg);
 						window.location.reload(); //执行刷新
 					} else {
-						//console.log(JSON.stringify(data))
 						mui.alert(data.msg);
 						window.location.reload(); //执行刷新
 					}
