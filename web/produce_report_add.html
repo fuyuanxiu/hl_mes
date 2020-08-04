@@ -72,7 +72,8 @@
 				mui.plusReady(function() {
 					var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
 					var detail = param.detail;
-					showDetailData(detail);
+					var child =param.child;
+					showDetailData(detail,child);
 				})
 				//焦点监听事件---自动填充良品/不良品数
 				$("#unqualifiedqty").blur(function() {
@@ -119,24 +120,25 @@
 					}, 100)
 				});
 
-				function showDetailData(detail) { //显示详细数据
+				function showDetailData(detail,child) { //显示详细数据
 					var data = JSON.parse(detail)
+					var child_data=JSON.parse(child)
 					$("#worl_singnum").text(data.WORL_SINGNUM); //工单号
 					$("#pro_code").text(data.PRO_CODE); //品名
 					$("#pro_name").text(data.PRO_NAME); //产品名称
-					$("#worproc_name").text(data.WORPROC_NAME); //工序名称
-					$("#equ_name").text(data.EQU_NAME); //设备
-					$("#equ_code").text(data.EQU_CODE); //设备编号
+					$("#worproc_name").text(child_data.WORPROC_NAME); //工序名称
+					$("#equ_name").text(child_data.EQU_NAME); //设备
+					$("#equ_code").text(child_data.EQU_CODE); //设备编号
 					$("#workshop_center_code").text(data.WORKSHOP_CENTER_CODE); //工作中心
 					$("#worl_qty").text(data.WORL_QTY); //工单数量
 					$("#output_qty").text(data.OUTPUT_QTY); //工排产量
 					$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
 					$("#bg_qty").text(data.BG_QTY); //已报工数量
 					$("#person_name").text(data.PERSON_NAME); //员工
-					$("#status").text(data.STATUS); //状态
-					id = data.ID; //MES_PLAN_PRO_ID 排产ID
-					worproc_code = data.WORPROC_CODE; //工序编码
-					eq_code = data.EQU_CODE;
+					$("#status").text(child_data.STATUS); //状态
+					id = child_data.ID; //MES_PLAN_PRO_ID 排产ID
+					worproc_code = child_data.WORPROC_CODE; //工序编码
+					eq_code = child_data.EQU_CODE;
 				}
 				//提交报工数量
 				function reportBgQTY(bgqty, unqualifiedqty, qualifiedqty) { //报工数量，不良品数，良品数

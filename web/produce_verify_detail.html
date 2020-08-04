@@ -110,7 +110,7 @@
 				var child_data = JSON.parse(child)
 				$("#task_no").text(data.TASK_NO); //工单号
 				$("#board_name").text(data.BOARD_NAME); //产品名称
-				$("#proc_equ").text(child_data.PROC_NAM + " - " + data.EQU_NAME); //工序名称-设备名称
+				$("#proc_equ").text(child_data.PROC_NAM + " - " + child_data.EQU_NAME); //工序名称-设备名称
 				$("#plan_qty").text(data.PLAN_QTY); //工单数量
 				$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
 			}

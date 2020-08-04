@@ -25,23 +25,25 @@
 		<script id='record-template' type="text/template">
 			<% for(var i in record){ var item=record[i];%>
 			<div class="mui-card">
-			<div class="font-seal"><%=(item.STATUS)%></div>
 			<div class="mui-card-header">
 				产品名称: <%=(item.PRO_NAME)%>
 			</div>
 			<div class="mui-card-content">
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>'>
+					<% for(var j in item.Child){ var item1=item.Child[j]; %>
+					<li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>' child-data='<%=(item1)%>'>
 						<a href="javascript:;" class="mui-navigate-right">
+							<div class="font-seal"><%=(item1.STATUS)%></div>
 							<span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
 							<div class="mui-media-body">
-								<%=(item.EQU_NAME)%>—<%=(item.EQU_CODE)%>
+								<%=(item1.EQU_NAME)%>—<%=(item1.EQU_CODE)%>
 								<p class='mui-ellipsis'>
-									工序:<%=(item.WORPROC_NAME)%>
+									工序:<%=(item1.WORPROC_NAME)%>
 								</p>
 							</div>
 						</a>
 					</li>
+					<%}%>
 				</ul>
 				<div class="mui-card-footer">
 					<span>工单号:<%=(item.WORL_SINGNUM)%></span>
@@ -61,9 +63,11 @@
 				getProduceList();
 				mui("#contentId").on("tap", "li", function() {
 					var detail_data = this.getAttribute('detail-data'); //详细信息
+					var child_data = this.getAttribute('child-data'); //详细信息
 					//console.log(detail_data);
 					OpenWindow('produce_report_add', 'produce_report_add.html', {
-						"detail": detail_data
+						"detail": detail_data,
+						"child":child_data
 					});
 				});
 			});

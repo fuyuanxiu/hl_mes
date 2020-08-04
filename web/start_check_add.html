@@ -74,8 +74,8 @@
 			mui.plusReady(function() {
 				var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
 				var detail = param.detail;
-				//console.log(detail)
-				showDetailData(detail);
+				var child = param.child;
+				showDetailData(detail,child);
 			})
 			window.addEventListener("changeBar", function(e) {
 				//console.log(e.detail.barcode)
@@ -120,16 +120,17 @@
 			};
 			var workCenter, worproc_code, eq_code;
 
-			function showDetailData(detail) {
+			function showDetailData(detail,child) {
 				var data = JSON.parse(detail)
+				var child_data = JSON.parse(child)
 				$("#worl_singnum").val(data.WORL_SINGNUM); //工单号
 				$("#pro_code").val(data.PRO_CODE); //品名
 				$("#pro_name").val(data.PRO_NAME); //产品名称
-				$("#worproc_name").val(data.WORPROC_NAME); //工序名称
-				$("#equ_name").val(data.EQU_NAME); //设备名
-				workCenter = data.WORKSHOP_CENTER_CODE; //工作中心
-				worproc_code = data.WORPROC_CODE; //工序编码
-				eq_code = data.EQU_CODE; //设备编号
+				$("#worproc_name").val(child_data.WORPROC_NAME); //工序名称
+				$("#equ_name").val(child_data.EQU_NAME); //设备名
+				workCenter = child_data.WORKSHOP_CENTER_CODE; //工作中心
+				worproc_code = child_data.WORPROC_CODE; //工序编码
+				eq_code = child_data.EQU_CODE; //设备编号
 			}
 
 			function startCheckAdd(machine, barcode) {
@@ -145,6 +146,7 @@
 					if (data.result) {
 						//console.log(JSON.stringify(data));
 						mui.alert(data.msg);
+						document.getElementById("login").disabled = true;
 					} else {
 						mui.alert(data.msg);
 						//console.log(data.msg);
