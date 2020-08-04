@@ -101,19 +101,22 @@
 				});
 				//监听点击事件
 				document.getElementById("report").addEventListener("tap", function() {
-					var bgqty = $("#bgqty").val();
-					var unqualifiedqty = $("#unqualifiedqty").val();
-					var qualifiedqty = $("#qualifiedqty").val();
-					if (bgqty == "" || unqualifiedqty == "" || qualifiedqty == "") {
-						mui.alert("请完善数据"); //再加上bgqty要大于良品和不良品
-					} else {
-						var btnArray = ['取消', '提交'];
-						mui.confirm("本次报工数量：" + bgqty + " 不良品数：" + unqualifiedqty + " 良品数：" + qualifiedqty, '请确认', btnArray, function(e) {
-							if (e.index == 1) {
-								reportBgQTY(bgqty, unqualifiedqty, qualifiedqty);
-							}
-						})
-					}
+					setTimeout(function() { //进行延时处理，防止修改数据未及时传递
+						var bgqty = $("#bgqty").val();
+						var unqualifiedqty = $("#unqualifiedqty").val();
+						var qualifiedqty = $("#qualifiedqty").val();
+						if (bgqty == "" || unqualifiedqty == "" || qualifiedqty == "") {
+							mui.alert("请完善数据"); //再加上bgqty要大于良品和不良品
+						} else {
+							var btnArray = ['取消', '提交'];
+							mui.confirm("本次报工数量：" + bgqty + " 不良品数：" + unqualifiedqty + " 良品数：" + qualifiedqty, '请确认', btnArray,
+								function(e) {
+									if (e.index == 1) {
+										reportBgQTY(bgqty, unqualifiedqty, qualifiedqty);
+									}
+								})
+						}
+					}, 100)
 				});
 
 				function showDetailData(detail) { //显示详细数据
@@ -133,6 +136,7 @@
 					$("#status").text(data.STATUS); //状态
 					id = data.ID; //MES_PLAN_PRO_ID 排产ID
 					worproc_code = data.WORPROC_CODE; //工序编码
+					eq_code = data.EQU_CODE;
 				}
 				//提交报工数量
 				function reportBgQTY(bgqty, unqualifiedqty, qualifiedqty) { //报工数量，不良品数，良品数
@@ -145,13 +149,13 @@
 						bg_Qty: bgqty,
 						unqu_Qty: unqualifiedqty,
 						qu_Qty: qualifiedqty,
-						eqCODE: $("#equ_code").val()
+						eqCODE: eq_code
 					}, function(data) {
 						if (data.result) {
 							//console.log(JSON.stringify(data));
 							mui.alert(data.msg);
 							$("#bg_qty").val(data.data); //详细信息--报工数据
-							document.getElementById("report").disabled=true;
+							document.getElementById("report").disabled = true;
 						} else {
 							mui.alert(data.msg);
 						}
