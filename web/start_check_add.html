@@ -84,7 +84,15 @@
 				if (document.getElementById(inputId).value.length == 0) {
 					document.getElementById(inputId).value = (e.detail.barcode) + ",";
 				} else {
-					document.getElementById(inputId).value = (document.getElementById("barcode").value + e.detail.barcode + ",");
+					var str = document.getElementById(inputId).value
+					if(str.indexOf(e.detail.barcode) != -1){
+						//如果已经存在则不填写
+						plus.ui.toast("该数据已经存在!");
+					}else{
+						document.getElementById(inputId).value = (document.getElementById(inputId).value + e.detail.barcode + ",");
+					}
+					
+					
 				}
 			});
 
