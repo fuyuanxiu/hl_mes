@@ -59,19 +59,19 @@
 				</div>
 				<div class="mui-input-row">
 					<label>审核数量：</label>
-					<input name="audit_qty" type="number"  {{check}} value="<%=(item.AUDIT_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input name="audit_qty" type="number"  {{check}} value="<%=(item.AUDIT_QTY)%>" onfocus="countAll('audit_qty',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>良品数量：</label>
-					<input name="qualified_qty" type="number"  {{check}} value="<%=(item.QUALIFIED_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input name="qualified_qty" type="number"  {{check}} value="<%=(item.QUALIFIED_QTY)%>"onfocus="countAll('qualified_qty',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>不良品数：</label>
-					<input name="unqualified_qty" type="number" {{check}} value="<%=(item.UNQUALIFIED_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input name="unqualified_qty" type="number" {{check}} value="<%=(item.UNQUALIFIED_QTY)%>" onfocus="countAll('unqualified_qty',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>报废数量：</label>
-					<input name="bf_qty" type="number"  {{check}} value="<%=(item.BF_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input name="bf_qty" type="number"  {{check}} value="<%=(item.BF_QTY)%>"onfocus="countAll('bf_qty',<%=(i)%>)"  onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<input name="id" type="text" style="display: none;" disabled value="<%=(item.ID)%>">
 			</li>
@@ -101,7 +101,8 @@
 				if (item_verify == "0") { //0:未审核 1：已审核
 					return "";
 				}
-				return "disabled";
+				return "";
+				//return "disabled";
 			};
 
 			function showDetailData(detail, child) {
@@ -156,38 +157,32 @@
 						mui.alert("请完善审核数据！")
 						return false;
 					}
-					if (i == 0) { //判断是否是第一组数据
-						paramInfo = id[i].value + "," +
-							audit_qty[i].value + "," +
-							qualified_qty[i].value + "," +
-							unqualified_qty[i].value + "," +
-							bf_qty[i].value + "|";
-					} else if (i + 1 == id.length) { //判断是否是最后一组数据
-						paramInfo = paramInfo + id[i].value + "," +
-							audit_qty[i].value + "," +
-							qualified_qty[i].value + "," +
-							unqualified_qty[i].value + "," +
-							bf_qty[i].value;
-					} else {
-						paramInfo = paramInfo + id[i].value + "," +
-							audit_qty[i].value + "," +
-							qualified_qty[i].value + "," +
-							unqualified_qty[i].value + "," +
-							bf_qty[i].value + "|";
-					}
+					paramInfo += id[i].value + "," +
+						audit_qty[i].value + "," +
+						qualified_qty[i].value + "," +
+						unqualified_qty[i].value + "," +
+						bf_qty[i].value + "|";
+				}
+				if(paramInfo.length > 0){
+					//去掉最后一个|
+					paramInfo = paramInfo.substr(0, paramInfo.length - 1);  
 				}
 				aj.post('/produce_verify/sumbitProduceVerify', {
 					usercode: api_localStorageGet("code"),
 					reportInfo: paramInfo
 				}, function(data) {
-					if (data.result) {
-						mui.alert(data.msg);
-						window.location.reload(); //执行刷新
-					} else {
-						mui.alert(data.msg);
-						window.location.reload(); //执行刷新
-					}
+					mui.alert(data.msg);
+					window.location.reload(); //执行刷新
 				});
+			}
+			
+			function countAll(inputId,i){
+				var audit_qty = document.getElementsByName("audit_qty"); //审核数量
+				var qualified_qty = document.getElementsByName("qualified_qty"); //良品数量
+				var unqualified_qty = document.getElementsByName("unqualified_qty"); //不良品数
+				var bf_qty = document.getElementsByName("bf_qty"); //报废数量
+				
+				alert(audit_qty[i].value)
 			}
 		</script>
 	</body>
