@@ -140,8 +140,10 @@
 		<script type="text/javascript" charset="utf-8">
 			var size_m = '';var usercode = '';var username = '';var version='';
 			var factory='';var company='';var bsCode='';
+			mui.init()
 			mui.plusReady(function() {
 				//usernme
+				console.log(api_localStorageGet('name'))
 				usercode = api_localStorageGet('code');
 				username = api_localStorageGet('name');
 				//console.log(api_localStorageGet('name'))
