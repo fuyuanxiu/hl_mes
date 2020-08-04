@@ -74,7 +74,7 @@
 					usercode: api_localStorageGet("code")
 				}, function(data) {
 					if (data.result) {
-						//console.log(JSON.stringify(data.data))
+						console.log(JSON.stringify(data.data))
 						 document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data
 						}); 
