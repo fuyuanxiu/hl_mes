@@ -34,7 +34,7 @@
 						<p>设备编号:&nbsp;<span id="equ_code"></span></p>
 						<p>工作中心:&nbsp;<span id="workshop_center_code"></span></p>
 						<p>工单数量:&nbsp;<span id="worl_qty"></span></p>
-						<p>工排产量:&nbsp;<span id="output_qty"></span></p>
+						<p>排产数量:&nbsp;<span id="output_qty"></span></p>
 						<p>完工数量:&nbsp;<span id="complete_qty"></span></p>
 						<p>已报工数量:&nbsp;<span id="bg_qty"></span></p>
 						<p>员工:&nbsp;<span id="person_name"></span></p>
@@ -49,16 +49,15 @@
 				</div>
 				<div class="mui-input-row">
 					<label>不良品数</label>
-					<input id="unqualifiedqty" type="number" class="mui-input-clear" placeholder="请输入不良品数" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input id="unqualifiedqty" type="number" class="mui-input-clear" placeholder="请输入不良品数" value="0" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>良品数</label>
-					<input id="qualifiedqty" type="number" class="mui-input-clear" placeholder="请输入良品数" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input id="qualifiedqty" type="number" class="mui-input-clear" placeholder="请输入良品数" value="0" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-content-padded" align="center">
 					<button type="button" class="mui-btn mui-btn-success" style="width: 80%;margin: 10px;" id="report">生产报工</button>
 				</div>
-				
 			</div>
 			<script type="text/javascript">
 				mui.init({
@@ -75,6 +74,31 @@
 					var detail = param.detail;
 					showDetailData(detail);
 				})
+				//焦点监听事件---自动填充良品/不良品数
+				$("#unqualifiedqty").blur(function() {
+					var unqualifiedqty = $("#unqualifiedqty").val();
+					var bgqty = $("#bgqty").val();
+					var qualifiedqty = bgqty - unqualifiedqty;
+					if (qualifiedqty < 0) {
+						mui.alert("不良品数大于报工数量");
+						$("#qualifiedqty").val("0")
+						$("#unqualifiedqty").val("0")
+						return false
+					}
+					$("#qualifiedqty").val(qualifiedqty)
+				});
+				$("#qualifiedqty").blur(function() {
+					var qualifiedqty = $("#qualifiedqty").val();
+					var bgqty = $("#bgqty").val();
+					var unqualifiedqty = bgqty - qualifiedqty;
+					if (unqualifiedqty < 0) {
+						mui.alert("良品数大于报工数量");
+						$("#unqualifiedqty").val("0")
+						$("#qualifiedqty").val("0")
+						return false
+					}
+					$("#unqualifiedqty").val(unqualifiedqty)
+				});
 				//监听点击事件
 				document.getElementById("report").addEventListener("tap", function() {
 					var bgqty = $("#bgqty").val();
@@ -127,9 +151,7 @@
 							//console.log(JSON.stringify(data));
 							mui.alert(data.msg);
 							$("#bg_qty").val(data.data); //详细信息--报工数据
-							var bgqty = $("#bgqty").val(""); //填写栏，报工数
-							var unqualifiedqty = $("#unqualifiedqty").val("");
-							var qualifiedqty = $("#qualifiedqty").val("");
+							document.getElementById("report").disabled=true;
 						} else {
 							mui.alert(data.msg);
 						}
