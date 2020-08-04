@@ -57,7 +57,7 @@
 		
 		<script type="text/javascript" charset="utf-8">
 			mui.plusReady(function(){
-			var pages = ["main.html","test.html","setting.html"];
+			var pages = ["main.html","message.html","setting.html"];
 			var titles =['首页','消息','设置中心']
 			var arr = document.getElementsByClassName("mui-tab-item")
 			var styles = {
@@ -81,6 +81,7 @@
 						 * 目的：将父子窗口合并成一个页面，实现同开同关的效果。 避免点击返回安监室，子页面先关闭，而父页面的头部和尾部没有关闭的BUG。
 						 */
 						slef.append(pageArr[i]);
+						if(i==1)mui.alert("正在开发中……")
 						document.getElementById("title").innerHTML = titles[i];
 					})
 				}(i);

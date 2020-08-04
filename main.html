@@ -12,47 +12,48 @@
 			.mui-content {
 				margin-top: 2px;
 			}
-			.badge{
+
+			.badge {
 				position: absolute;
-				top:0;
+				top: 0;
 				right: 0;
 				z-index: 99;
 			}
 		</style>
 	</head>
 	<body>
- 		<!-- <header class="mui-bar mui-bar-nav">
+		<!-- <header class="mui-bar mui-bar-nav">
 			<h1 class="mui-title">PMS</h1>
 		</header> -->
 		<div class="mui-content">
 			<div class="mui-slider">
-			  <div class="mui-slider-group">
-				<div class="mui-slider-item"><a href="#"><img src="img/bg1.jpg" /></a></div>
-				<div class="mui-slider-item"><a href="#"><img src="img/bg2.jpg" /></a></div>
-				<div class="mui-slider-item"><a href="#"><img src="img/bg3.jpg" /></a></div>
-			  </div>
+				<div class="mui-slider-group">
+					<div class="mui-slider-item"><a href="#"><img src="img/bg1.jpg" /></a></div>
+					<div class="mui-slider-item"><a href="#"><img src="img/bg2.jpg" /></a></div>
+					<div class="mui-slider-item"><a href="#"><img src="img/bg3.jpg" /></a></div>
+				</div>
 			</div>
-			<ul class="mui-table-view mui-grid-view mui-grid-9" id="list" >
+			<ul class="mui-table-view mui-grid-view mui-grid-9" id="list">
 				<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-4 bg1">
-					<a href="web/start_check_list.html" >
+					<a href="web/start_check_list.html">
 						<span class="mui-icon iconfont icon-tubiaoku-" style="color:#15aa0d"></span>
 						<div class="mui-media-body">开工授权</div>
 					</a>
 				</li>
 				<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-4 bg1">
-					<a href="web/produce_report_list.html" > 
+					<a href="web/produce_report_list.html">
 						<span class="mui-icon iconfont icon-gongdanxinxi" style="color:#CD8500"></span>
 						<div class="mui-media-body">生产报工</div>
 					</a>
 				</li>
 				<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-4 bg1">
-					<a href="web/produce_verify_list.html" >
+					<a href="web/produce_verify_list.html">
 						<span class="mui-icon iconfont icon-shenpi-copy" style="color:#0099CC"></span>
 						<div class="mui-media-body">报工审核</div>
 					</a>
 				</li>
 				<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-4 bg1">
-					<a href="web/IQC_coming_list.html" >
+					<a href="web/IQC_coming_list.html" id="wait">
 						<span class="mui-icon iconfont icon-pandian" style="color:#FF7F00"></span>
 						<div class="mui-media-body">设备盘点</div>
 					</a>
@@ -141,37 +142,41 @@
 			// });
 			// 重写移动端返回键 
 			var first = null;
-			mui.back = function(){
-			mui.plusReady(function() {
-			//首页返回键处理
-			//处理逻辑：1秒内，连续两次按返回键，则退出应用；
-			if(!first){
-			first = new Date().getTime();
-			mui.toast('再按一次退出登录');
-			setTimeout(function(){
-			first = null;
-			},1000);
-			}else{
-			if(new Date().getTime()-first<1000){
-			plus.runtime.restart();
-			}
-			}
-			});
+			mui.back = function() {
+				mui.plusReady(function() {
+					//首页返回键处理
+					//处理逻辑：1秒内，连续两次按返回键，则退出应用；
+					if (!first) {
+						first = new Date().getTime();
+						mui.toast('再按一次退出登录');
+						setTimeout(function() {
+							first = null;
+						}, 1000);
+					} else {
+						if (new Date().getTime() - first < 1000) {
+							plus.runtime.restart();
+						}
+					}
+				});
 			}
 			mui.init()
 			mui.plusReady(function() {
 				var gallery = mui('.mui-slider');
 				gallery.slider({
-				  interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
+					interval: 5000 //自动轮播周期，若为0则不自动播放，默认为0；
 				});
-				
+
 				//document.getElementById('iqc_badge').innerHTML = '';
 			})
 			mui("#list").on("tap", "a", function() {
 				var id = this.getAttribute('href');
 				var href = this.href;
-				if(id == 'login'){
+				if (id == 'login') {
 					plus.runtime.restart();
+				}
+				if(id=="web/IQC_coming_list.html"){
+					 mui.alert("正在开发中……")
+					  return false
 				}
 				mui.openWindow({
 					id: id,
