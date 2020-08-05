@@ -93,8 +93,8 @@
 				var detail = param.detail;
 				var child = param.child_data;
 				var data=JSON.parse(child)
-				showDetailData(detail, child);
-				getProduceVerifyDetail(detail, data.PROC_NO, data.WORKSHOP_CENTER_CODE)
+				showDetailData(detail,child);
+				getProduceVerifyDetail(detail,data.EQU_CODE,data.PROC_NO,data.WORKSHOP_CENTER_CODE)
 			})
 
 			template.defaults.imports.checkInput = function(item_verify) {
@@ -115,14 +115,14 @@
 				$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
 			}
 
-			function getProduceVerifyDetail(detail, PROC_NO, WORKSHOP_CENTER_CODE) {
+			function getProduceVerifyDetail(detail,EQU_CODE,PROC_NO,WORKSHOP_CENTER_CODE) {
 				var de_data = JSON.parse(detail)
 				aj.post('/produce_verify/getProduceVerifyDetail', {
 					usercode: api_localStorageGet("code"),
 					proc: PROC_NO,
 					workCenter: WORKSHOP_CENTER_CODE,
 					taskNo: de_data.TASK_NO,
-					eq_code: de_data.EQU_CODE
+					eq_code: EQU_CODE
 				}, function(data) {
 					if (data.result) {
 						document.getElementById('contentId').innerHTML = template('record-template', {
