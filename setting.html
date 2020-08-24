@@ -85,8 +85,8 @@
 				</div>
 				<!--昵称-->
 				<div class="head_name">
-					<div id="username">用户名</div>
-					<div id="usercode">账户：18710789465</div>
+					<div id="username"></div>
+					<div id="usercode"></div>
 				</div>
 				<!--消息与二维码-->
 				<div class="head_but">
@@ -143,10 +143,8 @@
 			mui.init()
 			mui.plusReady(function() {
 				//usernme
-				console.log(api_localStorageGet('name'))
 				usercode = api_localStorageGet('code');
 				username = api_localStorageGet('name');
-				//console.log(api_localStorageGet('name'))
 				document.getElementById("username").innerHTML = username;
 				document.getElementById("usercode").innerHTML = "账号:"+usercode;
 				//缓存
@@ -236,7 +234,13 @@
 				api_localStorageSave("version", version);
 				sessionStorage.setItem("bsCode", bsCode); 
 			}
-
+			
+			function getQueryString(name) { 
+			        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+			        var r = window.location.search.substr(1).match(reg); 
+			        if (r != null) return unescape(r[2]); 
+			        return null; 
+			    } 
 		</script>
 	</body>
 </html>

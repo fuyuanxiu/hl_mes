@@ -69,7 +69,8 @@
 			for(var i=0; i<arr.length; i++){
 				// 有几个选项卡，需要创建几个子页面
 				var page = plus.webview.create(pages[i],pages[i],styles);
-				pageArr.push(page);
+				
+				pageArr.push(page); 
 				!function(i){
 					arr[i].addEventListener("tap",function(){
 						// 让当前页面(i)显示，不是当前页面隐藏
@@ -80,7 +81,10 @@
 						/* 让新创建的webview，追加合并到当前的窗口上。合并成一个窗口。
 						 * 目的：将父子窗口合并成一个页面，实现同开同关的效果。 避免点击返回安监室，子页面先关闭，而父页面的头部和尾部没有关闭的BUG。
 						 */
+						if(i==2)pageArr[i].reload()
+						
 						slef.append(pageArr[i]);
+						
 						if(i==1)mui.alert("正在开发中……")
 						document.getElementById("title").innerHTML = titles[i];
 					})

@@ -23,8 +23,8 @@
 	</head>
 	<body>
 		<!-- <header class="mui-bar mui-bar-nav">
-			<h1 class="mui-title">PMS</h1>
-		</header> -->
+			<h1 class="mui-title">MES</h1>
+		</header> --> 
 		<div class="mui-content">
 			<div class="mui-slider">
 				<div class="mui-slider-group">
@@ -143,7 +143,7 @@
 			// 重写移动端返回键 
 			var first = null;
 			mui.back = function() {
-				mui.plusReady(function() {
+				mui.ready(function() {
 					//首页返回键处理
 					//处理逻辑：1秒内，连续两次按返回键，则退出应用；
 					if (!first) {
@@ -160,7 +160,7 @@
 				});
 			}
 			mui.init()
-			mui.plusReady(function() {
+			mui.ready(function() {
 				var gallery = mui('.mui-slider');
 				gallery.slider({
 					interval: 5000 //自动轮播周期，若为0则不自动播放，默认为0；

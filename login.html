@@ -97,11 +97,13 @@
 					var username = document.getElementById("username");
 					var password = document.getElementById("password");
 					if (username.value.length == 0) {
-						plus.ui.toast("用户名不能为空");
+						//plus.ui.toast("用户名不能为空");
+						alert("用户名不能为空")
 						return;
 					}
 					if (password.value.length == 0) {
-						plus.ui.toast("密码不能为空");
+						//plus.ui.toast("密码不能为空");
+						alert("密码不能为空")
 						return;
 					}
 					
@@ -132,7 +134,7 @@
 								document.getElementById("password").value = "";
 								if (data.result) {
 									//登录成功
-									plus.ui.toast("登录成功");
+									//plus.ui.toast("登录成功");
 									api_localStorageSave("code", data.data.FCODE);
 									api_localStorageSave("name", data.data.FNAME);
 									api_localStorageSave("factory", data.data.FFACTORY);
@@ -141,18 +143,18 @@
 									api_localStorageSave("webPath",  API.webPath);
 									
 									sessionStorage.setItem("bsCode", data.data.FCODE); //存一个session会话
-									mui.openWindow({
+									 mui.openWindow({
 										url: 'index.html',
 										id: 'index',
 									})
-
 								} else {
 									//登录失败
-									plus.ui.toast(data.msg);
+									alert(data.msg)
+									//plus.ui.toast(data.msg);
 								}
 							},
 							error: function(xhr, type, errorThrown) {
-								plus.ui.toast('登录失败!失败类型是:' + type);
+								//plus.ui.toast('登录失败!失败类型是:' + type);
 							}
 						})
 						setTimeout(function() {
