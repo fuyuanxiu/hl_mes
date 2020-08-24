@@ -7,6 +7,10 @@
 		<script src="js/mui.js"></script>
 		<script src="js/api.js"></script>
 		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery-1.11.1.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/comment.css" />
+		<link rel="stylesheet" type="text/css" href="css/iconfont.css" />
 		<!--页面优化-->
 		<meta name="HandheldFriendly" content="true" />
 		<style type="text/css">
@@ -43,8 +47,13 @@
 
 			<form class="mui-input-group">
 				<div class="mui-input-row cell">
-					<label>用户名</label>
-					<input type="text" class="mui-input-clear" placeholder="请输入用户名" id="username" >
+					<label onclick="clicked('web/commom/saomiao.html','username','login.html');"><span class="mui-icon iconfont icon-saomiao">
+						</span>工号</label>
+					<input type="text" class="mui-input-clear" placeholder="请输入扫描/输入工号" id="username">
+				</div>
+				<div class="mui-input-row cell">
+					<label>姓名</label>
+					<input type="text" class="mui-input-clear" disabled id="name_info">
 				</div>
 				<div class="mui-input-row">
 					<label>密码</label>
@@ -61,9 +70,15 @@
 			</div>
 
 		</div>
+		
+			<div class="mui-card-footer">
+				<span style="margin: 0 auto;" id="ver"></span>
+			</div>
+		
+
 
 		<script type="text/javascript" charset="utf-8">
-			mui.init();
+			mui.init({})
 			// 重写移动端返回键 
 			var first = null;
 			mui.back = function() {
@@ -81,6 +96,7 @@
 							plus.runtime.quit();
 						}
 					}
+
 				});
 			}
 			mui.plusReady(function() {
@@ -88,8 +104,16 @@
 				//var reg=document.getElementById("reg");
 				//20191113-fyx-默认填写上一次登录人账号
 				document.getElementById("username").value = api_localStorageGet("code")
-				
-				
+				plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+					document.getElementById("ver").innerHTML = "当前版本号：" + inf.version
+					console.log()
+				})
+				$('#username').bind('keyup', function(event) {
+					if (event.keyCode == "13") {
+						getName();
+					}
+				})
+
 				var login = document.getElementById("login");
 				var loginWai = document.getElementById("loginWai");
 
@@ -104,7 +128,7 @@
 						plus.ui.toast("密码不能为空");
 						return;
 					}
-					
+
 					/* api_localStorageSave("code", username.value);
 					api_localStorageSave("webPath",  API.webPath);
 					
@@ -113,58 +137,87 @@
 						id: 'index'
 					})
 					return ; */
-					
-						mui('#login').button('loading');
-						//mui('#loginWai').button('loading');
-						mui.ajax(API.webPath + '/login', {
-							data: {
-								username: username.value.toString(),
-								password: password.value.toString()
-							},
-							dataType: 'json',
-							type: 'POST',
-							timeout: 10000,
-							headers: {
-								'Content-Type': 'application/json'
-							},
-							success: function(data) {
-				
-								document.getElementById("password").value = "";
-								if (data.result) {
-									//登录成功
-									plus.ui.toast("登录成功");
-									api_localStorageSave("code", data.data.FCODE);
-									api_localStorageSave("name", data.data.FNAME);
-									api_localStorageSave("factory", data.data.FFACTORY);
-									api_localStorageSave("company", data.data.FCOMPANY);
-									
-									api_localStorageSave("webPath",  API.webPath);
-									
-									sessionStorage.setItem("bsCode", data.data.FCODE); //存一个session会话
-									mui.openWindow({
-										url: 'index.html',
-										id: 'index',
-									})
 
-								} else {
-									//登录失败
-									plus.ui.toast(data.msg);
-								}
-							},
-							error: function(xhr, type, errorThrown) {
-								plus.ui.toast('登录失败!失败类型是:' + type);
+					mui('#login').button('loading');
+					//mui('#loginWai').button('loading');
+					mui.ajax(API.webPath + '/login', {
+						data: {
+							username: username.value.toString(),
+							password: password.value.toString()
+						},
+						dataType: 'json',
+						type: 'POST',
+						timeout: 10000,
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						success: function(data) {
+
+							document.getElementById("password").value = "";
+							if (data.result) {
+								//登录成功
+								plus.ui.toast("登录成功");
+								api_localStorageSave("code", data.data.FCODE);
+								api_localStorageSave("name", data.data.FNAME);
+								api_localStorageSave("factory", data.data.FFACTORY);
+								api_localStorageSave("company", data.data.FCOMPANY);
+
+								api_localStorageSave("webPath", API.webPath);
+
+								sessionStorage.setItem("bsCode", data.data.FCODE); //存一个session会话
+								mui.openWindow({
+									url: 'index.html',
+									id: 'index',
+								})
+
+							} else {
+								//登录失败
+								plus.ui.toast(data.msg);
 							}
-						})
-						setTimeout(function() {
-							mui('#login').button('reset');
-							mui('#loginWai').button('reset');
-						}.bind(this), 1000);
-					
-
+						},
+						error: function(xhr, type, errorThrown) {
+							plus.ui.toast('登录失败!失败类型是:' + type);
+						}
+					})
+					setTimeout(function() {
+						mui('#login').button('reset');
+						mui('#loginWai').button('reset');
+					}.bind(this), 1000);
 				})
-				
-				
 			})
+
+			function getName() {
+				mui.ajax(API.webPath + '/check_name', {
+					data: {
+						username: $("#username").val()
+					},
+					dataType: 'json',
+					type: 'POST',
+					timeout: 10000,
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					success: function(data) {
+						if (data.result) {
+							//console.log(data)
+							var name = [data.data];
+							 console.log(JSON.stringify(name))
+							// console.log(name[0].FNAME);
+							$("#name_info").val(name[0].FNAME)
+						} else {
+							//获取失败
+							console.log(JSON.stringify(data))
+							plus.ui.toast(data.msg);
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(xhr)
+						console.log(type)
+						console.log(errorThrown)
+						plus.ui.toast('获取失败!失败类型是:' + type);
+					}
+				})
+			}
 
 			function update() {
 				plus.runtime.getProperty(plus.runtime.appid, function(inf) {
@@ -190,7 +243,7 @@
 							} else {
 								plus.nativeUI.alert(res.msg);
 							}
-							api_localStorageSave("version", ver);//保存当前版本号
+							api_localStorageSave("version", ver); //保存当前版本号
 						},
 						error: function(xhr, type, errorThrown) {
 							plus.ui.toast('登录失败!失败类型是:' + type);
@@ -218,7 +271,7 @@
 							//clearInterval(i);
 							var baifenbiw = (Math.round(daxiaoa * 100) / 100) * 100
 							//console.log(baifenbiw)
-							showPer(a,'下载中');
+							showPer(a, '下载中');
 							break;
 						case 4: // 下载完成
 							console.log("下载完成！");
@@ -226,14 +279,14 @@
 							plus.io.resolveLocalFileSystemURL(task.filename, function(entry) {
 								console.log(entry.toLocalURL()) //绝对地址  
 								speed = 0.1;
-								showPer(speed,'安装中');
+								showPer(speed, '安装中');
 								plus.runtime.install(entry.toLocalURL(), {}, function() {
-								plus.nativeUI.alert("安装成功！", function() {
-									plus.runtime.restart();
+									plus.nativeUI.alert("安装成功！", function() {
+										plus.runtime.restart();
+									});
+								}, function(e) {
+									plus.nativeUI.alert("更新失败===" + e.message);
 								});
-							}, function(e) {
-								plus.nativeUI.alert("更新失败===" + e.message);
-							});									
 							});
 							console.log(task.filename)
 							break;
@@ -243,7 +296,8 @@
 				dtask.start();
 			}
 			var speed = 0.1;
-			function showPer(baifenbi,aln) {
+
+			function showPer(baifenbi, aln) {
 				var canvas = document.getElementById('canvas'), //获取canvas元素
 					context = canvas.getContext('2d'), //获取画图环境，指明为2d
 					centerX = canvas.width / 2, //Canvas中心点x轴坐标
@@ -273,7 +327,7 @@
 					context.restore();
 				}
 				//百分比文字绘制
-				function text(n,aln) {
+				function text(n, aln) {
 					context.save(); //save和restore可以保证样式属性只运用于该段canvas元素
 					context.strokeStyle = "#614cf6"; //设置描边样式
 					context.font = "40px Arial"; //设置字体大小和字体
@@ -288,7 +342,7 @@
 				//动画循环
 				context.clearRect(0, 0, canvas.width, canvas.height);
 				whiteCircle();
-				text(baifenbi,aln);
+				text(baifenbi, aln);
 				blueCircle(speed);
 
 				// (function drawFrame() {
@@ -301,8 +355,15 @@
 				// 	speed += 0.1;
 				// }());
 				//if (speed > 100) return;
-				 	speed += 0.2;
+				speed += 0.2;
 			}
+
+			function clicked(url, f1, urlId) {
+				OpenWindow(f1, url, {
+					urlId: urlId,
+					inputId: f1
+				});
+			};
 		</script>
 	</body>
 </html>
