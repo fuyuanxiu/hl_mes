@@ -99,6 +99,13 @@
 
 				});
 			}
+			window.addEventListener("changeBar", function(e) {
+				//console.log(e.detail.barcode)
+				//console.log(document.getElementById("#barcode").value)
+				var inputId = e.detail.inputId
+				document.getElementById(inputId).value = (e.detail.barcode)
+				getName();
+			});
 			mui.plusReady(function() {
 				//update();
 				//var reg=document.getElementById("reg");
@@ -106,7 +113,6 @@
 				document.getElementById("username").value = api_localStorageGet("code")
 				plus.runtime.getProperty(plus.runtime.appid, function(inf) {
 					document.getElementById("ver").innerHTML = "当前版本号：" + inf.version
-					console.log()
 				})
 				$('#username').bind('keyup', function(event) {
 					if (event.keyCode == "13") {
