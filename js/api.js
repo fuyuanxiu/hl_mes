@@ -2,8 +2,8 @@ var API = window.API = {
 
 	//webPath			: "http://192.168.1.105:9999/",
 	//webPathWai: "http://113.106.220.62:9999/jyapp/",
-	//webPath			: "http://192.168.1.117:9998/",
-	webPath			: "http://192.168.1.160:9998/hl_rf",
+	webPath			: "http://192.168.0.109:9998/",
+	//webPath			: "http://192.168.1.160:9998/hl_rf",
 	// webPath			: "http://192.168.22.9:8080/hl_rf",
 
 
