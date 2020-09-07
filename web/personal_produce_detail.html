@@ -52,7 +52,7 @@
 			<li class="mui-table-view-cell" >
 				<div class="mui-input-row">
 					<label>报工数量：</label>
-					<input name="aplay_num"   value="<%=(item.BG_QTY)%>"  onfocus="countAll('aplay_num',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input name="aplay_num"   value="<%=(item.BG_QTY)%>"  onblur="countAll('aplay_num',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>合格品数：</label>
@@ -60,7 +60,7 @@
 				</div>
 				<div class="mui-input-row">
 					<label>不合格数：</label>
-					<input name="unqualified_qty" type="number" value="<%=(item.UNQUALIFIED_QTY)%>" onfocus="countAll('unqualified_qty',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input name="unqualified_qty" type="number" value="<%=(item.UNQUALIFIED_QTY)%>" onblur="countAll('unqualified_qty',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<input name="id" type="text" style="display: none;" disabled value="<%=(item.ID)%>">
 			</li>
@@ -135,18 +135,21 @@
 					//去掉最后一个|
 					paramInfo = paramInfo.substr(0, paramInfo.length - 1);
 				}
-				console.log(paramInfo)
 				aj.post('/produce_verify/sumbitProduceRecordDetail', {
 					usercode: api_localStorageGet("code"),
-					proc:order.WORPROC_CODE,
+					proc:child_data[0].WORPROC_CODE,
 					task_no:order.TASK_NO,
-					eq_code:child_data.EQU_CODE,
+					eq_code:child_data[0].EQU_CODE,
 					reportInfo: paramInfo,
 					role:role
 				}, function(data) {
 					mui.alert(data.msg);
-					window.location.reload(); //执行刷新
+					//返回上一页并刷新
+					var list = plus.webview.currentWebview().opener();
+					mui.fire(list, 'refresh'); //refresh是A页面自定义事件
+					return true; //返回true,继续页面关闭逻辑
 				});
+				
 			}
 			function countAll(inputId,i){
 				var aplay_num = document.getElementsByName("aplay_num"); //报工数量

@@ -42,16 +42,16 @@
 			<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="submit">提 交 审 核</button>
 		</div>
 		<script id='record-template' type="text/template">
-			<% for(var i in record){ var item=record[i]; var check = $imports.checkInput(item.VERIFY) %>	
+			<% for(var i in record){ var item=record[i]; var check = $imports.checkInput(item);  var verify= $imports.checkVerify(item)%>	
 		<div class="mui-card">
 		<div class="mui-card-header "><%=(item.PERSON_NAME)%>(<%=(item.STAFF_NO)%>)</div>
 		<div class="mui-card-content mui-navigate-right" id="list" >
 			<ul class="mui-table-view " detail-data='<%=(item)%>'>
 			<li class="mui-table-view-cell" >
-			{{if item.VERIFY=="0"}}
-			<div class="font-seal">未审核</div>
-			{{else}}
+			{{if verify}}
 			<div class="font-seal-ok">已审核</div>
+			{{else}}
+			<div class="font-seal">未审核</div>
 			{{/if}}	
 				
 				<div class="mui-input-row">
@@ -88,16 +88,17 @@
 				var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
 				var detail = param.detail;
 				var child = param.child_data;
-				var data = JSON.parse(child)
-				var de_data=JSON.parse(detail)
+				ch_data = JSON.parse(child)
+				de_data=JSON.parse(detail)
+				console.log(JSON.stringify(ch_data))
+				console.log(JSON.stringify(de_data))
 				showDetailData(detail, child);
-				//console.log(de_data.Role)
-				getProduceVerifyDetail(detail, data.EQU_CODE, data.WORPROC_CODE, data.WORKSHOP_CENTER_NAME);
+				getProduceVerifyDetail(detail, ch_data.EQU_CODE, ch_data.WORPROC_CODE, ch_data.WORKSHOP_CENTER_NAME);
 				mui("#contentId").on("tap", "ul", function() {
 					var detail_data = this.getAttribute('detail-data'); //详细信息
-					console.log(detail_data)
+					//console.log(detail_data)
 					detail_data=JSON.parse([detail_data])
-					if(detail_data.VERIFY=="0"){//只有未审核才可以查看明细修改
+					if(detail_data.VERIFY=="0"||detail_data.VERIFY_01=="0"){//只有未审核才可以查看明细修改
 						OpenWindow('personal_produce_detail', 'personal_produce_detail.html', {
 							"order":de_data,
 							"pl_param": detail_data,
@@ -107,12 +108,23 @@
 				})
 			})
 
-			template.defaults.imports.checkInput = function(item_verify) {
-				if (item_verify == "0") { //0:未审核 1：已审核
+			template.defaults.imports.checkInput = function(item) {//判断是否可以修改input
+				var role=api_localStorageGet("role")// VERIFY/VERIFY_01: 0:未审核 1：已审核
+				if(role=="OperatingPersonnel"&&item.VERIFY=="1"){
+					return "";
+				}else if(role=="'QualityInspectors"&&item.VERIFY_01=="1"){
 					return "";
 				}
 				return "disabled";
-				//return "";
+			};
+			template.defaults.imports.checkVerify = function(item) {//判断状态显示
+				var role=api_localStorageGet("role")// VERIFY/VERIFY_01: 0:未审核 1：已审核
+				if(role=="OperatingPersonnel"&&item.VERIFY=="1"){
+					return true;
+				}else if(role=="'QualityInspectors"&&item.VERIFY_01=="1"){
+					return true;
+				}
+				return false;
 			};
 
 			function showDetailData(detail, child) {
@@ -134,7 +146,7 @@
 					eq_code: EQU_CODE
 				}, function(data) {
 					if (data.result) {
-						//console.log(data)
+						//console.log(JSON.stringify(data))
 						document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data
 						});
@@ -155,29 +167,32 @@
 			});
 			
 			function submitResult() {
-				var id = document.getElementsByName("id");
-				var audit_qty = document.getElementsByName("audit_qty"); //审核数量
-				var qualified_qty = document.getElementsByName("qualified_qty"); //良品数量
-				var unqualified_qty = document.getElementsByName("unqualified_qty"); //不良品数
-				var paramInfo = ""; //参数字符串
-				for (var i = 0; i < id.length; i++) { //循环获取每组input的数据
-					if (audit_qty[i].value == "" || qualified_qty[i].value == "" || //判断数据表的完整性
-						unqualified_qty[i].value == "" ) {
-						mui.alert("请完善审核数据！")
-						return false;
-					}
-					paramInfo += id[i].value + "," +
-						audit_qty[i].value + "," +
-						qualified_qty[i].value + "," +
-						unqualified_qty[i].value + "|";
-				}
-				if (paramInfo.length > 0) {
-					//去掉最后一个|
-					paramInfo = paramInfo.substr(0, paramInfo.length - 1);
-				}
+				// var id = document.getElementsByName("id");
+				// var audit_qty = document.getElementsByName("audit_qty"); //审核数量
+				// var qualified_qty = document.getElementsByName("qualified_qty"); //良品数量
+				// var unqualified_qty = document.getElementsByName("unqualified_qty"); //不良品数
+				// var paramInfo = ""; //参数字符串
+				// for (var i = 0; i < id.length; i++) { //循环获取每组input的数据
+				// 	if (audit_qty[i].value == "" || qualified_qty[i].value == "" || //判断数据表的完整性
+				// 		unqualified_qty[i].value == "" ) {
+				// 		mui.alert("请完善审核数据！")
+				// 		return false;
+				// 	}
+				// 	paramInfo += id[i].value + "," +
+				// 		audit_qty[i].value + "," +
+				// 		qualified_qty[i].value + "," +
+				// 		unqualified_qty[i].value + "|";
+				// }
+				// if (paramInfo.length > 0) {
+				// 	//去掉最后一个|
+				// 	paramInfo = paramInfo.substr(0, paramInfo.length - 1);
+				// }
 				aj.post('/produce_verify/sumbitProduceVerify', {
 					usercode: api_localStorageGet("code"),
-					reportInfo: paramInfo
+					proc:ch_data.WORPROC_CODE,
+					task_no:de_data.TASK_NO,
+					eq_code:ch_data.EQU_CODE,
+					role:de_data.Role
 				}, function(data) {
 					mui.alert(data.msg);
 					window.location.reload(); //执行刷新
