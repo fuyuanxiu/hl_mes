@@ -22,18 +22,21 @@
 			<h1 class="mui-title">报工审核</h1>
 		</header>
 		<div class="mui-content">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
-					<a  href="#">工单信息</a>
-					<div class="mui-collapse-content">
-						<p>工单号:&nbsp; <span id="task_no"></span></p>
-						<p>工序-设备:&nbsp;<span id="proc_equ"></span></p>
-						<p>产品名称:&nbsp;<span id="board_name"></span></p>
-						<p>工单数量:&nbsp;<span id="plan_qty"></span></p>
-						<p>完成数量:&nbsp;<span id="complete_qty"></span></p>
-					</div>
-				</li>
-			</ul>
+			 <ul class="mui-table-view"> 
+			        <li class="mui-table-view-cell mui-collapse mui-active">
+			            <a class="mui-navigate-right" href="#">工单信息</a>
+			            <div class="mui-collapse-content">
+			                <p>工单号:&nbsp; <span id="task_no"></span></p>
+			                	<p>工序-设备:&nbsp;<span id="proc_equ"></span></p>
+			                	<p>产品名称:&nbsp;<span id="board_name"></span></p>
+			                	<p>工单数量:&nbsp;<span id="plan_qty"></span></p>
+			                	<p>完成数量:&nbsp;<span id="complete_qty"></span></p>
+								<p>组长:&nbsp;<span id="captain"></span></p>
+								<p>质量:&nbsp;<span id="quality"></span></p>
+			                </div>
+			        </li>
+			    </ul>
+			
 			<div id="contentId">
 			</div>
 		</div>
@@ -56,15 +59,15 @@
 				
 				<div class="mui-input-row">
 					<label>审核数量：</label>
-					<input name="audit_qty" type="number"  {{check}} value="<%=(item.AUDIT_QTY)%>" onfocus="countAll('audit_qty',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input name="audit_qty" type="number"  {{check}} value="<%=(item.AUDIT_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>合格品数：</label>
-					<input name="qualified_qty" type="number"  value="<%=(item.QUALIFIED_QTY)%>"onfocus="countAll('qualified_qty',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input name="qualified_qty" type="number" disabled value="<%=(item.QUALIFIED_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>不合格数：</label>
-					<input name="unqualified_qty" type="number" {{check}} value="<%=(item.UNQUALIFIED_QTY)%>" onfocus="countAll('unqualified_qty',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input name="unqualified_qty" type="number" {{check}} value="<%=(item.UNQUALIFIED_QTY)%>" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<input name="id" type="text" style="display: none;" disabled value="<%=(item.ID)%>">
 			</li>
@@ -90,14 +93,15 @@
 				var child = param.child_data;
 				ch_data = JSON.parse(child)
 				de_data=JSON.parse(detail)
-				console.log(JSON.stringify(ch_data))
-				console.log(JSON.stringify(de_data))
+				//console.log(JSON.stringify(ch_data))
+				//console.log(JSON.stringify(de_data))
 				showDetailData(detail, child);
 				getProduceVerifyDetail(detail, ch_data.EQU_CODE, ch_data.WORPROC_CODE, ch_data.WORKSHOP_CENTER_NAME);
 				mui("#contentId").on("tap", "ul", function() {
 					var detail_data = this.getAttribute('detail-data'); //详细信息
 					//console.log(detail_data)
 					detail_data=JSON.parse([detail_data])
+					
 					if(detail_data.VERIFY=="0"||detail_data.VERIFY_01=="0"){//只有未审核才可以查看明细修改
 						OpenWindow('personal_produce_detail', 'personal_produce_detail.html', {
 							"order":de_data,
@@ -110,9 +114,9 @@
 
 			template.defaults.imports.checkInput = function(item) {//判断是否可以修改input
 				var role=api_localStorageGet("role")// VERIFY/VERIFY_01: 0:未审核 1：已审核
-				if(role=="OperatingPersonnel"&&item.VERIFY=="1"){
+				if(role=="OperatingPersonnel"&&item.VERIFY=="0"){
 					return "";
-				}else if(role=="'QualityInspectors"&&item.VERIFY_01=="1"){
+				}else if(role=="'QualityInspectors"&&item.VERIFY_01=="0"){
 					return "";
 				}
 				return "disabled";
@@ -146,12 +150,26 @@
 					eq_code: EQU_CODE
 				}, function(data) {
 					if (data.result) {
-						//console.log(JSON.stringify(data))
+						console.log(JSON.stringify(data))
+						var list= data.data
+						if(list[0].VERIFY==1){
+							$("#captain").text("已审核"); 
+						}else{
+							$("#captain").text("未审核"); 
+						}
+						if(list[0].VERIFY_01==1){
+							$("#quality").text("已审核"); 
+						}else{
+							$("#quality").text("未审核"); 
+						}
 						document.getElementById('contentId').innerHTML = template('record-template', {
-							"record": data.data
+							"record":list
 						});
 					} else {
 						mui.alert(data.msg);
+						var list = plus.webview.currentWebview().opener();
+						mui.fire(list, 'refresh'); //refresh是A页面自定义事件
+						return true; //返回true,继续页面关闭逻辑
 					}
 				});
 			}
@@ -167,26 +185,6 @@
 			});
 			
 			function submitResult() {
-				// var id = document.getElementsByName("id");
-				// var audit_qty = document.getElementsByName("audit_qty"); //审核数量
-				// var qualified_qty = document.getElementsByName("qualified_qty"); //良品数量
-				// var unqualified_qty = document.getElementsByName("unqualified_qty"); //不良品数
-				// var paramInfo = ""; //参数字符串
-				// for (var i = 0; i < id.length; i++) { //循环获取每组input的数据
-				// 	if (audit_qty[i].value == "" || qualified_qty[i].value == "" || //判断数据表的完整性
-				// 		unqualified_qty[i].value == "" ) {
-				// 		mui.alert("请完善审核数据！")
-				// 		return false;
-				// 	}
-				// 	paramInfo += id[i].value + "," +
-				// 		audit_qty[i].value + "," +
-				// 		qualified_qty[i].value + "," +
-				// 		unqualified_qty[i].value + "|";
-				// }
-				// if (paramInfo.length > 0) {
-				// 	//去掉最后一个|
-				// 	paramInfo = paramInfo.substr(0, paramInfo.length - 1);
-				// }
 				aj.post('/produce_verify/sumbitProduceVerify', {
 					usercode: api_localStorageGet("code"),
 					proc:ch_data.WORPROC_CODE,
@@ -195,18 +193,13 @@
 					role:de_data.Role
 				}, function(data) {
 					mui.alert(data.msg);
-					window.location.reload(); //执行刷新
+					//window.location.reload(); //执行刷新
+					//返回上一页并刷新
+					var list = plus.webview.currentWebview().opener();
+					mui.fire(list, 'refresh'); //refresh是A页面自定义事件
+					return true; //返回true,继续页面关闭逻辑
 				});
 			}
-
-			// function countAll(inputId,i){
-			// 	var audit_qty = document.getElementsByName("audit_qty"); //审核数量
-			// 	var qualified_qty = document.getElementsByName("qualified_qty"); //良品数量
-			// 	var unqualified_qty = document.getElementsByName("unqualified_qty"); //不良品数
-			// 	var bf_qty = document.getElementsByName("bf_qty"); //报废数量
-
-			// 	alert(audit_qty[i].value)
-			// }
 		</script>
 	</body>
 </html>

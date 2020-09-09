@@ -290,9 +290,9 @@ function GetQueryString(name) {
 			success: success,
 			error: function(xhr, type, errorThrown) {
 				mui.alert('服务器连接超时，请稍后再试');
-				// console.log(xhr)
-				// console.log(type)
-				// console.log(errorThrown)
+				 console.log(xhr)
+				 console.log(type)
+				 console.log(errorThrown)
 			},
 			beforeSend: function() {
 				plus.nativeUI.showWaiting("处理中，请等待...");
