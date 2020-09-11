@@ -2,8 +2,8 @@ var API = window.API = {
 
 	//webPath			: "http://192.168.1.105:9999/",
 	//webPathWai: "http://113.106.220.62:9999/jyapp/",
-	webPath			: "http://192.168.0.109:9998/",
-	//webPath			: "http://192.168.1.160:9998/hl_rf",
+	//webPath			: "http://192.168.0.109:9998/",
+	webPath			: "http://192.168.1.160:9998/hl_rf",
 	// webPath			: "http://192.168.22.9:8080/hl_rf",
 
 
@@ -290,9 +290,9 @@ function GetQueryString(name) {
 			success: success,
 			error: function(xhr, type, errorThrown) {
 				mui.alert('服务器连接超时，请稍后再试');
-				 console.log(xhr)
-				 console.log(type)
-				 console.log(errorThrown)
+				// console.log(xhr)
+				// console.log(type)
+				// console.log(errorThrown)
 			},
 			beforeSend: function() {
 				plus.nativeUI.showWaiting("处理中，请等待...");

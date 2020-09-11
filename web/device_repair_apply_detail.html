@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.js"></script>
+		<script src="../js/jquery-1.11.1.js"></script>
+		<script src="../js/api.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/template-web.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
+		<link rel="stylesheet" type="text/css" href="../css/timeline.css" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav colorBg">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>
+			</button>
+			<h1 class="mui-title">维修单详情</h1>
+		</header>
+		<div class="mui-content" id="contentId">
+			<div>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#">维修单跟踪</a>
+						<div class="mui-collapse-content">
+							<section id="cd-timeline" class="cd-container" style="">
+								<div class="cd-timeline-block">
+									<div class="cd-timeline-img cd-picture"></div>
+									<div class="cd-timeline-content">
+										<div>维修员01接收委派，正在处理</div>
+										<div class="cd-date">2018-05-22 15:43:58</div>
+									</div>
+								</div>
+								<div class="cd-timeline-block">
+									<div class="cd-timeline-img cd-movie"></div>
+									<div class="cd-timeline-content">
+										<div>分派员，委派维修员01处理</div>
+										<div class="cd-date">2020-08-02 15:33:34</div>
+									</div>
+								</div>
+								<div class="cd-timeline-block">
+									<div class="cd-timeline-img cd-movie"></div>
+									<div class="cd-timeline-content">
+										<div>杜世文，提交报修申请</div>
+										<div class="cd-date">2020-08-02 14:33:34</div>
+									</div>
+								</div>
+							</section>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="mui-input-group">
+				<div class="mui-input-row">
+					<label>故障设备</label>
+					<input type="text" value="注塑机PZS-0321" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>设备位置</label>
+					<input type="text" value="已过模具寿命不宜使用" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>故障描述</label>
+					<input type="text" value="已过模具寿命不宜使用" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>维修方案</label>
+					<input type="text" value="已过模具寿命不宜使用" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>故障原因</label>
+					<input type="text" value="已过模具寿命不宜使用" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>维修结果</label>
+					<input type="text" value="已过模具寿命不宜使用" class="mui-input-clear">
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+	</body>
+
+</html>

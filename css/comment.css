@@ -44,3 +44,17 @@
 	color: #00ff7f;
 	font-weight: bold;
 }
+.font-seal-wait {
+	font-size: 10px;
+	z-index: 2;
+	position: absolute;
+	right: 14px;
+	top: 25px;
+	border: 1px solid #d7b700;
+	transform: rotate(25deg);
+	width: 43px;
+	line-height: 20px;
+	text-align: center;
+	color: #d7b700;
+	font-weight: bold;
+}

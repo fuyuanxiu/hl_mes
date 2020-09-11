@@ -28,55 +28,132 @@
 				<li class="mui-table-view-cell mui-collaps mui-active">
 					<a href="#"></a>
 					<div class="mui-collapse-content">
-						<p>盘点区域:&nbsp; <span id="task_no"></span></p>
-						<p>盘点单号:&nbsp;<span id="proc_equ"></span></p>
-						<p>盘点时间段:&nbsp;<span id="board_name"></span></p>
+						<p>盘点区域:&nbsp; <span id="area"></span></p>
+						<p>盘点单号:&nbsp;<span id="bill_no"></span></p>
+						<p>盘点时间段:&nbsp;<span id="time_interval"></span></p>
 					</div>
 				</li>
 			</ul>
 			<div>
 				<div class="mui-input-group">
 					<div class="mui-input-row">
-						<label onclick="clicked('commom/saomiao.html','location','web/device_invetory.html');">当前区域<span class="mui-icon iconfont icon-saomiao"
-						 id="num1"></label>
-						<input id="location" type="number" class="mui-input-clear" placeholder="请扫描">
+						<label onclick="clicked('commom/saomiao.html','now_area','web/device_invetory.html');">当前区域<span class="mui-icon iconfont icon-saomiao"
+							 id="num1"></label>
+						<input id="now_area" type="text" class="mui-input-clear" placeholder="请扫描">
 					</div>
 					<div class="mui-input-row">
-						<label onclick="clicked('commom/saomiao.html','device','web/device_invetory.html');" >盘点设备<span class="mui-icon iconfont icon-saomiao"
-						 id="num1"></label>
-						<input id="device" type="number" class="mui-input-clear" placeholder="请扫描">
+						<label onclick="clicked('commom/saomiao.html','device','web/device_invetory.html');">盘点设备<span class="mui-icon iconfont icon-saomiao"
+							 id="num1"></label>
+						<input id="device" type="text" class="mui-input-clear" placeholder="请扫描">
 					</div>
 					<div class="mui-input-row">
 						<label>原区域</label>
-						<input type="number" class="mui-input-clear" disabled style="background-color: #f0f0f0;">
+						<input type="text" id="original_area" class="mui-input-clear" disabled style="background-color: #f0f0f0;">
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="mui-content-padded" align="center">
-			<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="submit">确 认</button>
+			<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="submitData">确 认</button>
 		</div>
 		<script type="text/javascript">
 			mui.init();
-			
+
 			window.addEventListener("changeBar", function(e) {
 				var inputId = e.detail.inputId
 				document.getElementById(inputId).value = e.detail.barcode
 			});
 			mui.plusReady(function() {
-				getUerPower();//判断盘点权限
+				getUerPower(); //判断盘点权限
 			})
-			function getUerPower(){
+
+			function getUerPower() {
 				aj.post('/device_inventory/judgeUserPower', {
 					usercode: api_localStorageGet("code")
 				}, function(data) {
 					if (data.result) {
-					console.log(JSON.stringify(data.data))
+						var inventory = data.data
+						$("#area").text(inventory[0].area);
+						$("#time_interval").text(inventory[0].timeInterval);
+						$("#bill_no").text(inventory[0].billNo);
 					} else {
 						mui.alert(data.msg);
 					}
 				});
 			}
+
+			//监听当前区域——扫描回车
+			$('#now_area').bind('keyup', function(event) {
+				if (event.keyCode == "13") { //输入回车执行
+					aj.post('/device_inventory/judgeArea', {
+						usercode: api_localStorageGet("code"),
+						area: $('#now_area').val(),
+						check_id: $("#bill_no").text(),
+						right_area: $("#area").text()
+					}, function(data) {
+						//console.log(JSON.stringify(data))
+						if (data.result) {
+							mui.alert("区域验证通过，请继续扫描设备");
+						} else {
+							mui.alert(data.msg);
+						}
+					});
+				}
+			});
+			//监听设备扫描——扫描回车
+			$('#device').bind('keyup', function(event) {
+				if($('#now_area').val()==""){
+					mui.alert("请先扫描区域信息")
+					return false;
+				}
+				if (event.keyCode == "13") { //输入回车执行
+					aj.post('/device_inventory/judgeDevice', {
+						usercode: api_localStorageGet("code"),
+						check_id: $("#bill_no").text(),
+						eq_code: $("#device").val(),
+						area: $('#now_area').val()
+					}, function(data) {
+						//console.log(JSON.stringify(data))
+						var msgData=data.data
+						if (data.result) {
+							//mui.alert(msgData[0].result);
+							$("#original_area").val(msgData[0].old_location)
+						} else {
+							mui.alert(msgData[0].result);
+							$("#original_area").val(msgData[0].old_location)
+						}
+					});
+				}
+			});
+			$("#submitData").click(function() {
+				var area = $('#now_area').val();
+				var device = $("#device").val();
+				var check_id = $("#bill_no").text();
+				var original_area= $("#original_area").val();
+				if (area == "" || device == "" || check_id == "") {
+					mui.alert("请完善数据")
+					return false;
+				}else if(area==original_area){
+					mui.alert("区域相同无需此操作")
+					return false;
+				}
+				aj.post('/device_inventory/sumbitInventory', {
+					usercode: api_localStorageGet("code"),
+					check_id: check_id,
+					eq_code: device,
+					area: area
+				}, function(data) {
+					console.log(JSON.stringify(data))
+					if (data.result) {
+						console.log(JSON.stringify(data))
+						mui.alert("操作成功");
+					} else {
+						mui.alert(data.msg);
+					}
+				});
+
+			})
+
 			function clicked(url, f1, urlId) {
 				OpenWindow(f1, url, {
 					urlId: urlId,

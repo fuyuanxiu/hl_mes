@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.js"></script>
+		<script src="../js/jquery-1.11.1.js"></script>
+		<script src="../js/api.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/template-web.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	</head>
+
+	<body class="mui-fullscreen">
+		<header class="mui-bar mui-bar-nav colorBg">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>
+			</button>
+			<h1 class="mui-title">维修申请</h1>
+		</header>
+		<div class="mui-content" id="contentId">
+			<div>
+				<div class="mui-card">
+					<div class="mui-card-footer">
+						<span>杜世文(PL053)</span>
+						<button class="mui-btn mui-btn-green" id="addApply">新增报修</button>
+					</div>
+				</div>
+			</div>
+			<div class="mui-card">
+				<div class="mui-card-header">
+					报修单号:BX0000023 
+				</div>
+				<div class="mui-card-content">
+					<ul class="mui-table-view">
+					    <li class="mui-table-view-cell mui-media" >
+					        <a href="javascript:;" class="mui-navigate-right">
+					            <div class="font-seal">待委派</div>
+					            <div class="mui-media-body">
+					                <span>维修描述：注塑机脱胶</span>
+					                <p class='mui-ellipsis'>
+									<span>申请部门：生产部-注塑车间</span><br/>
+									<span>备注：无</span>
+									</p>
+					            </div>
+					        </a>
+					    </li>
+						
+					</ul>
+				</div>
+				<div class="mui-card-footer">
+					<span>2020-08-08 10:23</span>
+					<span>
+						<button class="mui-btn-yellow">取消</button>
+						<button class="mui-btn-primary">完结</button>
+					</span>
+				</div>
+			</div>
+			<div class="mui-card">
+				<div class="mui-card-header">
+					报修单号:BX0000005 
+				</div>
+				<div class="mui-card-content">
+					<ul class="mui-table-view">
+					    <li class="mui-table-view-cell mui-media" >
+					        <a href="javascript:;" class="mui-navigate-right">
+					            <div class="font-seal-wait">维修中</div>
+					            <div class="mui-media-body">
+					                <span>维修描述：空调不制冷</span>
+					                <p class='mui-ellipsis'>
+									<span>申请部门：生产部</span><br/>
+									<span>备注：无</span>
+									</p>
+					            </div>
+					        </a>
+					    </li>
+					</ul>
+				</div>
+				<div class="mui-card-footer">
+					<span>2020-08-02 10:23</span>
+					<span>
+						<button class="mui-btn-yellow">取消</button>
+						<button class="mui-btn-primary">完结</button>
+					</span>
+				</div>
+			</div>
+			<div class="mui-card">
+				<div class="mui-card-header">
+					报修单号:BX0000002 
+				</div>
+				<div class="mui-card-content">
+					<ul class="mui-table-view">
+					    <li class="mui-table-view-cell mui-media" >
+					        <a href="javascript:;" class="mui-navigate-right">
+					            <div class="font-seal-ok">已完结</div>
+					            <div class="mui-media-body">
+					                <span>维修描述：三楼车间切压机磨损</span>
+					                <p class='mui-ellipsis'>
+									<span>申请部门：生产部</span><br/>
+									<span>备注：无</span>
+									</p>
+					            </div>
+					        </a>
+					    </li>
+					</ul>
+				</div>
+				<div class="mui-card-footer">
+					<span>2020-08-01 11:01</span>
+					<span>
+						<button disabled class="mui-btn-yellow">取消</button>
+						<button disabled class="mui-btn-primary">完结</button>
+					</span>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			mui.init()
+			window.addEventListener('refresh', function(e) { //监听页面返回事件
+				window.location.reload(); //执行刷新
+			});
+			mui.plusReady(function() {
+				
+			})
+			mui("#contentId").on("tap", "li", function() {
+				OpenWindow('device_repair_apply_detail', 'device_repair_apply_detail.html',"")
+			})
+			$("#addApply").click(function(){
+				OpenWindow('device_repair_apply_add', 'device_repair_apply_add.html', "");
+			})
+		</script>
+	</body>
+
+</html>
