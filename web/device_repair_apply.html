@@ -23,116 +23,204 @@
 				<span class="mui-icon mui-icon-left-nav"></span>
 			</button>
 			<h1 class="mui-title">维修申请</h1>
+			<a href="#" style="color:#003269"  class="mui-pull-right"><span class="title-right1" ID="usr"></span></a>
 		</header>
-		<div class="mui-content" id="contentId">
-			<div>
-				<div class="mui-card">
-					<div class="mui-card-footer">
-						<span>杜世文(PL053)</span>
-						<button class="mui-btn mui-btn-green" id="addApply">新增报修</button>
+		<div class="mui-content">
+			<div class="mui-card">
+				<div class="mui-card-header" style="align-items: center;">
+					新增报修【请填写报修内容并提交】
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label onclick="clicked('commom/saomiao.html','device','web/device_repair_apply.html');">故障设备<span class="mui-icon iconfont icon-saomiao"
+							 id="num1"></label>
+						<input id="device" type="text" class="mui-input-clear" placeholder="请扫描">
+					</div>
+					<div class="mui-input-row">
+						<label>故障描述</label>
+						<input type="text" id="des" class="mui-input-clear">
+					</div>
+					<div class="mui-content-padded" align="center">
+						<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="submitData">提 交</button>
 					</div>
 				</div>
 			</div>
+			<div id="contentId">
+				<script id='template' type="text/template">
+					<% for(var i in record){ var item=record[i];  
+			var c =$imports.checkC(item.STATUS);
+			var f =$imports.checkF(item.STATUS);%>
 			<div class="mui-card">
 				<div class="mui-card-header">
-					报修单号:BX0000023 
+					报修单号:<%=(item.APPLY_NO)%>
 				</div>
 				<div class="mui-card-content">
 					<ul class="mui-table-view">
-					    <li class="mui-table-view-cell mui-media" >
+					    <li class="mui-table-view-cell mui-media" data-item='<%=(item)%>'>
 					        <a href="javascript:;" class="mui-navigate-right">
-					            <div class="font-seal">待委派</div>
+								{{if item.STATUS =="待委派"}}
+								<div class="font-seal">待委派</div>
+								{{else if item.STATUS=="待响应"}}
+								<div class="font-seal">待响应</div>
+								{{else if item.STATUS=="维修中"}}
+								<div class="font-seal-wait">维修中</div>
+								{{else if item.STATUS=="已修好"}}
+								<div class="font-seal-ok">已修好</div>
+								{{else if item.STATUS=="完结"}}
+								<div class="font-seal-ok">完结</div>
+								{{else}}
+								<div class="font-seal-cancel">已取消</div>
+								{{/if}}
 					            <div class="mui-media-body">
-					                <span>维修描述：注塑机脱胶</span>
+					                设备信息：<span><%=(item.EQ_NAME)%>(<%=(item.EQ_CODE)%>)</span>
 					                <p class='mui-ellipsis'>
-									<span>申请部门：生产部-注塑车间</span><br/>
-									<span>备注：无</span>
+									故障描述：<span><%=(item.TRU_PHEN)%></span><br/>
+									设备位置：<span><%=(item.LINE_NO)%></span><br/>
+									维修人员：<span><%=(item.RPHAND_BY_NAME)%></span>
 									</p>
 					            </div>
 					        </a>
 					    </li>
-						
 					</ul>
 				</div>
 				<div class="mui-card-footer">
-					<span>2020-08-08 10:23</span>
+					<span>申请日期：<%=(item.APPLY_DATE)%></span>
 					<span>
-						<button class="mui-btn-yellow">取消</button>
-						<button class="mui-btn-primary">完结</button>
+						<button {{c}} onclick="cancel('<%=(item.ID)%>')" class="mui-btn-yellow">取消</button>
+						<button {{f}} onclick="finish('<%=(item.ID)%>')"  class="mui-btn-primary">完结</button>
 					</span>
 				</div>
 			</div>
-			<div class="mui-card">
-				<div class="mui-card-header">
-					报修单号:BX0000005 
-				</div>
-				<div class="mui-card-content">
-					<ul class="mui-table-view">
-					    <li class="mui-table-view-cell mui-media" >
-					        <a href="javascript:;" class="mui-navigate-right">
-					            <div class="font-seal-wait">维修中</div>
-					            <div class="mui-media-body">
-					                <span>维修描述：空调不制冷</span>
-					                <p class='mui-ellipsis'>
-									<span>申请部门：生产部</span><br/>
-									<span>备注：无</span>
-									</p>
-					            </div>
-					        </a>
-					    </li>
-					</ul>
-				</div>
-				<div class="mui-card-footer">
-					<span>2020-08-02 10:23</span>
-					<span>
-						<button class="mui-btn-yellow">取消</button>
-						<button class="mui-btn-primary">完结</button>
-					</span>
-				</div>
-			</div>
-			<div class="mui-card">
-				<div class="mui-card-header">
-					报修单号:BX0000002 
-				</div>
-				<div class="mui-card-content">
-					<ul class="mui-table-view">
-					    <li class="mui-table-view-cell mui-media" >
-					        <a href="javascript:;" class="mui-navigate-right">
-					            <div class="font-seal-ok">已完结</div>
-					            <div class="mui-media-body">
-					                <span>维修描述：三楼车间切压机磨损</span>
-					                <p class='mui-ellipsis'>
-									<span>申请部门：生产部</span><br/>
-									<span>备注：无</span>
-									</p>
-					            </div>
-					        </a>
-					    </li>
-					</ul>
-				</div>
-				<div class="mui-card-footer">
-					<span>2020-08-01 11:01</span>
-					<span>
-						<button disabled class="mui-btn-yellow">取消</button>
-						<button disabled class="mui-btn-primary">完结</button>
-					</span>
-				</div>
+			<%}%>
+			</script>
 			</div>
 		</div>
 		<script type="text/javascript">
-			mui.init()
 			window.addEventListener('refresh', function(e) { //监听页面返回事件
 				window.location.reload(); //执行刷新
 			});
 			mui.plusReady(function() {
-				
-			})
+				var usr = api_localStorageGet("name") + "(" + api_localStorageGet("code") + ")"
+				$("#usr").text(usr)
+				getList();
+			});
+
+			function getList() { //获取报修单
+				aj.post('/dev_apply/getList', {
+					usercode: api_localStorageGet("code")
+				}, function(data) {
+					if (data.result) {
+						//console.log(JSON.stringify(data.data))
+						document.getElementById('contentId').innerHTML = template('template', {
+							"record": data.data
+						});
+					} else {
+						console.log(JSON.stringify(data))
+						plus.ui.toast(data.msg);
+					}
+				});
+			}
+
 			mui("#contentId").on("tap", "li", function() {
-				OpenWindow('device_repair_apply_detail', 'device_repair_apply_detail.html',"")
+				var data_item = this.getAttribute('data-item');
+				//console.log(data_item)
+				OpenWindow('device_repair_apply_detail', 'device_repair_apply_detail.html', {
+					"data_item": data_item
+				});
 			})
-			$("#addApply").click(function(){
-				OpenWindow('device_repair_apply_add', 'device_repair_apply_add.html', "");
-			})
+			// $("#addApply").click(function() {
+			// 	OpenWindow('device_repair_apply_add', 'device_repair_apply_add.html', "");
+			// })
+			//判断是否可以点击列表内 取消 和 完结 的按钮
+			template.defaults.imports.checkC = function(status) {
+				if (status == "待委派" || status == "待响应") {
+					return ""
+				} else {
+					return "disabled"
+				}
+			};
+			template.defaults.imports.checkF = function(status) {
+				if (status == "已修好") {
+					return ""
+				} else {
+					return "disabled"
+				}
+			};
+			window.addEventListener("changeBar", function(e) {
+				var inputId = e.detail.inputId
+				document.getElementById(inputId).value = e.detail.barcode
+			});
+			$("#submitData").click(function() {
+				var device = $("#device").val();
+				var des = $("#des").val();
+				if (device == "" || des == "") {
+					mui.alert("请完善数据")
+					return false
+				} else {
+					submit(device, des);
+				}
+			});
+
+			function cancel(app_id) { //取消申请
+				mui.confirm("是否取消该申请？", '提示',['否', '是'], function(e) {
+					if (e.index == 1) {
+						aj.post('/dev_apply/cannel', {
+							usercode: api_localStorageGet("code"),
+							apply_id: app_id
+						}, function(data) {
+							//console.log(JSON.stringify(data))
+							if (data.result) {
+								mui.alert(data.msg);
+								window.location.reload(); //执行刷新
+							} else {
+								mui.alert(data.msg);
+							}
+						});
+					}
+				})
+			}
+
+			function finish(app_id) {
+				mui.confirm("是否完结该申请？", '提示', ['否', '是'], function(e) {
+					if (e.index == 1) {
+						aj.post('/dev_apply/finish', {
+							usercode: api_localStorageGet("code"),
+							apply_id: app_id
+						}, function(data) {
+							console.log(JSON.stringify(data.data))
+							if (data.result) {
+								mui.alert(data.msg);
+								window.location.reload(); //执行刷新
+							} else {
+								mui.alert(data.msg);
+							}
+						});
+					}
+				})
+			}
+
+			function submit(eq_code, des) {
+				aj.post('/dev_apply/add', {
+					usercode: api_localStorageGet("code"),
+					eq_code: eq_code,
+					fault_des: des
+				}, function(data) {
+					console.log(JSON.stringify(data))
+					if (data.result) {
+						mui.alert(data.msg)
+						window.location.reload(); //执行刷新
+					} else {
+						mui.alert(data.msg)
+					}
+				});
+			}
+
+			function clicked(url, f1, urlId) {
+				OpenWindow(f1, url, {
+					urlId: urlId,
+					inputId: f1
+				});
+			};
 		</script>
 	</body>
 

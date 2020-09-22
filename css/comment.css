@@ -44,6 +44,7 @@
 	color: #00ff7f;
 	font-weight: bold;
 }
+
 .font-seal-wait {
 	font-size: 10px;
 	z-index: 2;
@@ -57,4 +58,25 @@
 	text-align: center;
 	color: #d7b700;
 	font-weight: bold;
+}
+
+.font-seal-cancel {
+	font-size: 10px;
+	z-index: 2;
+	position: absolute;
+	right: 14px;
+	top: 25px;
+	border: 1px solid #bcbcbc;
+	transform: rotate(25deg);
+	width: 43px;
+	line-height: 20px;
+	text-align: center;
+	color: #bcbcbc;
+	font-weight: bold;
+}
+
+/*header 用户名居于右侧*/
+.title-right1 {
+	float: right;
+	line-height: 44px !important;
 }
