@@ -23,7 +23,7 @@
 				<span class="mui-icon mui-icon-left-nav"></span>
 			</button>
 			<h1 class="mui-title">维修申请</h1>
-			<a href="#" style="color:#003269"  class="mui-pull-right"><span class="title-right1" ID="usr"></span></a>
+			<a href="#" style="color:#003269" class="mui-pull-right"><span class="title-right1" ID="usr"></span></a>
 		</header>
 		<div class="mui-content">
 			<div class="mui-card">
@@ -46,8 +46,9 @@
 				</div>
 			</div>
 			<div id="contentId">
-				<script id='template' type="text/template">
-					<% for(var i in record){ var item=record[i];  
+			</div>
+			<script id='template' type="text/template">
+				<% for(var i in record){ var item=record[i];  
 			var c =$imports.checkC(item.STATUS);
 			var f =$imports.checkF(item.STATUS);%>
 			<div class="mui-card">
@@ -93,7 +94,6 @@
 			</div>
 			<%}%>
 			</script>
-			</div>
 		</div>
 		<script type="text/javascript">
 			window.addEventListener('refresh', function(e) { //监听页面返回事件
@@ -116,7 +116,7 @@
 						});
 					} else {
 						console.log(JSON.stringify(data))
-						plus.ui.toast(data.msg);
+						mui.alert(data.msg);
 					}
 				});
 			}
@@ -124,7 +124,7 @@
 			mui("#contentId").on("tap", "li", function() {
 				var data_item = this.getAttribute('data-item');
 				//console.log(data_item)
-				OpenWindow('device_repair_apply_detail', 'device_repair_apply_detail.html', {
+				OpenWindow('device_repair_detail', 'device_repair_detail.html', {
 					"data_item": data_item
 				});
 			})
@@ -162,7 +162,7 @@
 			});
 
 			function cancel(app_id) { //取消申请
-				mui.confirm("是否取消该申请？", '提示',['否', '是'], function(e) {
+				mui.confirm("是否取消该申请？", '提示', ['否', '是'], function(e) {
 					if (e.index == 1) {
 						aj.post('/dev_apply/cannel', {
 							usercode: api_localStorageGet("code"),
@@ -187,7 +187,7 @@
 							usercode: api_localStorageGet("code"),
 							apply_id: app_id
 						}, function(data) {
-							console.log(JSON.stringify(data.data))
+							//console.log(JSON.stringify(data.data))
 							if (data.result) {
 								mui.alert(data.msg);
 								window.location.reload(); //执行刷新

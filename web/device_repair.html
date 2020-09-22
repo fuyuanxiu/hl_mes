@@ -15,16 +15,6 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
 		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
-		<style type="text/css">
-			.mui-popover.mui-popover-action .mui-table-view .mui-table-view-cell:after {
-				height: 0px;
-			}
-
-			.mui-popover .mui-table-view {
-				background-color: #fff;
-				border-radius: 0px;
-			}
-		</style>
 	</head>
 
 	<body class="mui-fullscreen">
@@ -32,7 +22,7 @@
 			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
 				<span class="mui-icon mui-icon-left-nav"></span>
 			</button>
-			<h1 class="mui-title">报修委派</h1>
+			<h1 class="mui-title">设备维修</h1>
 			<a href="#" style="color:#003269" class="mui-pull-right"><span class="title-right1" ID="usr"></span></a>
 		</header>
 		<div class="mui-content">
@@ -40,9 +30,9 @@
 			</div>
 		</div>
 		<script id='template' type="text/template">
-			<% for(var i in record){ var item=record[i];  
-		var t =$imports.checkT(item.STATUS);
-		var a =$imports.checkA(item.STATUS);%>
+				<% for(var i in record){ var item=record[i];  
+		var r =$imports.checkR(item.STATUS);
+		var c =$imports.checkC(item.STATUS);%>
 		<div class="mui-card">
 			<div class="mui-card-header">
 				报修单号:<%=(item.APPLY_NO)%>
@@ -79,41 +69,25 @@
 			<div class="mui-card-footer">
 				<span>申请日期：<%=(item.APPLY_DATE)%></span>
 				<span>
-					<button {{t}}  onclick="transfer('<%=(item.ID)%>')" class="mui-btn-yellow">转派</button>
-					<button {{a}}  onclick="assgin('<%=(item.ID)%>')" class="mui-btn-primary">委派</button>
+					<button {{r}} onclick="respond('<%=(item.ID)%>')" class="mui-btn-green">响应</button>
+					<button {{c}} onclick="complete('<%=(item)%>')"  class="mui-btn-primary">完成</button>
 				</span>
 			</div>
 		</div>
 		<%}%>
 		</script>
-		<div id="listContent" class=" mui-popover mui-popover-bottom mui-popover-action" data-disable-auto-close="true">
-			<ul class="mui-table-view" id="assgin_list">
-				<script id='as-template' type="text/template">
-					<% for(var i in record){ var item=record[i];%>
-					<li class="mui-table-view-cell" detail-data='<%=(item)%>'>
-					 <a href="#"><%=(item.DEPARTMENTNAME)%>——<%=(item.FNAME)%>
-					 </a>
-					</li>
-					<%}%>
-				</script>
-			</ul>
 		</div>
-		<!-- <div id="transferContent" class=" mui-popover mui-popover-bottom mui-popover-action">
-			<ul class="mui-table-view" id="transfer_list">
-				<li class="mui-table-view-cell"><a href="#">Item1</a></li>
-			</ul>
-		</div> -->
 		<script type="text/javascript">
-			var repair_id = "";
-			var action = ";"
+			window.addEventListener('refresh', function(e) { //监听页面返回事件
+				window.location.reload(); //执行刷新
+			});
 			mui.plusReady(function() {
 				var usr = api_localStorageGet("name") + "(" + api_localStorageGet("code") + ")"
 				$("#usr").text(usr)
 				getList();
 			});
-
 			function getList() { //获取报修单
-				aj.post('/dev_handle/getList', {
+				aj.post('/dev_repair/getList', {
 					usercode: api_localStorageGet("code")
 				}, function(data) {
 					if (data.result) {
@@ -134,89 +108,32 @@
 					"data_item": data_item
 				});
 			})
-			template.defaults.imports.checkT = function(status) {//判断能否转单
-				if (status == "已响应" || status == "维修中") {
+			template.defaults.imports.checkR = function(status) {//判断能否响应
+				if (status == "待响应") {
 					return ""
 				} else {
 					return "disabled"
 				}
 			};
-			template.defaults.imports.checkA = function(status) {//判断能否委派
-				if (status == "待响应" || status == "待委派") {
+			template.defaults.imports.checkC = function(status) {//判断能否完结
+				if (status == "维修中") {
 					return ""
 				} else {
 					return "disabled"
 				}
 			};
-			
-			function assgin(id) {
-				repair_id = id;
-				action = "assgin";
-				mui('#listContent').popover('toggle');
-				getInfo();
+			function respond(id){
+				//console.log(id)
+				OpenWindow('device_repair_respond', 'device_repair_respond.html', {
+					"repair_id": id
+				});
 			}
-			mui("#assgin_list").on("tap", "li", function() {
-				mui('.mui-popover').popover('toggle');
-				var detail_data = this.getAttribute('detail-data'); //详细信息
-				data = JSON.parse(detail_data)
-				if (action == "transfer") {
-					mui.confirm("是否转派" + data.FNAME + "？", '提示', ['否', '是'], function(e) {
-						if (e.index == 1) {
-							aj.post('/dev_handle/transfer', {
-								usercode: api_localStorageGet("code"),
-								id: repair_id,
-								repair_man: data.FCODE
-							}, function(data) {
-								if (data.result) {
-									//console.log(JSON.stringify(data))
-									mui.alert(data.msg);
-									window.location.reload(); //执行刷新
-								} else {
-									mui.alert(data.msg);
-								}
-							});
-						}
-					})
-				} else {
-					mui.confirm("是否委派" + data.FNAME + "？", '提示', ['否', '是'], function(e) {
-						if (e.index == 1) {
-							aj.post('/dev_handle/assign', {
-								usercode: api_localStorageGet("code"),
-								id: repair_id,
-								repair_man: data.FCODE
-							}, function(data) {
-								if (data.result) {
-									//console.log(JSON.stringify(data))
-									mui.alert(data.msg);
-									window.location.reload(); //执行刷新
-								} else {
-									mui.alert(data.msg);
-								}
-							});
-						}
-					})
-				}
-			});
-
-			function transfer(id) {
-				repair_id = id;
-				action = "transfer"
-				mui('#listContent').popover('toggle');
-				getInfo();
-			}
-
-			function getInfo() {
-				aj.post('/dev_handle/getAuxiliaryInfo', "", function(data) {
-					if (data.result) {
-						//console.log(JSON.stringify(data))
-						var list = data.data
-						document.getElementById('assgin_list').innerHTML = template('as-template', {
-							"record": list[0].FettlerInfo
-						});
-					} else {
-						console.log(JSON.stringify(data))
-						plus.ui.toast(data.msg);
-					}
+			function complete(item){
+				var data=JSON.parse(item)
+				//console.log(data.EQ_CODE)
+				OpenWindow('device_repair_complete', 'device_repair_complete.html', {
+					"repair_id": data.ID,
+					"dev_code":data.EQ_CODE
 				});
 			}
 		</script>

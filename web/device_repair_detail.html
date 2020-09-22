@@ -33,14 +33,13 @@
 						<div class="mui-collapse-content">
 							<section id="cd-timeline" class="cd-container" style="">
 								<script id='template' type="text/template">
-									<% for(var i in record){ var item=record[i]; var len=record.length%>	
+									<% for(var i in record){ var item=record[i];%>	
 									<div class="cd-timeline-block">
-									{{if i==len-1}}
+									{{if i==0}}
 									<div class="cd-timeline-img cd-picture"></div>
 									{{else}}
 									<div class="cd-timeline-img cd-movie"></div>
 									{{/if}}
-										
 										<div class="cd-timeline-content">
 										<div><%=(item.CONTENT)%></div>
 										<div class="cd-date"><%=(item.THEDATE)%></div>
