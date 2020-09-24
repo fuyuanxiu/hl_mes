@@ -28,9 +28,9 @@
 		<div class="mui-content" id="contentId">
 			<div>
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell mui-collapse">
+					<li class="mui-table-view-cell mui-collapse mui-active">
 						<a class="mui-navigate-right" href="#">维修单跟踪</a>
-						<div class="mui-collapse-content">
+						<div class="mui-collapse-content ">
 							<section id="cd-timeline" class="cd-container" style="">
 								<script id='template' type="text/template">
 									<% for(var i in record){ var item=record[i];%>	
@@ -41,7 +41,7 @@
 									<div class="cd-timeline-img cd-movie"></div>
 									{{/if}}
 										<div class="cd-timeline-content">
-										<div><%=(item.CONTENT)%></div>
+										<div class="wrap"><%=(item.CONTENT)%></div>
 										<div class="cd-date"><%=(item.THEDATE)%></div>
 										</div>
 									</div>
@@ -62,21 +62,24 @@
 					<label>设备位置</label>
 					<input disabled id="location" type="text" class="mui-input-clear">
 				</div>
-				<div class="mui-input-row">
+				<div class="mui-input-row" style="height:auto;">
 					<label>故障描述</label>
-					<input disabled id="desc" type="text" class="mui-input-clear">
+					<textarea rows="3" disabled id="desc" style="height:auto;" type="text" class="mui-input-clear"></textarea>
+					<!-- <input disabled id="desc" type="text" class="mui-input-clear"> -->
 				</div>
-				<div class="mui-input-row">
+				<div class="mui-input-row" style="height:auto;">
 					<label>故障原因</label>
-					<input disabled id="reason" type="text" class="mui-input-clear">
+					<textarea rows="3" disabled  id="reason" type="text" class="mui-input-clear"></textarea>
+					<!-- <input disabled id="reason" type="text" class="mui-input-clear"> -->
 				</div>
 				<div class="mui-input-row">
 					<label>维修方案</label>
 					<input disabled id="plan" type="text" class="mui-input-clear">
 				</div>
-				<div class="mui-input-row">
+				<div class="mui-input-row" style="height:auto;">
 					<label>维修内容</label>
-					<input disabled id="cont" type="text" class="mui-input-clear">
+					<textarea rows="3" disabled id="cont" type="text" class="mui-input-clear"></textarea>
+					<!-- <input disabled id="cont" type="text" class="mui-input-clear"> -->
 				</div>
 				<div class="mui-input-row">
 					<label>维修结果</label>
