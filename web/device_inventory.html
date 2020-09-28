@@ -39,7 +39,7 @@
 					<div class="mui-input-row">
 						<label onclick="clicked('commom/saomiao.html','now_area','web/device_invetory.html');">当前区域<span class="mui-icon iconfont icon-saomiao"
 							 id="num1"></label>
-						<input id="now_area" type="text" class="mui-input-clear" placeholder="请扫描">
+						<input id="now_area" disabled type="text" class="mui-input-clear" placeholder="请扫描">
 					</div>
 					<div class="mui-input-row">
 						<label onclick="clicked('commom/saomiao.html','device','web/device_invetory.html');">设备编号<span class="mui-icon iconfont icon-saomiao"
@@ -50,7 +50,7 @@
 						<label>原区域</label>
 						<input type="text" id="original_area" class="mui-input-clear" disabled style="background-color: #f0f0f0;">
 					</div>
-					<textarea id="record" disabled style="background-color: #f3f3f3;"></textarea>
+					<textarea rows="3" id="record" disabled style="background-color: #f3f3f3;"></textarea>
 				</div>
 			</div>
 		</div>
@@ -62,8 +62,18 @@
 
 			window.addEventListener("changeBar", function(e) {
 				var inputId = e.detail.inputId
-				document.getElementById(inputId).value = e.detail.barcode
+				document.getElementById(inputId).value = e.detail.barcode;
+				if (inputId == "now_area") {
+					judgeArea();
+				} else if (inputId == "device") {
+					if ($('#now_area').val() == "") {
+						mui.alert("请先扫描区域信息")
+						return false;
+					}
+					judgeDevice();
+				}
 			});
+
 			mui.plusReady(function() {
 				getUerPower(); //判断盘点权限
 			})
@@ -77,12 +87,11 @@
 						$("#area").text(inventory[0].area);
 						$("#time_interval").text(inventory[0].timeInterval);
 						$("#bill_no").text(inventory[0].billNo);
-						$("#record").val("获取盘点数据成功")
-						document.getElementById("record").style.color = "#66CC00"
 					} else {
 						$("#record").val(data.msg)
 						document.getElementById("record").style.color = "#CC3366"
 						mui.alert(data.msg);
+						mui.back();
 					}
 				});
 			}
@@ -90,25 +99,29 @@
 			//监听当前区域——扫描回车
 			$('#now_area').bind('keyup', function(event) {
 				if (event.keyCode == "13") { //输入回车执行
-					aj.post('/device_inventory/judgeArea', {
-						usercode: api_localStorageGet("code"),
-						area: $('#now_area').val(),
-						check_id: $("#bill_no").text(),
-						right_area: $("#area").text()
-					}, function(data) {
-						//console.log(JSON.stringify(data))
-						if (data.result) {
-							$("#record").val("区域验证通过，请继续扫描设备")
-							document.getElementById("record").style.color = "#66CC00"
-							mui.alert("区域验证通过，请继续扫描设备");
-						} else {
-							$("#record").val(data.msg)
-							document.getElementById("record").style.color = "#CC3366"
-							mui.alert(data.msg);
-						}
-					});
+					judgeArea()
 				}
 			});
+
+			function judgeArea() {
+				aj.post('/device_inventory/judgeArea', {
+					usercode: api_localStorageGet("code"),
+					area: $('#now_area').val(),
+					check_id: $("#bill_no").text(),
+					right_area: $("#area").text()
+				}, function(data) {
+					//console.log(JSON.stringify(data))
+					if (data.result) {
+						$("#record").val("区域验证通过，请继续扫描设备")
+						document.getElementById("record").style.color = "#66CC00"
+						mui.alert("区域验证通过，请继续扫描设备");
+					} else {
+						$("#record").val(data.msg)
+						document.getElementById("record").style.color = "#CC3366"
+						mui.alert(data.msg);
+					}
+				});
+			}
 			//监听设备扫描——扫描回车
 			$('#device').bind('keyup', function(event) {
 				if ($('#now_area').val() == "") {
@@ -116,28 +129,33 @@
 					return false;
 				}
 				if (event.keyCode == "13") { //输入回车执行
-					aj.post('/device_inventory/judgeDevice', {
-						usercode: api_localStorageGet("code"),
-						check_id: $("#bill_no").text(),
-						eq_code: $("#device").val(),
-						area: $('#now_area').val()
-					}, function(data) {
-						//console.log(JSON.stringify(data))
-						var msgData = data.data
-						if (data.result) {
-							mui.alert(msgData[0].result);
-							$("#original_area").val(msgData[0].old_location)
-							document.getElementById("record").style.color = "#66CC00"
-							$("#record").val(msgData[0].result);
-						} else {
-							mui.alert(data.msg);
-							$("#record").val(data.msg)
-							document.getElementById("record").style.color = "#CC3366"
-							//$("#original_area").val(msgData[0].old_location)
-						}
-					});
+					judgeDevice()
 				}
 			});
+
+			function judgeDevice() {
+				aj.post('/device_inventory/judgeDevice', {
+					usercode: api_localStorageGet("code"),
+					check_id: $("#bill_no").text(),
+					eq_code: $("#device").val(),
+					area: $('#now_area').val()
+				}, function(data) {
+					//console.log(JSON.stringify(data))
+					var msgData = data.data
+					if (data.result) {
+						mui.alert(msgData[0].result);
+						$("#original_area").val(msgData[0].old_location)
+						document.getElementById("record").style.color = "#66CC00"
+						$("#record").val(msgData[0].result);
+					} else {
+						$("#original_area").val(msgData[0].old_location)
+						mui.alert(msgData[0].result);
+						$("#record").val(msgData[0].result)
+						document.getElementById("record").style.color = "#CC3366"
+					}
+				});
+			}
+
 			$("#submitData").click(function() {
 				var area = $('#now_area').val();
 				var device = $("#device").val();
@@ -162,7 +180,7 @@
 				}, function(data) {
 					console.log(JSON.stringify(data))
 					if (data.result) {
-						console.log(JSON.stringify(data))
+						//console.log(JSON.stringify(data))
 						document.getElementById("record").style.color = "#66CC00"
 						$("#record").val("已完成盘点操作");
 						mui.alert("操作成功");

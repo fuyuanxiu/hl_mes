@@ -43,10 +43,8 @@
 	text-align: center;
 	color: #00ff7f;
 	font-weight: bold;
-<<<<<<< HEAD
 }
-=======
-}
+
 
 .font-seal-wait {
 	font-size: 10px;
@@ -90,4 +88,8 @@
 					line-height: 42px;
 					font-size: 14px;
 				}
->>>>>>> b7a15797487a559a4752027e9fd1b91ad8bf8e33
+
+
+
+.wrap{display: table-cell; vertical-align: middle; width: 100%;padding: 1px 0px;line-height: 18px;word-wrap: break-word; word-break: break-all;}    
+
