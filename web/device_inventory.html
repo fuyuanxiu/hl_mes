@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>设备盘点</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.js"></script>
+		<script src="../js/jquery-1.11.1.js"></script>
+		<script src="../js/api.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/template-web.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav colorBg">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>
+			</button>
+			<h1 class="mui-title">设备盘点</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-collaps mui-active">
+					<a href="#"></a>
+					<div class="mui-collapse-content">
+						<p>盘点区域:&nbsp; <span id="area"></span></p>
+						<p>盘点单号:&nbsp;<span id="bill_no"></span></p>
+						<p>盘点时间段:&nbsp;<span id="time_interval"></span></p>
+					</div>
+				</li>
+			</ul>
+			<div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label onclick="clicked('commom/saomiao.html','now_area','web/device_invetory.html');">当前区域<span class="mui-icon iconfont icon-saomiao"
+							 id="num1"></label>
+						<input id="now_area" type="text" class="mui-input-clear" placeholder="请扫描">
+					</div>
+					<div class="mui-input-row">
+						<label onclick="clicked('commom/saomiao.html','device','web/device_invetory.html');">设备编号<span class="mui-icon iconfont icon-saomiao"
+							 id="num1"></label>
+						<input id="device" type="text" class="mui-input-clear" placeholder="请扫描">
+					</div>
+					<div class="mui-input-row">
+						<label>原区域</label>
+						<input type="text" id="original_area" class="mui-input-clear" disabled style="background-color: #f0f0f0;">
+					</div>
+					<textarea id="record" disabled style="background-color: #f3f3f3;"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="mui-content-padded" align="center">
+			<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="submitData">确 认</button>
+		</div>
+		<script type="text/javascript">
+			mui.init();
+
+			window.addEventListener("changeBar", function(e) {
+				var inputId = e.detail.inputId
+				document.getElementById(inputId).value = e.detail.barcode
+			});
+			mui.plusReady(function() {
+				getUerPower(); //判断盘点权限
+			})
+
+			function getUerPower() {
+				aj.post('/device_inventory/judgeUserPower', {
+					usercode: api_localStorageGet("code")
+				}, function(data) {
+					if (data.result) {
+						var inventory = data.data
+						$("#area").text(inventory[0].area);
+						$("#time_interval").text(inventory[0].timeInterval);
+						$("#bill_no").text(inventory[0].billNo);
+						$("#record").val("获取盘点数据成功")
+						document.getElementById("record").style.color = "#66CC00"
+					} else {
+						$("#record").val(data.msg)
+						document.getElementById("record").style.color = "#CC3366"
+						mui.alert(data.msg);
+					}
+				});
+			}
+
+			//监听当前区域——扫描回车
+			$('#now_area').bind('keyup', function(event) {
+				if (event.keyCode == "13") { //输入回车执行
+					aj.post('/device_inventory/judgeArea', {
+						usercode: api_localStorageGet("code"),
+						area: $('#now_area').val(),
+						check_id: $("#bill_no").text(),
+						right_area: $("#area").text()
+					}, function(data) {
+						//console.log(JSON.stringify(data))
+						if (data.result) {
+							$("#record").val("区域验证通过，请继续扫描设备")
+							document.getElementById("record").style.color = "#66CC00"
+							mui.alert("区域验证通过，请继续扫描设备");
+						} else {
+							$("#record").val(data.msg)
+							document.getElementById("record").style.color = "#CC3366"
+							mui.alert(data.msg);
+						}
+					});
+				}
+			});
+			//监听设备扫描——扫描回车
+			$('#device').bind('keyup', function(event) {
+				if ($('#now_area').val() == "") {
+					mui.alert("请先扫描区域信息")
+					return false;
+				}
+				if (event.keyCode == "13") { //输入回车执行
+					aj.post('/device_inventory/judgeDevice', {
+						usercode: api_localStorageGet("code"),
+						check_id: $("#bill_no").text(),
+						eq_code: $("#device").val(),
+						area: $('#now_area').val()
+					}, function(data) {
+						//console.log(JSON.stringify(data))
+						var msgData = data.data
+						if (data.result) {
+							mui.alert(msgData[0].result);
+							$("#original_area").val(msgData[0].old_location)
+							document.getElementById("record").style.color = "#66CC00"
+							$("#record").val(msgData[0].result);
+						} else {
+							mui.alert(data.msg);
+							$("#record").val(data.msg)
+							document.getElementById("record").style.color = "#CC3366"
+							//$("#original_area").val(msgData[0].old_location)
+						}
+					});
+				}
+			});
+			$("#submitData").click(function() {
+				var area = $('#now_area').val();
+				var device = $("#device").val();
+				var check_id = $("#bill_no").text();
+				var original_area = $("#original_area").val();
+				if (area == "" || device == "" || check_id == "") {
+					mui.alert("请完善数据")
+					$("#record").val(("请完善数据"))
+					document.getElementById("record").style.color = "#CC3366"
+					return false;
+				} else if (area == original_area) {
+					mui.alert("区域相同无需此操作")
+					$("#record").val(("区域相同无需此操作"))
+					document.getElementById("record").style.color = "#CC3366"
+					return false;
+				}
+				aj.post('/device_inventory/sumbitInventory', {
+					usercode: api_localStorageGet("code"),
+					check_id: check_id,
+					eq_code: device,
+					area: area
+				}, function(data) {
+					console.log(JSON.stringify(data))
+					if (data.result) {
+						console.log(JSON.stringify(data))
+						document.getElementById("record").style.color = "#66CC00"
+						$("#record").val("已完成盘点操作");
+						mui.alert("操作成功");
+					} else {
+						mui.alert(data.msg);
+						$("#record").val(data.msg)
+						document.getElementById("record").style.color = "#CC3366"
+					}
+				});
+
+			})
+
+			function clicked(url, f1, urlId) {
+				OpenWindow(f1, url, {
+					urlId: urlId,
+					inputId: f1
+				});
+			};
+		</script>
+	</body>
+
+</html>

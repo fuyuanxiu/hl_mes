@@ -49,14 +49,18 @@
 			<a href="#popover" style="color:#0062CC" id="header_list" class="title-right mui-icon mui-icon-list"></a>
 		</header>
 		<div id="popover" class="mui-popover">
-		  <ul class="mui-table-view">
-		    <li class="mui-table-view-cell"><a href="#">Item1</a></li>
-		    <li class="mui-table-view-cell"><a href="#">Item2</a></li>
-		  </ul>
+			<ul class="mui-table-view" id="record_list">
+				
+			</ul>
+			<script id='record-template' type="text/template">
+				<% for(var i in record){ var item=record[i];%>
+				<li class="mui-table-view-cell" detail-data='<%=(item)%>'><a href="#"><%=(item.CREATE_DATE)%>  报工数:<%=(item.BG_QTY)%> </a></li>
+				<%}%>
+			</script>
 		</div>
 		<div class="mui-content" id="contentId">
 			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
+				<li class="mui-table-view-cell mui-collaps mui-active">
 					<a class="mui-navigate" href="#">基础信息</a>
 					<div class="mui-collapse-content">
 						<p>工单号:&nbsp;&nbsp;<span id="worl_singnum"></span></p>
@@ -65,7 +69,7 @@
 						<p>工序:&nbsp;<span id="worproc_name"></span></p>
 						<p>设备:&nbsp;<span id="equ_name"></span></p>
 						<p>设备编号:&nbsp;<span id="equ_code"></span></p>
-						<p>计划数量:&nbsp;<span id="output_qty"></span></p>						
+						<p>计划数量:&nbsp;<span id="output_qty"></span></p>
 						<p>已报工数量:&nbsp;<span id="bg_qty"></span></p>
 						<p>累计报工合格品数量:&nbsp;<span id="hg_qty"></span></p>
 						<p>累计报工不合格品数量:&nbsp;<span id="bhg_qty"></span></p>
@@ -88,8 +92,9 @@
 					<label>合格品数</label>
 					<input id="qualifiedqty" type="number" class="mui-input-clear" placeholder="请输入良品数" value="0" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
-				<div >
+				<div>
 					<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="report">生产报工</button>
+					<button type="button" class="mui-btn mui-btn-warning" style="width: 100%;display: none;" id="alter_record">报工修改</button>
 				</div>
 				<p class="bottom-p">本次报工数量=合格品数+不合格品数</p>
 			</div>
@@ -104,10 +109,12 @@
 				var id = ""; //MES_PLAN_PRO_ID 排产ID
 				var worproc_code = ""; //工序编码
 				mui.plusReady(function() {
+					//mui('.mui-popover').popover('hide',[anchor]);
+					mui('.mui-popover').popover('toggle');
 					var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
 					var detail = param.detail;
-					var child =param.child;
-					showDetailData(detail,child);
+					var child = param.child;
+					showDetailData(detail, child);
 				})
 				//焦点监听事件---自动填充良品/不良品数
 				$("#unqualifiedqty").blur(function() {
@@ -153,50 +160,119 @@
 						}
 					}, 100)
 				});
-				mui('.mui-popover').popover('toggle',document.getElementById("header_list"));
-				function showDetailData(detail,child) { //显示详细数据
-					var data = JSON.parse(detail)
-					var child_data=JSON.parse(child)
-					$("#worl_singnum").text(data.WORL_SINGNUM); //工单号
-					$("#pro_code").text(data.PRO_CODE); //品名
-					$("#pro_name").text(data.PRO_NAME); //产品名称
-					$("#worproc_name").text(child_data.WORPROC_NAME); //工序名称
-					$("#equ_name").text(child_data.EQU_NAME); //设备
-					$("#equ_code").text(child_data.EQU_CODE); //设备编号
-					$("#output_qty").text(data.OUTPUT_QTY); //工排产量
-					$("#hg_qty").text(data.HG_QTY); //合格数量
-					$("#bhg_qty").text(data.BHG_QTY); //不合格数量
-					$("#last_time").text(data.LASTUPDATE_DATE); //最后一次报工时间
-					$("#bg_qty").text(data.BG_QTY); //已报工数量
-					$("#person_name").text(data.PERSON_NAME); //员工
-					$("#status").text(child_data.STATUS); //状态
-					id = child_data.ID; //MES_PLAN_PRO_ID 排产ID
-					worproc_code = child_data.WORPROC_CODE; //工序编码
-					eq_code = child_data.EQU_CODE;
-				}
-				//提交报工数量
-				function reportBgQTY(bgqty, unqualifiedqty, qualifiedqty) { //报工数量，不良品数，良品数
-					aj.post('/produce/produceReport', {
-						usercode: api_localStorageGet("code"),
-						factory: api_localStorageGet("factory"),
-						company: api_localStorageGet("company"),
-						plan_id: id,
-						proc: worproc_code,
-						bg_Qty: bgqty,
-						unqu_Qty: unqualifiedqty,
-						qu_Qty: qualifiedqty,
-						eqCODE: eq_code
-					}, function(data) {
-						if (data.result) {
-							//console.log(JSON.stringify(data));
-							mui.alert(data.msg);
-							$("#bg_qty").val(data.data); //详细信息--报工数据
-							document.getElementById("report").disabled = true;
-						} else {
-							mui.alert(data.msg);
-						}
+
+				function getRecordList() {//获取报工记录
+					aj.post('/produce/getReportRecord', {
+							usercode: api_localStorageGet("code"),
+							plan_ID: id,
+							proc: worproc_code,
+							eq_CODE: eq_code
+						}, function(data) {
+							//console.log(JSON.stringify(data))
+							if (data.result) {
+								document.getElementById('record_list').innerHTML = template('record-template', {
+									"record": data.data
+								});
+							} else {
+								mui.alert(data.msg)
+							}
+						})
+					}
+					mui('.mui-popover').popover('toggle', document.getElementById("header_list")); //右上角列表
+					function showDetailData(detail, child) { //显示详细数据
+						var data = JSON.parse(detail)
+						var child_data = JSON.parse(child)
+						$("#worl_singnum").text(data.WORL_SINGNUM); //工单号
+						$("#pro_code").text(data.PRO_CODE); //品名
+						$("#pro_name").text(data.PRO_NAME); //产品名称
+						$("#worproc_name").text(child_data.WORPROC_NAME); //工序名称
+						$("#equ_name").text(child_data.EQU_NAME); //设备
+						$("#equ_code").text(child_data.EQU_CODE); //设备编号
+						$("#output_qty").text(data.OUTPUT_QTY); //工排产量
+						$("#hg_qty").text(data.HG_QTY); //合格数量
+						$("#bhg_qty").text(data.BHG_QTY); //不合格数量
+						$("#last_time").text(data.LASTUPDATE_DATE); //最后一次报工时间
+						$("#bg_qty").text(data.BG_QTY); //已报工数量
+						$("#person_name").text(data.PERSON_NAME); //员工
+						$("#status").text(child_data.STATUS); //状态
+						id = child_data.ID; //MES_PLAN_PRO_ID 排产ID
+						worproc_code = child_data.WORPROC_CODE; //工序编码
+						eq_code = child_data.EQU_CODE;
+						getRecordList();
+					}
+					mui("#record_list").on("tap", "li", function() {
+						document.getElementById("report").style.display="none";
+						document.getElementById("alter_record").style.display="block";
+						mui('.mui-popover').popover('toggle');
+						var detail_data = this.getAttribute('detail-data'); //详细信息
+						var data=JSON.parse(detail_data)
+						report_id=data.ID2;//报工ID
+						//console.log(detail_data)
+						$("#bgqty").val(data.BG_QTY);
+						$("#unqualifiedqty").val(data.BHG_QTY);
+						$("#qualifiedqty").val(data.HG_QTY);
 					});
-				}
+					document.getElementById("alter_record").addEventListener("tap", function() {
+						setTimeout(function() { //进行延时处理，防止修改数据未及时传递
+							var bgqty = $("#bgqty").val();
+							var unqualifiedqty = $("#unqualifiedqty").val();
+							var qualifiedqty = $("#qualifiedqty").val();
+							if (bgqty == "" || unqualifiedqty == "" || qualifiedqty == "") {
+								mui.alert("请完善数据"); //再加上bgqty要大于良品和不良品
+							} else {
+								var btnArray = ['取消', '提交'];
+								mui.confirm("本次修改报工数量：" + bgqty + " 不良品数：" + unqualifiedqty + " 良品数：" + qualifiedqty, '请确认', btnArray,
+									function(e) {
+										if (e.index == 1) {
+											alterBgQTY(bgqty, unqualifiedqty, qualifiedqty);
+										}
+									})
+							}
+						}, 100)
+					});
+					//提交报工修改数据
+					function alterBgQTY(bgqty, unqualifiedqty, qualifiedqty){
+						aj.post('/produce/updateReportRecord', {
+							usercode:api_localStorageGet("code"),
+							plan_ID: id,
+							report_ID: report_id,
+							bg_QTY: bgqty,
+							unqua_Qty: unqualifiedqty,
+							qua_Qty: qualifiedqty,
+						}, function(data) {
+							if (data.result) {
+								//console.log(JSON.stringify(data));
+								mui.alert(data.msg);
+								$("#bg_qty").val(data.data); //详细信息--报工数据
+								document.getElementById("alter_record").disabled = true;
+							} else {
+								mui.alert(data.msg);
+							}
+						});
+					}
+					//提交报工数量
+					function reportBgQTY(bgqty, unqualifiedqty, qualifiedqty) { //报工数量，不良品数，良品数
+						aj.post('/produce/produceReport', {
+							usercode: api_localStorageGet("code"),
+							factory: api_localStorageGet("factory"),
+							company: api_localStorageGet("company"),
+							plan_id: id,
+							proc: worproc_code,
+							bg_Qty: bgqty,
+							unqu_Qty: unqualifiedqty,
+							qu_Qty: qualifiedqty,
+							eqCODE: eq_code
+						}, function(data) {
+							if (data.result) {
+								//console.log(JSON.stringify(data));
+								mui.alert(data.msg);
+								$("#bg_qty").val(data.data); //详细信息--报工数据
+								document.getElementById("report").disabled = true;
+							} else {
+								mui.alert(data.msg);
+							}
+						});
+					}
 			</script>
 	</body>
 </html>

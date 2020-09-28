@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>报工明细</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.js"></script>
+		<script src="../js/jquery-1.11.1.js"></script>
+		<script src="../js/api.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/template-web.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	</head>
+
+	<body class="mui-fullscreen">
+		<header class="mui-bar mui-bar-nav colorBg">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>
+			</button>
+			<h1 class="mui-title">报工明细</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-collaps mui-active">
+					<a  href="#"></a>
+					<div class="mui-collapse-content">
+						<p>工号： <span id="worker_id"></span></p>
+						<p>姓名： <span id="worker_name"></span></p>
+
+					</div>
+				</li>
+			</ul>
+			<div id="contentId">
+			</div>
+		</div>
+		<div class="mui-content-padded" align="center">
+			<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="submit">提 交 更 改</button>
+		</div>
+		<script id='record-template' type="text/template">
+			<% for(var i in record){ var item=record[i]; %>	
+		<div class="mui-card">
+		<div class="mui-card-header">
+			报工时间: <%=(item.BG_DATE)%>
+		</div>
+		<div class="mui-card-content" id="list" >
+			<ul class="mui-table-view " detail-data='<%=(item)%>'>
+			<li class="mui-table-view-cell" >
+				<div class="mui-input-row">
+					<label>报工数量：</label>
+					<input name="aplay_num"   value="<%=(item.BG_QTY)%>"  onblur="countAll('aplay_num',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+				</div>
+				<div class="mui-input-row">
+					<label>不合格数：</label>
+					<input name="unqualified_qty" type="number" value="<%=(item.UNQUALIFIED_QTY)%>" onblur="countAll('unqualified_qty',<%=(i)%>)" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+				</div>
+				<div class="mui-input-row">
+					<label>合格品数：</label>
+					<input style="background-color: #f0f0f0;" name="qualified_qty" disabled type="number" value="<%=(item.QUALIFIED_QTY)%>" >
+				</div>
+				
+				<input name="id" type="text" style="display: none;" disabled value="<%=(item.ID)%>">
+			</li>
+			</ul>
+		</div>
+		</div>
+		<%}%>
+		</script>
+		<script type="text/javascript">
+			mui.init({
+				beforeback: function() { //页面返回时触发
+					var list = plus.webview.currentWebview().opener();
+					mui.fire(list, 'refresh'); //refresh是A页面自定义事件
+					return true; //返回true,继续页面关闭逻辑
+				}
+			})
+			mui.plusReady(function() {
+				var param = plus.webview.currentWebview(); //获取上一页面传递过来的参数
+				pl_param = param.pl_param;
+				role = param.role;
+				order=param.order;
+				child_data=order.Child;
+				//console.log(JSON.stringify( order))
+				$("#worker_id").text(pl_param.STAFF_NO);
+				$("#worker_name").text(pl_param.PERSON_NAME)
+				getProduceRecordDetail(pl_param, role)
+			})
+
+			function getProduceRecordDetail(pl_param, role) {
+				aj.post('/produce_verify/getProduceRecordDetail', {
+					usercode: api_localStorageGet("code"),
+					plan_id: pl_param.PID,
+					role: role
+				}, function(data) {
+					if (data.result) {
+						document.getElementById('contentId').innerHTML = template('record-template', {
+							"record": data.data
+						});
+						//console.log(JSON.stringify(data))
+					} else {
+						mui.alert(data.msg);
+					}
+				});
+			}
+			//监听点击事件 —— 提交审核
+			document.getElementById("submit").addEventListener("tap", function() {
+				var btnArray = ['取消', '提交'];
+				mui.confirm("确认提交本次修改？", '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						submitResult();
+					}
+				})
+			});
+			function submitResult() {
+				var id = document.getElementsByName("id");
+				var aplay_num = document.getElementsByName("aplay_num"); //报工数量
+				var qualified_qty = document.getElementsByName("qualified_qty"); //良品数量
+				var unqualified_qty = document.getElementsByName("unqualified_qty"); //不良品数
+				var paramInfo = ""; //参数字符串
+				for (var i = 0; i < id.length; i++) { //循环获取每组input的数据
+					if ( aplay_num[i].value == "" ||qualified_qty[i].value == "" || //判断数据表的完整性
+						unqualified_qty[i].value == "" ) {
+						mui.alert("请完善审核数据！")
+						return false;
+					}
+					paramInfo += id[i].value + "," +
+					aplay_num[i].value + "," +
+						qualified_qty[i].value + "," +
+						unqualified_qty[i].value + "|";
+				}
+				if (paramInfo.length > 0) {
+					//去掉最后一个|
+					paramInfo = paramInfo.substr(0, paramInfo.length - 1);
+				}
+				aj.post('/produce_verify/sumbitProduceRecordDetail', {
+					usercode: api_localStorageGet("code"),
+					proc:child_data[0].WORPROC_CODE,
+					task_no:order.TASK_NO,
+					eq_code:child_data[0].EQU_CODE,
+					reportInfo: paramInfo,
+					role:role
+				}, function(data) {
+					mui.alert(data.msg);
+					//返回上一页并刷新
+					var list = plus.webview.currentWebview().opener();
+					mui.fire(list, 'refresh'); //refresh是A页面自定义事件
+					return true; //返回true,继续页面关闭逻辑
+				});
+				
+			}
+			function countAll(inputId,i){
+				var aplay_num = document.getElementsByName("aplay_num"); //报工数量
+				var qualified_qty = document.getElementsByName("qualified_qty"); //良品数量
+				var unqualified_qty = document.getElementsByName("unqualified_qty"); //不良品数
+				var data=aplay_num[i].value-unqualified_qty[i].value
+				qualified_qty[i].value=data;
+			}
+		</script>
+	</body>
+
+</html>

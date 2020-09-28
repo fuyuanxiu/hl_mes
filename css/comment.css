@@ -43,4 +43,51 @@
 	text-align: center;
 	color: #00ff7f;
 	font-weight: bold;
+<<<<<<< HEAD
 }
+=======
+}
+
+.font-seal-wait {
+	font-size: 10px;
+	z-index: 2;
+	position: absolute;
+	right: 14px;
+	top: 25px;
+	border: 1px solid #d7b700;
+	transform: rotate(25deg);
+	width: 43px;
+	line-height: 20px;
+	text-align: center;
+	color: #d7b700;
+	font-weight: bold;
+}
+
+.font-seal-cancel {
+	font-size: 10px;
+	z-index: 2;
+	position: absolute;
+	right: 14px;
+	top: 25px;
+	border: 1px solid #bcbcbc;
+	transform: rotate(25deg);
+	width: 43px;
+	line-height: 20px;
+	text-align: center;
+	color: #bcbcbc;
+	font-weight: bold;
+}
+
+/*header 用户名居于右侧*/
+.title-right1 {
+	float: right;
+	line-height: 44px !important;
+}
+.mui-badge1 {
+					padding: 0px;
+					width: 65%;
+					float: right;
+					line-height: 42px;
+					font-size: 14px;
+				}
+>>>>>>> b7a15797487a559a4752027e9fd1b91ad8bf8e33

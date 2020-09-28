@@ -49,7 +49,7 @@
 				<div class="mui-input-row cell">
 					<label onclick="clicked('web/commom/saomiao.html','username','login.html');"><span class="mui-icon iconfont icon-saomiao">
 						</span>工号</label>
-					<input type="text" class="mui-input-clear" placeholder="请输入扫描/输入工号" id="username">
+					<input type="search" style="text-align:left " class="mui-input-clear" placeholder="请输入扫描/输入工号" id="username">
 				</div>
 				<div class="mui-input-row cell">
 					<label>姓名</label>
@@ -70,11 +70,11 @@
 			</div>
 
 		</div>
-		
-			<div class="mui-card-footer">
-				<span style="margin: 0 auto;" id="ver"></span>
-			</div>
-		
+
+		<div class="mui-card-footer">
+			<span style="margin: 0 auto;" id="ver"></span>
+		</div>
+
 
 
 		<script type="text/javascript" charset="utf-8">
@@ -114,11 +114,11 @@
 				plus.runtime.getProperty(plus.runtime.appid, function(inf) {
 					document.getElementById("ver").innerHTML = "当前版本号：" + inf.version
 				})
-				$('#username').bind('keyup', function(event) {
-					if (event.keyCode == "13") {
-						getName();
-					}
-				})
+				// $('#username').bind('keyup', function(event) {
+				// 	if (event.keyCode == "13") {
+				// 		getName();
+				// 	}
+				// });
 
 				var login = document.getElementById("login");
 				var loginWai = document.getElementById("loginWai");
@@ -128,12 +128,12 @@
 					var password = document.getElementById("password");
 					if (username.value.length == 0) {
 						//plus.ui.toast("用户名不能为空");
-						alert("用户名不能为空")
+						mui.alert("用户名不能为空")
 						return;
 					}
 					if (password.value.length == 0) {
 						//plus.ui.toast("密码不能为空");
-						alert("密码不能为空")
+						mui.alert("密码不能为空")
 						return;
 					}
 
@@ -195,6 +195,24 @@
 				})
 			})
 
+			$('#username').bind('search', function() {
+				//搜索事件
+				if ($("#username").val() == "") {
+					mui.alert("请输入正确的工号");
+					return false;
+				} else {
+					getName();
+				}
+			})
+			$("#username").blur(function() {
+				if ($("#username").val() == "") {
+					mui.alert("请输入正确的工号");
+					return false;
+				} else {
+					getName();
+				}
+			});
+
 			function getName() {
 				mui.ajax(API.webPath + '/check_name', {
 					data: {
@@ -210,13 +228,14 @@
 						if (data.result) {
 							//console.log(data)
 							var name = [data.data];
-							 console.log(JSON.stringify(name))
+							console.log(JSON.stringify(name))
 							// console.log(name[0].FNAME);
 							$("#name_info").val(name[0].FNAME)
 						} else {
 							//获取失败
-							console.log(JSON.stringify(data))
-							plus.ui.toast(data.msg);
+							//console.log(JSON.stringify(data))
+							$("#username").val("");
+							mui.alert(data.msg);
 						}
 					},
 					error: function(xhr, type, errorThrown) {

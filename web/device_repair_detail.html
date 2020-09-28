@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.js"></script>
+		<script src="../js/jquery-1.11.1.js"></script>
+		<script src="../js/api.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/template-web.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
+		<link rel="stylesheet" type="text/css" href="../css/timeline.css" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav colorBg">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>
+			</button>
+			<h1 class="mui-title">维修单详情</h1>
+		</header>
+		<div class="mui-content" id="contentId">
+			<div>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#">维修单跟踪</a>
+						<div class="mui-collapse-content">
+							<section id="cd-timeline" class="cd-container" style="">
+								<script id='template' type="text/template">
+									<% for(var i in record){ var item=record[i];%>	
+									<div class="cd-timeline-block">
+									{{if i==0}}
+									<div class="cd-timeline-img cd-picture"></div>
+									{{else}}
+									<div class="cd-timeline-img cd-movie"></div>
+									{{/if}}
+										<div class="cd-timeline-content">
+										<div><%=(item.CONTENT)%></div>
+										<div class="cd-date"><%=(item.THEDATE)%></div>
+										</div>
+									</div>
+								<%}%>
+								</script>
+							</section>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<div class="mui-input-group">
+				<div class="mui-input-row">
+					<label>故障设备</label>
+					<input disabled id="dev_name" type="text" value="编号——名称" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>设备位置</label>
+					<input disabled id="location" type="text" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>故障描述</label>
+					<input disabled id="desc" type="text" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>故障原因</label>
+					<input disabled id="reason" type="text" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>维修方案</label>
+					<input disabled id="plan" type="text" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>维修内容</label>
+					<input disabled id="cont" type="text" class="mui-input-clear">
+				</div>
+				<div class="mui-input-row">
+					<label>维修结果</label>
+					<input disabled id="result" type="text" class="mui-input-clear">
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			mui.init({});
+			mui.plusReady(function() {
+				var param = plus.webview.currentWebview(); //获取上一页面传递过来的参数
+				data_item = param.data_item;
+				var item = JSON.parse(data_item)
+				$("#dev_name").val(item.EQ_NAME + "(" + item.EQ_CODE + ")");
+				$("#location").val(item.LINE_NO);
+				$("#desc").val(item.TRU_PHEN);
+				$("#reason").val(item.TRU_SOLU);
+				$("#plan").val(item.TRU_DEAL);
+				$("#cont").val(item.RPHAND_MARK)
+				$("#result").val(item.RP_REAL)
+				getSchedule(item.ID) //获取记录跟踪数据
+				//将数据填充在Input中
+			});
+
+			function getSchedule(id) {
+				aj.post('/dev_apply/getScheduleList', {
+					usercode: api_localStorageGet("code"),
+					apply_id: id
+				}, function(data) {
+					//console.log(JSON.stringify(data))
+					if (data.result) {
+						document.getElementById('cd-timeline').innerHTML = template('template', {
+							"record": data.data
+						});
+					} else {
+						console.log(JSON.stringify(data))
+						plus.ui.toast(data.msg);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

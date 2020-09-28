@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.js"></script>
+		<script src="../js/jquery-1.11.1.js"></script>
+		<script src="../js/api.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/template-web.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	</head>
+
+	<body class="mui-fullscreen">
+		<header class="mui-bar mui-bar-nav colorBg">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>
+			</button>
+			<h1 class="mui-title">维修响应</h1>
+			<a href="#" style="color:#003269" class="mui-pull-right"><span class="title-right1" ID="usr"></span></a>
+		</header>
+		<div class="mui-content">
+			<div class="mui-card">
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label>故障设备</label>
+						<input id="device" type="text" class="mui-input-clear" disabled>
+					</div>
+					<div class="mui-input-row">
+						<label>故障内容</label>
+						<input type="text" id="cont" class="mui-input-clear">
+					</div>
+					<div class="mui-input-row">
+						<label>维修结果</label>
+						<a class="mui-navigate-right">
+							<span class="mui-badge1">
+								<select class="mui-h5" style="margin:auto; color:#000;" id="result">
+								</select>
+							</span>
+						</a>
+					</div>
+					<div class="mui-content-padded" align="center">
+						<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="submitData">提 交</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			mui.init({});
+			var repair_id = "";
+			mui.plusReady(function() {
+				var param = plus.webview.currentWebview(); //获取父页面传递过来的参数
+				repair_id = param.repair_id;
+				var dev_code=param.dev_code;
+				var usr = api_localStorageGet("name") + "(" + api_localStorageGet("code") + ")"
+				$("#usr").text(usr)
+				$("#device").val(dev_code)
+				getInfo();
+			});
+
+			function getInfo() {
+				aj.post('/dev_handle/getAuxiliaryInfo', "", function(data) {
+					if (data.result) {
+						//console.log(JSON.stringify(data))
+						var list = data.data
+						var r_list = list[0].Result
+						for (var i = 0; i < r_list.length; i++) {
+							if (i == 0) {
+								$("#result").append("<option value=''>请选择</option>")
+							}
+							$("#result").append("<option  value='" + r_list[i].COLUMN_VALUE + "'>" + r_list[i].COLUMN_VALUE +
+								"</option>")
+						}
+					} else {
+						console.log(JSON.stringify(data))
+						plus.ui.toast(data.msg);
+					}
+				});
+			}
+			$("#submitData").click(function() {
+				var cont = $("#cont").val();
+				var result = $("#result").val();
+				if (cont == "" || result == "") {
+					mui.alert("请完善数据")
+					return false
+				} else {
+					submit(device, cont, result);
+				}
+			});
+
+			function submit(device, cont, result) {
+				aj.post('/dev_repair/complete', {
+					usercode: api_localStorageGet("code"),
+					id: repair_id,
+					content: cont,
+					results: result
+				}, function(data) {
+					console.log(JSON.stringify(data))
+					if (data.result) {
+						mui.alert(data.msg)
+						var list = plus.webview.currentWebview().opener();
+						mui.fire(list, 'refresh'); //refresh是A页面自定义事件
+						return true; //返回true,继续页面关闭逻辑
+					} else {
+						mui.alert(data.msg)
+					}
+				});
+			}
+		</script>
+	</body>
+</html>
