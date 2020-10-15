@@ -86,11 +86,11 @@
 				</div>
 				<div class="mui-input-row">
 					<label>不合格品数</label>
-					<input id="unqualifiedqty" type="number" class="mui-input-clear" placeholder="请输入不良品数" value="0" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input id="unqualifiedqty" type="number" class="mui-input-clear" placeholder="请输入不合格品数" value="0" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div class="mui-input-row">
 					<label>合格品数</label>
-					<input id="qualifiedqty" type="number" class="mui-input-clear" placeholder="请输入良品数" value="0" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+					<input id="qualifiedqty" type="number" class="mui-input-clear" placeholder="请输入合格品数" value="0" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
 				</div>
 				<div>
 					<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="report">生产报工</button>
@@ -116,13 +116,13 @@
 					var child = param.child;
 					showDetailData(detail, child);
 				})
-				//焦点监听事件---自动填充良品/不良品数
+				//焦点监听事件---自动填充合格品/不合格品数
 				$("#unqualifiedqty").blur(function() {
 					var unqualifiedqty = $("#unqualifiedqty").val();
 					var bgqty = $("#bgqty").val();
 					var qualifiedqty = bgqty - unqualifiedqty;
 					if (qualifiedqty < 0) {
-						mui.alert("不良品数大于报工数量");
+						mui.alert("不合格品数大于报工数量");
 						$("#qualifiedqty").val("0")
 						$("#unqualifiedqty").val("0")
 						return false
@@ -134,7 +134,7 @@
 					var bgqty = $("#bgqty").val();
 					var unqualifiedqty = bgqty - qualifiedqty;
 					if (unqualifiedqty < 0) {
-						mui.alert("良品数大于报工数量");
+						mui.alert("合格品数大于报工数量");
 						$("#unqualifiedqty").val("0")
 						$("#qualifiedqty").val("0")
 						return false
@@ -148,10 +148,10 @@
 						var unqualifiedqty = $("#unqualifiedqty").val();
 						var qualifiedqty = $("#qualifiedqty").val();
 						if (bgqty == "" || unqualifiedqty == "" || qualifiedqty == "") {
-							mui.alert("请完善数据"); //再加上bgqty要大于良品和不良品
+							mui.alert("请完善数据"); //再加上bgqty要大于合格品和不合格品
 						} else {
 							var btnArray = ['取消', '提交'];
-							mui.confirm("本次报工数量：" + bgqty + " 不良品数：" + unqualifiedqty + " 良品数：" + qualifiedqty, '请确认', btnArray,
+							mui.confirm("本次报工数量：" + bgqty + " 不合格品数：" + unqualifiedqty + " 合格品数：" + qualifiedqty, '请确认', btnArray,
 								function(e) {
 									if (e.index == 1) {
 										reportBgQTY(bgqty, unqualifiedqty, qualifiedqty);
@@ -218,10 +218,10 @@
 							var unqualifiedqty = $("#unqualifiedqty").val();
 							var qualifiedqty = $("#qualifiedqty").val();
 							if (bgqty == "" || unqualifiedqty == "" || qualifiedqty == "") {
-								mui.alert("请完善数据"); //再加上bgqty要大于良品和不良品
+								mui.alert("请完善数据"); //再加上bgqty要大于合格品和不合格品
 							} else {
 								var btnArray = ['取消', '提交'];
-								mui.confirm("本次修改报工数量：" + bgqty + " 不良品数：" + unqualifiedqty + " 良品数：" + qualifiedqty, '请确认', btnArray,
+								mui.confirm("本次修改报工数量：" + bgqty + " 不合格品数：" + unqualifiedqty + " 合格品数：" + qualifiedqty, '请确认', btnArray,
 									function(e) {
 										if (e.index == 1) {
 											alterBgQTY(bgqty, unqualifiedqty, qualifiedqty);
@@ -251,7 +251,7 @@
 						});
 					}
 					//提交报工数量
-					function reportBgQTY(bgqty, unqualifiedqty, qualifiedqty) { //报工数量，不良品数，良品数
+					function reportBgQTY(bgqty, unqualifiedqty, qualifiedqty) { //报工数量，不合格品数，合格品数
 						aj.post('/produce/produceReport', {
 							usercode: api_localStorageGet("code"),
 							factory: api_localStorageGet("factory"),
