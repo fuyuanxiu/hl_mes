@@ -39,6 +39,7 @@
 			
 			<div id="contentId">
 			</div>
+			<input id="tcode" type="hidden">
 		</div>
 
 		<div class="mui-content-padded" align="center">
@@ -93,6 +94,7 @@
 				var child = param.child_data;
 				ch_data = JSON.parse(child)
 				de_data=JSON.parse(detail)
+				$('#tcode').val(detail.TECHNICS_CODE);
 				//console.log(JSON.stringify(ch_data))
 				//console.log(JSON.stringify(de_data))
 				showDetailData(detail, child);
@@ -136,18 +138,20 @@
 				var child_data = JSON.parse(child)
 				$("#task_no").text(data.TASK_NO); //工单号
 				$("#board_name").text(data.PRO_NAME); //产品名称
-				$("#proc_equ").text(child_data.WORPROC_NAME + " - " + child_data.EQU_NAME); //工序名称-设备名称
+				$("#proc_equ").text(child_data.TECHNICS_NAME) ;//+ " - " + child_data.EQU_NAME); //工序名称-设备名称
 				$("#plan_qty").text(data.PLAN_QTY); //工单数量
 				$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
 			}
 
 			function getProduceVerifyDetail(detail, EQU_CODE, PROC_NO, WORKSHOP_CENTER_CODE) {
 				var de_data = JSON.parse(detail)
+				//alert(de_data.TECHNICS_CODE);
 				aj.post('/produce_verify/getProduceVerifyDetail', {
 					usercode: api_localStorageGet("code"),
 					proc: PROC_NO,
 					taskNo: de_data.TASK_NO,
-					eq_code: EQU_CODE
+					eq_code: EQU_CODE,
+					tcode:de_data.TECHNICS_CODE
 				}, function(data) {
 					if (data.result) {
 						//console.log(JSON.stringify(data))
@@ -190,7 +194,8 @@
 					proc:ch_data.WORPROC_CODE,
 					task_no:de_data.TASK_NO,
 					eq_code:ch_data.EQU_CODE,
-					role:de_data.Role
+					role:de_data.Role,
+					tcode:$('#tcode').val()
 				}, function(data) {
 					mui.alert(data.msg);
 					//window.location.reload(); //执行刷新

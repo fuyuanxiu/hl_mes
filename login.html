@@ -205,8 +205,9 @@
 				}
 			})
 			$("#username").blur(function() {
+				//console.log('blur')
 				if ($("#username").val() == "") {
-					mui.alert("请输入正确的工号");
+					//mui.alert("请输入正确的工号");
 					return false;
 				} else {
 					getName();

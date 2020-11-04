@@ -41,7 +41,7 @@
 					            <div class="mui-media-body">
 					                <%=(item1.EQU_NAME)%>-<%=(item1.EQU_CODE)%>
 					                <p class='mui-ellipsis'>
-										工序:<%=(item1.WORPROC_NAME)%>-<%=(item1.WORKSHOP_CENTER_NAME)%>
+										工序:<%=(item1.TECHNICS_NAME)%>
 									</p>
 					            </div>
 					        </a>
@@ -51,7 +51,7 @@
 				</div>
 				<div class="mui-card-footer">
 					<span>工单号:<%=(item.TASK_NO)%></span>
-					<span>品号：<%=(item.PRO_CODE)%></span>
+					<span>产品编码：<%=(item.PRO_CODE)%></span>
 				</div>
 			</div>
 			<%}%>
@@ -65,7 +65,8 @@
 				getProduceVerifyList(); //获取待开工审核列表
 				mui("#contentId").on("tap", "li", function() {
 					var detail_data = this.getAttribute('detail-data'); //详细信息
-					var child_data=this.getAttribute('child-data')
+					var child_data=this.getAttribute('child-data');
+
 					OpenWindow('produce_verify_detail', 'produce_verify_detail.html', {
 						"detail": detail_data,
 						"child_data":child_data
@@ -78,7 +79,7 @@
 					usercode: api_localStorageGet("code")
 				}, function(data) {
 					if (data.result) {
-						console.log(JSON.stringify(data.data))
+						//console.log(JSON.stringify(data.data))
 						api_localStorageSave("role", data.data[0].Role);
 						 document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data

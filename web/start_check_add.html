@@ -22,13 +22,14 @@
 			<h1 class="mui-title">开工授权</h1>
 		</header>
 		<div class="mui-content" id="contentId">
+			<input id="id" type="hidden" >
 			<div class="mui-input-group">
 				<div class="mui-input-row">
 					<label>工单号</label>
 					<input id="worl_singnum" type="text" class="mui-input-clear"  disabled>
 				</div>
 				<div class="mui-input-row">
-					<label>品号</label>
+					<label>产品编码</label>
 					<input id="pro_code" type="text" class="mui-input-clear"  disabled>
 				</div>
 				<div class="mui-input-row">
@@ -36,11 +37,11 @@
 					<input id="pro_name" type="text" class="mui-input-clear"  disabled>
 				</div>
 				<div class="mui-input-row">
-					<label>工序名称</label>
+					<label>工序</label>
 					<input id="worproc_name" type="text" class="mui-input-clear"  disabled>
 				</div>
 				<div class="mui-input-row">
-					<label>设备名称</label>
+					<label>设备</label>
 					<input id="equ_name" type="text" class="mui-input-clear"  disabled>
 				</div>
 				<div class="mui-input-row">
@@ -89,7 +90,8 @@
 						//如果已经存在则不填写
 						plus.ui.toast("该数据已经存在!");
 					}else{
-						document.getElementById(inputId).value = (document.getElementById(inputId).value + e.detail.barcode + ",");
+						document.getElementById(inputId).value = e.detail.barcode;
+						//document.getElementById(inputId).value = (document.getElementById(inputId).value + e.detail.barcode + ",");
 					}
 					
 					
@@ -100,15 +102,16 @@
 			document.getElementById("login").addEventListener("tap", function() {
 				var barcode = $("#barcode").val(); //工号
 				var machine = $("#machine").val(); //设备编号
-				if (barcode == "" || machine == "") {
+				if (barcode == "" ) {
 					mui.alert("请完善数据"); //再加上bgqty要大于良品和不良品
 				} else {
-					var btnArray = ['取消', '提交'];
+					startCheckAdd(machine, barcode);
+					/* var btnArray = ['取消', '提交'];
 					mui.confirm("工号：" + barcode + " 设备编号：" + machine, '请确认开工授权信息', btnArray, function(e) {
 						if (e.index == 1) {
 							startCheckAdd(machine, barcode);
 						}
-					});
+					}); */
 				}
 			});
 
@@ -123,10 +126,11 @@
 			function showDetailData(detail,child) {
 				var data = JSON.parse(detail)
 				var child_data = JSON.parse(child)
+				$('#id').val(data.ID);
 				$("#worl_singnum").val(data.WORL_SINGNUM); //工单号
 				$("#pro_code").val(data.PRO_CODE); //品名
 				$("#pro_name").val(data.PRO_NAME); //产品名称
-				$("#worproc_name").val(child_data.WORPROC_NAME); //工序名称
+				$("#worproc_name").val(child_data.TECHNICS_NAME); //工序名称
 				$("#equ_name").val(child_data.EQU_NAME); //设备名
 				workCenter = child_data.WORKSHOP_CENTER_CODE; //工作中心
 				worproc_code = child_data.WORPROC_CODE; //工序编码
@@ -141,7 +145,8 @@
 					taskNo: $("#worl_singnum").val(), //工单号
 					eq_code: eq_code, //设备编号
 					staffNoInfo: barcode, //工号信息 
-					eq_id_Info: machine //设备ID
+					eq_id_Info: machine ,//设备ID
+					pid:$("#id").val()//排产id
 				}, function(data) {
 					if (data.result) {
 						//console.log(JSON.stringify(data));

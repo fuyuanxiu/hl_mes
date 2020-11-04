@@ -64,7 +64,7 @@
 					<a class="mui-navigate" href="#">基础信息</a>
 					<div class="mui-collapse-content">
 						<p>工单号:&nbsp;&nbsp;<span id="worl_singnum"></span></p>
-						<p>品号:&nbsp;&nbsp;<span id="pro_code"></span></p>
+						<p>产品编码:&nbsp;&nbsp;<span id="pro_code"></span></p>
 						<p>产品名称:&nbsp;<span id="pro_name"></span></p>
 						<p>工序:&nbsp;<span id="worproc_name"></span></p>
 						<p>设备:&nbsp;<span id="equ_name"></span></p>
@@ -185,7 +185,7 @@
 						$("#worl_singnum").text(data.WORL_SINGNUM); //工单号
 						$("#pro_code").text(data.PRO_CODE); //品名
 						$("#pro_name").text(data.PRO_NAME); //产品名称
-						$("#worproc_name").text(child_data.WORPROC_NAME); //工序名称
+						$("#worproc_name").text(child_data.TECHNICS_NAME); //工序名称
 						$("#equ_name").text(child_data.EQU_NAME); //设备
 						$("#equ_code").text(child_data.EQU_CODE); //设备编号
 						$("#output_qty").text(data.OUTPUT_QTY); //工排产量

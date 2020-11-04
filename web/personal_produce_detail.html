@@ -94,7 +94,8 @@
 				aj.post('/produce_verify/getProduceRecordDetail', {
 					usercode: api_localStorageGet("code"),
 					plan_id: pl_param.PID,
-					role: role
+					role: role,
+					aid:pl_param.ID
 				}, function(data) {
 					if (data.result) {
 						document.getElementById('contentId').innerHTML = template('record-template', {
@@ -142,7 +143,8 @@
 					task_no:order.TASK_NO,
 					eq_code:child_data[0].EQU_CODE,
 					reportInfo: paramInfo,
-					role:role
+					role:role,
+					tcode:child_data[0].TECHNICS_CODE
 				}, function(data) {
 					mui.alert(data.msg);
 					//返回上一页并刷新
