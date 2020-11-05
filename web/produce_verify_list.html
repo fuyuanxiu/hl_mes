@@ -79,13 +79,15 @@
 					usercode: api_localStorageGet("code")
 				}, function(data) {
 					if (data.result) {
-						//console.log(JSON.stringify(data.data))
+						//console.log(JSON.stringify(data.data)) 
 						api_localStorageSave("role", data.data[0].Role);
 						 document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data
 						}); 
 					} else {
-						mui.alert(data.msg);
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
 					}
 				});
 			}

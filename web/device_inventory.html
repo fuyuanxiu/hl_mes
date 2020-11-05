@@ -90,8 +90,9 @@
 					} else {
 						$("#record").val(data.msg)
 						document.getElementById("record").style.color = "red"
-						//mui.alert(data.msg);
-						mui.back();
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
 					}
 				});
 			}

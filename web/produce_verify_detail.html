@@ -98,7 +98,7 @@
 				//console.log(JSON.stringify(ch_data))
 				//console.log(JSON.stringify(de_data))
 				showDetailData(detail, child);
-				getProduceVerifyDetail(detail, ch_data.EQU_CODE, ch_data.WORPROC_CODE, ch_data.WORKSHOP_CENTER_NAME);
+				getProduceVerifyDetail(detail, ch_data.EQU_CODE, ch_data.WORPROC_CODE, ch_data.TECHNICS_CODE);
 				mui("#contentId").on("tap", "ul", function() {
 					var detail_data = this.getAttribute('detail-data'); //详细信息
 					//console.log(detail_data)
@@ -143,18 +143,19 @@
 				$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
 			}
 
-			function getProduceVerifyDetail(detail, EQU_CODE, PROC_NO, WORKSHOP_CENTER_CODE) {
+			function getProduceVerifyDetail(detail, EQU_CODE, PROC_NO, TECHNICS_CODE) {
 				var de_data = JSON.parse(detail)
-				//alert(de_data.TECHNICS_CODE);
+				//alert(TECHNICS_CODE);
 				aj.post('/produce_verify/getProduceVerifyDetail', {
 					usercode: api_localStorageGet("code"),
 					proc: PROC_NO,
 					taskNo: de_data.TASK_NO,
-					eq_code: EQU_CODE,
-					tcode:de_data.TECHNICS_CODE
+					eq_code: EQU_CODE, 
+					tcode:TECHNICS_CODE
 				}, function(data) {
+					//console.log(JSON.stringify(data))
 					if (data.result) {
-						//console.log(JSON.stringify(data))
+						
 						var list= data.data
 						if(list[0].VERIFY==1){
 							$("#captain").text("已审核"); 
@@ -170,10 +171,9 @@
 							"record":list
 						});
 					} else {
-						mui.alert(data.msg);
-						var list = plus.webview.currentWebview().opener();
-						mui.fire(list, 'refresh'); //refresh是A页面自定义事件
-						return true; //返回true,继续页面关闭逻辑
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
 					}
 				});
 			}

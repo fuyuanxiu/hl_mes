@@ -34,7 +34,16 @@
 					<div class="mui-input-row">
 						<label onclick="clicked('commom/saomiao.html','device','web/device_repair_apply.html');">故障设备<span class="mui-icon iconfont icon-saomiao"
 							 id="num1"></label>
-						<input disabled id="device" type="text" class="mui-input-clear" placeholder="请扫描">
+						<input  id="device" type="text" class="mui-input-clear" placeholder="请扫描">
+					</div>
+					<div class="mui-input-row">
+						<label>故障类型</label>
+						<a class="mui-navigate-right">
+							<span class="mui-badge1">
+								<select class="mui-h5" style="margin:auto; color:#000;" id="breakType">
+								</select>
+							</span>
+						</a>
 					</div>
 					<div class="mui-input-row" style="height:auto;">
 						<label>故障描述</label>
@@ -104,6 +113,7 @@
 				var usr = api_localStorageGet("name") + "(" + api_localStorageGet("code") + ")"
 				$("#usr").text(usr)
 				getList();
+				getInfo();
 			});
 
 			function getList() { //获取报修单
@@ -116,11 +126,31 @@
 							"record": data.data
 						});
 					} else {
-						console.log(JSON.stringify(data))
-						mui.alert(data.msg);
+						//console.log(JSON.stringify(data))
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
 					}
 				});
 			}
+			function getInfo(){
+				aj.post('/dev_handle/getAuxiliaryInfo', "", function(data) {
+					if (data.result) {						
+						 var list = data.data
+						 var breakList=list[0].BreakdownType
+						 for(var i=0;i<breakList.length;i++){
+							 if(i==0){
+								$("#breakType").append("<option value=''>请选择</option>"); 
+							 }
+							$("#breakType").append("<option value="+breakList[i].COLUMN_VALUE+">"+breakList[i].COLUMN_VALUE+"</option>");
+						 }
+					} else {
+						console.log(JSON.stringify(data))
+						plus.ui.toast(data.msg);
+					}
+				});
+			}
+
 
 			mui("#contentId").on("tap", "li", function() {
 				var data_item = this.getAttribute('data-item');
@@ -154,11 +184,12 @@
 			$("#submitData").click(function() {
 				var device = $("#device").val();
 				var des = $("#des").val();
-				if (device == "" || des == "") {
+				var break_type=$("#breakType").val();
+				if (device == ""||break_type=="") {
 					mui.alert("请完善数据")
 					return false
 				} else {
-					submit(device, des);
+					submit(device, des,break_type);
 				}
 			});
 
@@ -200,11 +231,12 @@
 				})
 			}
 
-			function submit(eq_code, des) {
+			function submit(eq_code, des,break_type) {
 				aj.post('/dev_apply/add', {
 					usercode: api_localStorageGet("code"),
 					eq_code: eq_code,
-					fault_des: des
+					fault_des: des,
+					break_type:break_type
 				}, function(data) {
 					console.log(JSON.stringify(data))
 					if (data.result) {

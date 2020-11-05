@@ -67,6 +67,7 @@
 				            <div class="mui-media-body">
 				                设备信息：<span><%=(item.EQ_NAME)%>(<%=(item.EQ_CODE)%>)</span>
 				                <p class='mui-ellipsis'>
+								故障类型：<span><%=(item.TRU_TYPE)%></span><br/>
 								故障描述：<span><%=(item.TRU_PHEN)%></span><br/>
 								设备位置：<span><%=(item.LINE_NO)%></span><br/>
 								维修人员：<span><%=(item.RPHAND_BY_NAME)%></span>
@@ -110,6 +111,7 @@
 				var usr = api_localStorageGet("name") + "(" + api_localStorageGet("code") + ")"
 				$("#usr").text(usr)
 				getList();
+				getInfo();
 			});
 
 			function getList() { //获取报修单
@@ -117,14 +119,15 @@
 					usercode: api_localStorageGet("code")
 				}, function(data) {
 					if (data.result) {
-						//console.log(JSON.stringify(data.data))
+						console.log(JSON.stringify(data.data))
 						document.getElementById('contentId').innerHTML = template('template', {
 							"record": data.data
 						});
 					} else {
 						//console.log(JSON.stringify(data))
-						mui.alert(data.msg);
-						mui.back();
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
 					}
 				});
 			}
@@ -209,13 +212,14 @@
 			function getInfo() {
 				aj.post('/dev_handle/getAuxiliaryInfo', "", function(data) {
 					if (data.result) {
-						//console.log(JSON.stringify(data))
+						var d=data.data
+						//console.log(JSON.stringify(d[0].FettlerInfo))
 						var list = data.data
 						document.getElementById('assgin_list').innerHTML = template('as-template', {
 							"record": list[0].FettlerInfo
 						});
 					} else {
-						console.log(JSON.stringify(data))
+						//console.log(JSON.stringify(data))
 						plus.ui.toast(data.msg);
 					}
 				});

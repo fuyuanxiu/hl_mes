@@ -97,7 +97,10 @@
 						});
 					} else {
 						//console.log(JSON.stringify(data))
-						mui.alert(data.msg);
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
+						
 					}
 				});
 			}
@@ -130,10 +133,11 @@
 			}
 			function complete(item){
 				var data=JSON.parse(item)
-				//console.log(data.EQ_CODE)
+				//console.log(item)
+				var msg_dev=data.EQ_NAME+"（"+data.EQ_CODE+"）"
 				OpenWindow('device_repair_complete', 'device_repair_complete.html', {
 					"repair_id": data.ID,
-					"dev_code":data.EQ_CODE
+					"dev_code":msg_dev
 				});
 			}
 		</script>

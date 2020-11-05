@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>生产停工</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/api.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/template-web.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/comment.css" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+	</head>
+	<body class="mui-fullscreen">
+		<header class="mui-bar mui-bar-nav colorBg">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+				<span class="mui-icon mui-icon-left-nav"></span>
+			</button>
+			<h1 class="mui-title">生产停工</h1>
+		</header>
+		<div class="mui-content" id="contentId">
+		</div>
+		<script id='record-template' type="text/template">
+			<% for(var i in record){ var item=record[i];
+			%>
+			<div class="mui-card">
+			<div class="mui-card-header">
+				工单号: <%=(item.WORL_SINGNUM)%>
+			</div>
+			<div class="mui-card-content">
+				<ul class="mui-table-view">
+					
+					<li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>'>
+						<a href="javascript:;">
+							<span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
+							<div class="mui-media-body">
+								<p class='mui-ellipsis'>
+									产品名称:<%=(item.PRO_NAME)%></br>
+									产品编码:<%=(item.PRO_CODE)%>
+								</p>
+							</div>
+						</a>
+					</li>
+					
+				</ul>
+				<div class="mui-card-footer">
+					<span><button  class="mui-btn-success">开工</button></span>
+					<span><button  class="mui-btn-warning">暂停</button>
+					<button  class="mui-btn-danger">停工</button>
+					</span>
+				</div>
+			</div>
+			</div>
+			<%}%>
+		</script>
+		<script type="text/javascript">
+			mui.init({});
+			mui.plusReady(function() {
+				getList();//获取工单列表数据
+			})
+			function getList(){
+				aj.post('/suspend/getList', {
+					usercode: api_localStorageGet("code")
+				}, function(data) {
+					console.log(data)
+					if (data.result) {
+						console.log(JSON.stringify(data.data))
+						document.getElementById('contentId').innerHTML = template('record-template', {
+							"record": data.data
+						});
+					} else {
+						//console.log(JSON.stringify(data))
+						//plus.ui.toast(data.msg);
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

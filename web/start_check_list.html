@@ -83,7 +83,10 @@
 							"record": data.data
 						});
 					} else {
-						plus.ui.toast(data.msg);
+						//plus.ui.toast(data.msg);
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
 					}
 				});
 			}

@@ -23,7 +23,8 @@
 		<div class="mui-content" id="contentId">
 		</div>
 		<script id='record-template' type="text/template">
-			<% for(var i in record){ var item=record[i];%>
+			<% for(var i in record){ var item=record[i];
+			var s =$imports.check(item.STATUS);%>
 			<div class="mui-card">
 			<div class="mui-card-header">
 				产品名称: <%=(item.PRO_NAME)%>
@@ -47,7 +48,7 @@
 				</ul>
 				<div class="mui-card-footer">
 					<span>工单号:<%=(item.WORL_SINGNUM)%></span>
-					<span>生产时间：<%=(item.PROD_DATE)%></span>
+					<span><button {{s}} onclick="suspend('<%=(item)%>')" class="mui-btn-warning">暂停</button></span>
 				</div>
 			</div>
 			</div>
@@ -82,10 +83,42 @@
 							"record": data.data
 						});
 					} else {
-						console.log(JSON.stringify(data))
-						plus.ui.toast(data.msg);
+						//console.log(JSON.stringify(data))
+						//plus.ui.toast(data.msg);
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
 					}
 				});
+			}
+			template.defaults.imports.check = function(status) {//判断能否转单
+				if (status == "暂停") {
+					return "disabled";
+				} else {
+					return "";
+				}
+			};
+			function suspend(item){
+				//console.log(item)
+				var item_data=JSON.parse(item);
+				var item_child=item_data.Child
+				//console.log(item_child[0].ID)
+				mui.confirm("是否暂停工单："+item_data.WORL_SINGNUM+"报工？", '提示', ['否', '是'], function(e) {
+					if (e.index == 1) {
+						aj.post('/produce/suspendReport', {
+							usercode: api_localStorageGet("code"),
+							plan_ID:item_child[0].ID
+						}, function(data) {
+							//console.log(JSON.stringify(data))
+							if (data.result) {
+								mui.alert(data.msg);
+								window.location.reload(); //执行刷新
+							} else {
+								mui.alert(data.msg);
+							}
+						});
+					}
+				})
 			}
 		</script>
 	</body>
