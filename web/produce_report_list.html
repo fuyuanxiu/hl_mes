@@ -34,7 +34,14 @@
 					<% for(var j in item.Child){ var item1=item.Child[j]; %>
 					<li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>' child-data='<%=(item1)%>'>
 						<a href="javascript:;" class="mui-navigate-right">
+							<!-- <div class="font-seal"><(item1.STATUS)%></div> -->
+							{{if item1.STATUS=="生产中"}}
+							<div class="font-seal-wait"><%=(item1.STATUS)%></div>
+							{{else if item1.STATUS=="待生产"||item1.STATUS=="停工"||item1.STATUS=="暂停"}}
 							<div class="font-seal"><%=(item1.STATUS)%></div>
+							{{else}}
+							<div class="font-seal-ok"><%=(item1.STATUS)%></div>
+							{{/if}}
 							<span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
 							<div class="mui-media-body">
 								<%=(item1.EQU_NAME)%>—<%=(item1.EQU_CODE)%>
