@@ -94,7 +94,7 @@
 				var child = param.child_data;
 				ch_data = JSON.parse(child)
 				de_data=JSON.parse(detail)
-				$('#tcode').val(detail.TECHNICS_CODE);
+				$('#tcode').val(ch_data.TECHNICS_CODE);
 				//console.log(JSON.stringify(ch_data))
 				//console.log(JSON.stringify(de_data))
 				showDetailData(detail, child);
@@ -155,7 +155,6 @@
 				}, function(data) {
 					//console.log(JSON.stringify(data))
 					if (data.result) {
-						
 						var list= data.data
 						if(list[0].VERIFY==1){
 							$("#captain").text("已审核"); 
@@ -197,12 +196,9 @@
 					role:de_data.Role,
 					tcode:$('#tcode').val()
 				}, function(data) {
-					mui.alert(data.msg);
-					//window.location.reload(); //执行刷新
-					//返回上一页并刷新
-					var list = plus.webview.currentWebview().opener();
-					mui.fire(list, 'refresh'); //refresh是A页面自定义事件
-					return true; //返回true,继续页面关闭逻辑
+					mui.alert(data.msg,function(){
+						mui.back()
+					});
 				});
 			}
 		</script>

@@ -24,6 +24,9 @@
 				background-color: #fff;
 				border-radius: 0px;
 			}
+			.mui-popover-bottom{
+				margin-top: 85%;
+			}
 		</style>
 	</head>
 
@@ -87,17 +90,24 @@
 		</div>
 		<%}%>
 		</script>
-		<div id="listContent" class=" mui-popover mui-popover-bottom mui-popover-action" data-disable-auto-close="true">
-			<ul class="mui-table-view" id="assgin_list">
-				<script id='as-template' type="text/template">
-					<% for(var i in record){ var item=record[i];%>
-					<li class="mui-table-view-cell" detail-data='<%=(item)%>'>
-					 <a href="#"><%=(item.DEPARTMENTNAME)%>——<%=(item.FNAME)%>
-					 </a>
-					</li>
-					<%}%>
-				</script>
-			</ul>
+		<div id="listContent" style="height: 45%;" class=" mui-popover mui-popover-bottom mui-popover-action 
+		mui-scroll-wrapper" data-disable-auto-close="true">
+				<div class="mui-scroll" > 
+					<ul class="mui-table-view" id="assgin_list">
+						<script id='as-template' type="text/template">
+							<% for(var i in record){ var item=record[i];%>
+							<li class="mui-table-view-cell" detail-data='<%=(item)%>'>
+							 <a href="#"><%=(item.DEPARTMENTNAME)%>——<%=(item.FNAME)%>
+							 </a>
+							</li>
+							<%}%>
+						</script>
+					</ul> 
+					
+				</div>
+			
+			
+			
 		</div>
 		<!-- <div id="transferContent" class=" mui-popover mui-popover-bottom mui-popover-action">
 			<ul class="mui-table-view" id="transfer_list">
@@ -105,12 +115,20 @@
 			</ul>
 		</div> -->
 		<script type="text/javascript">
+			mui.init();
+			(function($){
+			    $(".mui-scroll-wrapper").scroll({
+			        //bounce: false,//滚动条是否有弹力默认是true
+			        //indicators: false, //是否显示滚动条,默认是true
+			    }); 
+			})(mui); 
 			var repair_id = "";
 			var action = ";"
 			mui.plusReady(function() {
 				var usr = api_localStorageGet("name") + "(" + api_localStorageGet("code") + ")"
 				$("#usr").text(usr)
 				getList();
+				
 				getInfo();
 			});
 
@@ -119,7 +137,7 @@
 					usercode: api_localStorageGet("code")
 				}, function(data) {
 					if (data.result) {
-						console.log(JSON.stringify(data.data))
+						//console.log(JSON.stringify(data.data))
 						document.getElementById('contentId').innerHTML = template('template', {
 							"record": data.data
 						});

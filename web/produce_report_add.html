@@ -150,6 +150,9 @@
 						if (bgqty == "" || unqualifiedqty == "" || qualifiedqty == "") {
 							mui.alert("请完善数据"); //再加上bgqty要大于合格品和不合格品
 						} else {
+							if(unqualifiedqty=="0"){
+								 qualifiedqty=bgqty
+							}
 							var btnArray = ['取消', '提交'];
 							mui.confirm("本次报工数量：" + bgqty + " 不合格品数：" + unqualifiedqty + " 合格品数：" + qualifiedqty, '请确认', btnArray,
 								function(e) {

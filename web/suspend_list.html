@@ -28,18 +28,26 @@
 			%>
 			<div class="mui-card">
 			<div class="mui-card-header">
-				工单号: <%=(item.WORL_SINGNUM)%>
+				<span>工单号: <%=(item.TASK_NO)%></span>
+				<span>工单数: <%=(item.SPEC)%></span>
 			</div>
 			<div class="mui-card-content">
 				<ul class="mui-table-view">
 					
 					<li class="mui-table-view-cell mui-media" detail-data='<%=(item)%>'>
 						<a href="javascript:;">
+							{{if item.STATUS =="停工"}}
+							<div class="font-seal"><%=(item.STATUS)%></div>
+							{{else if item.STATUS=="暂停"}}
+							<div class="font-seal-wait"><%=(item.STATUS)%></div>
+							{{else}}
+							<div class="font-seal-ok"><%=(item.STATUS)%></div>
+							{{/if}}
 							<span class="mui-media-object mui-pull-left mui-icon iconfont icon-baozhuang" style="color: #ADD8E6;font-size:1.875rem"></span>
 							<div class="mui-media-body">
 								<p class='mui-ellipsis'>
-									产品名称:<%=(item.PRO_NAME)%></br>
-									产品编码:<%=(item.PRO_CODE)%>
+									产品名称:<%=(item.BOARD_ITEM)%></br>
+									产品编码:<%=(item.BOARD_NAME)%>
 								</p>
 							</div>
 						</a>
@@ -47,9 +55,11 @@
 					
 				</ul>
 				<div class="mui-card-footer">
-					<span><button  class="mui-btn-success">开工</button></span>
-					<span><button  class="mui-btn-warning">暂停</button>
-					<button  class="mui-btn-danger">停工</button>
+					<span><button onclick="start('<%=(item)%>')"  class="mui-btn-success">开工</button></span>
+					<span>
+					<button  style="margin-right: 20px;" onclick="suspend('<%=(item)%>')" 
+					class="mui-btn-warning">暂停</button>
+					<button onclick="stop('<%=(item)%>')" class="mui-btn-danger">停工</button>
 					</span>
 				</div>
 			</div>
@@ -59,26 +69,95 @@
 		<script type="text/javascript">
 			mui.init({});
 			mui.plusReady(function() {
-				getList();//获取工单列表数据
+				getList(); //获取工单列表数据
 			})
-			function getList(){
+
+			function getList() {
 				aj.post('/suspend/getList', {
 					usercode: api_localStorageGet("code")
 				}, function(data) {
-					console.log(data)
 					if (data.result) {
-						console.log(JSON.stringify(data.data))
+						console.log(JSON.stringify(data))
 						document.getElementById('contentId').innerHTML = template('record-template', {
 							"record": data.data
 						});
 					} else {
 						//console.log(JSON.stringify(data))
 						//plus.ui.toast(data.msg);
-						mui.alert(data.msg,function(){
+						mui.alert(data.msg, function() {
 							mui.back()
 						});
 					}
 				});
+			}
+
+			function start(item) { //开工
+				var data = JSON.parse(item)
+				mui.confirm("确认对【工单：" + data.TASK_NO + "】执行开工操作？", '提示', ['否', '是'], function(e) {
+					if (e.index == 1) {
+						aj.post('/suspend/changeStatus', {
+							usercode: api_localStorageGet("code"),
+							taskNo: data.TASK_NO,
+							itemNo: data.BOARD_ITEM,
+							plan_id: data.ID,
+							status: "开工"
+						}, function(data) {
+							console.log(JSON.stringify(data))
+							if (data.result) {
+								mui.alert(data.msg);
+								window.location.reload(); //执行刷新
+							} else {
+								mui.alert(data.msg);
+							}
+						});
+					}
+				})
+			}
+
+			function suspend(item) { //暂停
+				var data = JSON.parse(item)
+				mui.confirm("确认对【工单：" + data.TASK_NO + "】执行暂停操作？", '提示', ['否', '是'], function(e) {
+					if (e.index == 1) {
+						aj.post('/suspend/changeStatus', {
+							usercode: api_localStorageGet("code"),
+							taskNo: data.TASK_NO,
+							itemNo: data.BOARD_ITEM,
+							plan_id: data.ID,
+							status: "暂停"
+						}, function(data) {
+							console.log(JSON.stringify(data))
+							if (data.result) {
+								mui.alert(data.msg);
+								window.location.reload(); //执行刷新
+							} else {
+								mui.alert(data.msg);
+							}
+						});
+					}
+				})
+			}
+
+			function stop(item) { //停工
+				var data = JSON.parse(item)
+				mui.confirm("确认对【工单：" + data.TASK_NO + "】执行停工操作？", '提示', ['否', '是'], function(e) {
+					if (e.index == 1) {
+						aj.post('/suspend/changeStatus', {
+							usercode: api_localStorageGet("code"),
+							taskNo: data.TASK_NO,
+							itemNo: data.BOARD_ITEM,
+							plan_id: data.ID,
+							status: "停工"
+						}, function(data) {
+							console.log(JSON.stringify(data))
+							if (data.result) {
+								mui.alert(data.msg);
+								window.location.reload(); //执行刷新
+							} else {
+								mui.alert(data.msg);
+							}
+						});
+					}
+				})
 			}
 		</script>
 	</body>

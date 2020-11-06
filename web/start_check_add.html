@@ -52,7 +52,7 @@
 				<div class="mui-input-row">
 					<label onclick="clicked('commom/saomiao.html','machine','web/start_check_add.html');"><span class="mui-icon iconfont icon-saomiao"
 						 id="num1"></span>设备</label>
-					<input type="text" class="mui-input-clear" placeholder="请输入扫描/输入设备" id='machine'>
+					<input type="text" class="mui-input-clear" placeholder="请扫描/输入设备" id='machine'>
 				</div>
 			</div>
 			<div class="mui-content-padded" align="center">
@@ -126,6 +126,7 @@
 			function showDetailData(detail,child) {
 				var data = JSON.parse(detail)
 				var child_data = JSON.parse(child)
+				console.log(child)
 				$('#id').val(data.ID);
 				$("#worl_singnum").val(data.WORL_SINGNUM); //工单号
 				$("#pro_code").val(data.PRO_CODE); //品名
@@ -149,12 +150,11 @@
 					pid:$("#id").val()//排产id
 				}, function(data) {
 					if (data.result) {
-						//console.log(JSON.stringify(data));
-						mui.alert(data.msg);
-						document.getElementById("login").disabled = true;
+						mui.alert(data.msg,function(){
+							mui.back()
+						});
 					} else {
 						mui.alert(data.msg);
-						//console.log(data.msg);
 					}
 				});
 			}
