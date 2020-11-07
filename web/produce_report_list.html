@@ -118,8 +118,9 @@
 						}, function(data) {
 							//console.log(JSON.stringify(data))
 							if (data.result) {
-								mui.alert(data.msg);
-								window.location.reload(); //执行刷新
+								mui.alert(data.msg, function() {
+									window.location.reload(); //执行刷新
+								});								
 							} else {
 								mui.alert(data.msg);
 							}
