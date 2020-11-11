@@ -83,7 +83,8 @@
 				//console.log(document.getElementById("#barcode").value)
 				var inputId = e.detail.inputId
 				if (document.getElementById(inputId).value.length == 0) {
-					document.getElementById(inputId).value = (e.detail.barcode) + ",";
+					document.getElementById(inputId).value = (e.detail.barcode);
+					//document.getElementById(inputId).value = (e.detail.barcode) + ",";
 				} else {
 					var str = document.getElementById(inputId).value
 					if(str.indexOf(e.detail.barcode) != -1){

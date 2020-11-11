@@ -80,10 +80,7 @@
 				</li>
 			</ul>
 			<div class="mui-input-group">
-				<div class="mui-input-row">
-					<label>本次报工数量</label>
-					<input id="bgqty" type="number" class="mui-input-clear" placeholder="请输入本次报工数量" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
-				</div>
+				
 				<div class="mui-input-row">
 					<label>不合格品数</label>
 					<input id="unqualifiedqty" type="number" class="mui-input-clear" placeholder="请输入不合格品数" value="0" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
@@ -91,6 +88,10 @@
 				<div class="mui-input-row">
 					<label>合格品数</label>
 					<input id="qualifiedqty" type="number" class="mui-input-clear" placeholder="请输入合格品数" value="0" onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))">
+				</div>
+				<div class="mui-input-row">
+					<label>本次报工数量</label>
+					<input id="bgqty" type="number" class="mui-input-clear" placeholder="请输入本次报工数量" value="0" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
 				</div>
 				<div>
 					<button type="button" class="mui-btn mui-btn-success" style="width: 100%;" id="report">生产报工</button>
@@ -116,8 +117,8 @@
 					var child = param.child;
 					showDetailData(detail, child);
 				})
-				//焦点监听事件---自动填充合格品/不合格品数
-				$("#unqualifiedqty").blur(function() {
+				//焦点监听事件---自动填充合格品/不合格品数--2020/11/10
+				/*$("#unqualifiedqty").blur(function() {
 					var unqualifiedqty = $("#unqualifiedqty").val();
 					var bgqty = $("#bgqty").val();
 					var qualifiedqty = bgqty - unqualifiedqty;
@@ -141,19 +142,33 @@
 					}
 					$("#unqualifiedqty").val(unqualifiedqty)
 				});
+				*/
+				//焦点监听事件---自动填充报工数--2020/11/10
+				$("#unqualifiedqty").blur(function() {
+					var unqualifiedqty = $("#unqualifiedqty").val();
+					var qualifiedqty = $("#qualifiedqty").val();
+					var bgqty = parseInt(qualifiedqty) + parseInt(unqualifiedqty);
+					$("#bgqty").val(bgqty)
+				});
+				$("#qualifiedqty").blur(function() {
+					var qualifiedqty = $("#qualifiedqty").val();
+					var unqualifiedqty = $("#unqualifiedqty").val();
+					var bgqty = parseInt(qualifiedqty) + parseInt(unqualifiedqty);
+					$("#bgqty").val(bgqty)
+				});
 				//监听点击事件
 				document.getElementById("report").addEventListener("tap", function() {
 					setTimeout(function() { //进行延时处理，防止修改数据未及时传递
 						var bgqty = $("#bgqty").val();
 						var unqualifiedqty = $("#unqualifiedqty").val();
 						var qualifiedqty = $("#qualifiedqty").val();
-						if (bgqty == "" || unqualifiedqty == "" || qualifiedqty == "") {
-							mui.alert("请完善数据"); //再加上bgqty要大于合格品和不合格品
+						if (bgqty == ""||bgqty == "0" || unqualifiedqty == "" || qualifiedqty == "") {
+							mui.alert("请完善数据"); 
 						} else {
-							if(unqualifiedqty=="0"){
-								 qualifiedqty=bgqty;
-								 $("#qualifiedqty").val(qualifiedqty)
-							}
+							// if(unqualifiedqty=="0"){
+							// 	 qualifiedqty=bgqty;
+							// 	 $("#qualifiedqty").val(qualifiedqty)
+							// }
 							var btnArray = ['取消', '提交'];
 							mui.confirm("本次报工数量：" + bgqty + " 不合格品数：" + unqualifiedqty + " 合格品数：" + qualifiedqty, '请确认', btnArray,
 								function(e) {
@@ -221,13 +236,13 @@
 							var bgqty = $("#bgqty").val();
 							var unqualifiedqty = $("#unqualifiedqty").val();
 							var qualifiedqty = $("#qualifiedqty").val();
-							if (bgqty == "" || unqualifiedqty == "" || qualifiedqty == "") {
-								mui.alert("请完善数据"); //再加上bgqty要大于合格品和不合格品
+							if (bgqty == ""||bgqty=="0" || unqualifiedqty == "" || qualifiedqty == "") {
+								mui.alert("请完善数据"); 
 							} else {
-								if(unqualifiedqty=="0"){
-									 qualifiedqty=bgqty;
-									 $("#qualifiedqty").val(qualifiedqty);
-								}
+								// if(unqualifiedqty=="0"){
+								// 	 qualifiedqty=bgqty;
+								// 	 $("#qualifiedqty").val(qualifiedqty);
+								// }
 								var btnArray = ['取消', '提交'];
 								mui.confirm("本次修改报工数量：" + bgqty + " 不合格品数：" + unqualifiedqty + " 合格品数：" + qualifiedqty, '请确认', btnArray,
 									function(e) {
