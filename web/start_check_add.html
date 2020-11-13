@@ -127,8 +127,8 @@
 			function showDetailData(detail,child) {
 				var data = JSON.parse(detail)
 				var child_data = JSON.parse(child)
-				console.log(child)
-				$('#id').val(data.ID);
+				//console.log(child)
+				$('#id').val(child_data.ID);
 				$("#worl_singnum").val(data.WORL_SINGNUM); //工单号
 				$("#pro_code").val(data.PRO_CODE); //品名
 				$("#pro_name").val(data.PRO_NAME); //产品名称
