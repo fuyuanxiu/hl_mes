@@ -127,7 +127,7 @@
 			function showDetailData(detail,child) {
 				var data = JSON.parse(detail)
 				var child_data = JSON.parse(child)
-				//console.log(child)
+				console.log(child_data.ID)
 				$('#id').val(child_data.ID);
 				$("#worl_singnum").val(data.WORL_SINGNUM); //工单号
 				$("#pro_code").val(data.PRO_CODE); //品名
@@ -140,6 +140,7 @@
 			}
 
 			function startCheckAdd(machine, barcode) {
+				console.log($('#id').val())
 				aj.post('/start/addStartCheck', {
 					usercode: api_localStorageGet("code"),
 					proc: worproc_code, //工序

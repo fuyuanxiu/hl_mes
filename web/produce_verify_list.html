@@ -68,7 +68,9 @@
 				mui("#contentId").on("tap", "li", function() {
 					var detail_data = this.getAttribute('detail-data'); //详细信息
 					var child_data=this.getAttribute('child-data');
-
+					//console.log(detail_data)
+					//console.log(child_data)
+					
 					OpenWindow('produce_verify_detail', 'produce_verify_detail.html', {
 						"detail": detail_data,
 						"child_data":child_data
