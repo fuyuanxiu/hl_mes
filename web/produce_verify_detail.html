@@ -141,7 +141,7 @@
 				$("#board_name").text(data.PRO_NAME); //产品名称
 				$("#proc_equ").text(child_data.TECHNICS_NAME) ;//+ " - " + child_data.EQU_NAME); //工序名称-设备名称
 				$("#plan_qty").text(data.PLAN_QTY); //工单数量
-				$("#complete_qty").text(data.COMPLETE_QTY); //完成数量
+				$("#complete_qty").text(child_data.COMPLETE_QTY); //完成数量
 			}
 
 			function getProduceVerifyDetail(detail, EQU_CODE, PROC_NO, TECHNICS_CODE) {
